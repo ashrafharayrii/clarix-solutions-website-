@@ -20,7 +20,9 @@
     </a>
     <ul class="nav-links">
       <li><a href="#services">Services</a></li>
-      <li><a href="#about">About Us</a></li>
+      <li><a href="#process">How It Works</a></li>
+      <li><a href="#industries">Industries</a></li>
+      <li><a href="#about">About</a></li>
       <li><a href="#contact" class="btn-nav">Free Consultation</a></li>
     </ul>
     <button class="hamburger" id="hamburger" aria-label="Menu">
@@ -29,13 +31,18 @@
   </div>
   <div class="mobile-menu" id="mobileMenu">
     <a href="#services">Services</a>
-    <a href="#about">About Us</a>
+    <a href="#process">How It Works</a>
+    <a href="#industries">Industries</a>
+    <a href="#about">About</a>
     <a href="#contact">Free Consultation</a>
   </div>
 </nav>
 
-<!-- HERO SECTION -->
+<!-- ① HERO -->
 <section id="hero">
+  <div class="hero-orb orb-1"></div>
+  <div class="hero-orb orb-2"></div>
+  <div class="hero-orb orb-3"></div>
   <div class="hero-bg-grid"></div>
   <div class="hero-bg-logo"></div>
   <div class="container hero-layout">
@@ -44,21 +51,25 @@
         <span class="hb-dot"></span>
         Trusted by 50+ businesses · Amman, Jordan
       </div>
-      <h1>Track Your Business.<br/><span class="text-blue">Increase Your Profits.</span></h1>
-      <p class="hero-sub">We design and build custom business dashboards and professional websites tailored to your operations. From real-time sales tracking and inventory management to supplier oversight and employee performance — we turn your raw data into clear, actionable insights that help you make smarter decisions and grow faster.</p>
+      <h1>Track Your Business.<br/><span class="text-gradient-anim">Increase Your Profits.</span></h1>
+      <p class="hero-sub">We build custom business dashboards and professional websites — tailored to your exact operations. Real-time sales, inventory, supplier tracking, and employee performance, all in one place so you make smarter decisions every day.</p>
       <div class="hero-btns">
-        <a href="#services" class="btn-primary">Explore Services</a>
+        <a href="#services" class="btn-primary">Explore Our Services</a>
         <a href="#contact" class="btn-outline-white">Free Consultation</a>
       </div>
       <div class="hero-metrics">
-        <div class="hm-item"><strong>50+</strong><span>Projects Delivered</span></div>
+        <div class="hm-item"><strong class="counter" data-target="50" data-suffix="+">0</strong><span>Projects Delivered</span></div>
         <div class="hm-div"></div>
-        <div class="hm-item"><strong>10+</strong><span>Industries Served</span></div>
+        <div class="hm-item"><strong class="counter" data-target="10" data-suffix="+">0</strong><span>Industries Served</span></div>
         <div class="hm-div"></div>
         <div class="hm-item"><strong>100%</strong><span>Custom Built</span></div>
       </div>
     </div>
     <div class="hero-visual">
+      <div class="hero-photo-wrap">
+        <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=700&q=80" alt="Business Analytics" class="hero-photo-img" loading="lazy"/>
+        <div class="hero-photo-mask"></div>
+      </div>
       <div class="hv-card">
         <div class="hv-topbar">
           <div class="hv-dots"><span></span><span></span><span></span></div>
@@ -96,15 +107,14 @@
   <div class="hero-scroll-hint"><span>Scroll to explore</span><div class="scroll-arrow"></div></div>
 </section>
 
-<!-- THREE SERVICES SECTION -->
+<!-- ② SERVICES — what we offer -->
 <section id="services">
   <div class="container">
     <div class="sec-label">Our Services</div>
     <h2>Three Solutions. <span class="text-blue">One Goal.</span></h2>
-    <p class="sec-sub">Clarix Solutions helps your business run smarter — whether you need a powerful dashboard, a professional website, or the complete package.</p>
-
+    <p class="sec-sub">Everything your business needs — a live dashboard to run operations, a professional website to attract customers, or both.</p>
     <div class="services-grid">
-      <!-- SERVICE 1: Dashboard Development -->
+
       <div class="svc-card">
         <div class="svc-header dash-header">
           <div class="svc-icon-wrap">📊</div>
@@ -112,22 +122,19 @@
         </div>
         <div class="svc-body">
           <h3>Dashboard Development</h3>
-          <p class="svc-desc">A custom management dashboard that gives your business real-time visibility — inventory, sales, customers, suppliers, profit & loss, and employee performance.</p>
+          <p class="svc-desc">A real-time management dashboard built for your business — track inventory, sales, suppliers, and employees all from one screen.</p>
           <ul class="svc-list">
-            <li><div class="sli-icon">📦</div><div><strong>Inventory Tracking</strong> — real‑time stock & auto reorder alerts</div></li>
+            <li><div class="sli-icon">📦</div><div><strong>Inventory Tracking</strong> — live stock levels & auto reorder alerts</div></li>
             <li><div class="sli-icon">💰</div><div><strong>Sales & Profit Monitoring</strong> — daily, weekly, monthly performance</div></li>
             <li><div class="sli-icon">🚚</div><div><strong>Supplier Management</strong> — track orders, costs & reliability</div></li>
             <li><div class="sli-icon">👥</div><div><strong>Customer Behavior Analytics</strong> — purchase patterns & lifetime value</div></li>
             <li><div class="sli-icon">📌</div><div><strong>Employee Performance KPIs</strong> — efficiency metrics & contribution tracking</div></li>
           </ul>
-          <div class="svc-works-for">
-            <span>Perfect for:</span> Coffee Shops · Supermarkets · Restaurants · Retail · Jewelry · Clothing
-          </div>
+          <div class="svc-works-for"><span>Perfect for:</span> Coffee Shops · Supermarkets · Restaurants · Retail · Jewelry · Clothing</div>
           <a href="#contact" class="btn-primary">Request Dashboard</a>
         </div>
       </div>
 
-      <!-- SERVICE 2: Website Development -->
       <div class="svc-card">
         <div class="svc-header web-header">
           <div class="svc-icon-wrap">🌐</div>
@@ -138,19 +145,16 @@
           <p class="svc-desc">A fast, modern website that puts your business online professionally — custom built to match your brand and attract new customers.</p>
           <ul class="svc-list">
             <li><div class="sli-icon">🎨</div><div><strong>Custom Design</strong> — unique to your brand, no generic templates</div></li>
-            <li><div class="sli-icon">📱</div><div><strong>Mobile-First Approach</strong> — flawless experience on every device</div></li>
-            <li><div class="sli-icon">🛍️</div><div><strong>Product & Service Showcase</strong> — present your menu, catalog, or services clearly</div></li>
-            <li><div class="sli-icon">🔍</div><div><strong>SEO Optimization</strong> — help local customers find you on Google</div></li>
-            <li><div class="sli-icon">⚡</div><div><strong>Fast & Secure</strong> — optimized loading speed and HTTPS security</div></li>
+            <li><div class="sli-icon">📱</div><div><strong>Mobile-First</strong> — flawless on every device, screen size and browser</div></li>
+            <li><div class="sli-icon">🛍️</div><div><strong>Product & Service Showcase</strong> — menu, catalog, or services presented clearly</div></li>
+            <li><div class="sli-icon">🔍</div><div><strong>SEO Optimized</strong> — help local customers find you on Google</div></li>
+            <li><div class="sli-icon">⚡</div><div><strong>Fast & Secure</strong> — optimized speed and HTTPS security</div></li>
           </ul>
-          <div class="svc-works-for">
-            <span>Perfect for:</span> All business types — any size, any industry
-          </div>
+          <div class="svc-works-for"><span>Perfect for:</span> All business types — any size, any industry</div>
           <a href="#contact" class="btn-primary">Request Website</a>
         </div>
       </div>
 
-      <!-- SERVICE 3: Website + Dashboard Bundle -->
       <div class="svc-card bundle-card">
         <div class="svc-header bundle-header">
           <div class="svc-icon-wrap">🚀</div>
@@ -159,154 +163,330 @@
         </div>
         <div class="svc-body">
           <h3>Website + Dashboard <span class="text-blue">Bundle</span></h3>
-          <p class="svc-desc">The complete package — attract customers online with a professional website AND manage your entire business operations with a custom dashboard.</p>
+          <p class="svc-desc">The complete package — attract customers online with a professional website AND manage your entire operations with a live dashboard.</p>
           <ul class="svc-list">
             <li><div class="sli-icon">✅</div><div><strong>Everything in Dashboard + Website</strong> — full feature set included</div></li>
-            <li><div class="sli-icon">🔗</div><div><strong>Seamless Integration</strong> — website and dashboard work together as one system</div></li>
-            <li><div class="sli-icon">💰</div><div><strong>20% Savings</strong> — better value compared to purchasing separately</div></li>
-            <li><div class="sli-icon">🎯</div><div><strong>Unified Solution</strong> — one partner for online presence + internal operations</div></li>
+            <li><div class="sli-icon">🔗</div><div><strong>Seamless Integration</strong> — website and dashboard work as one system</div></li>
+            <li><div class="sli-icon">💰</div><div><strong>20% Savings</strong> — better value than purchasing separately</div></li>
+            <li><div class="sli-icon">🎯</div><div><strong>One Partner</strong> — online presence + internal operations, handled together</div></li>
             <li><div class="sli-icon">⭐</div><div><strong>Priority Support</strong> — 2 months of expedited assistance</div></li>
           </ul>
-          <div class="svc-works-for">
-            <span>Perfect for:</span> Growing businesses ready to scale online AND operationally
-          </div>
+          <div class="svc-works-for"><span>Perfect for:</span> Growing businesses ready to scale online AND operationally</div>
           <a href="#contact" class="btn-primary btn-bundle">Get the Bundle →</a>
         </div>
       </div>
-    </div>
 
+    </div>
   </div>
 </section>
 
-<!-- BEFORE / AFTER SECTION -->
+<!-- ③ BEFORE / AFTER — the difference, with real photos -->
 <section id="beforeafter">
   <div class="container">
     <div class="sec-label">The Difference</div>
     <h2>Before Clarix <span class="text-blue">vs. After Clarix</span></h2>
-    <p class="sec-sub">See the real impact a custom dashboard makes on your daily business operations.</p>
-
+    <p class="sec-sub">This is the gap between guessing and knowing — between wasting time and saving it.</p>
     <div class="ba-grid">
 
-      <!-- BEFORE CARD -->
+      <!-- BEFORE -->
       <div class="ba-card ba-before">
-        <div class="ba-header"><span>😓</span> Before Clarix</div>
-
-        <!-- Messy Spreadsheet Mockup -->
-        <div class="ba-visual ba-visual-before">
-          <div class="bav-bar">
-            <div class="bav-dots"><span></span><span></span><span></span></div>
-            <span class="bav-title">sales_data_FINAL_v3.xlsx</span>
-          </div>
-          <div class="bav-sheet">
-            <div class="bav-row bav-head"><span>Item</span><span>Feb</span><span>Mar</span><span>Notes</span></div>
-            <div class="bav-row"><span>Coffee</span><span class="bav-num">142</span><span class="bav-num">—</span><span class="bav-note">missing</span></div>
-            <div class="bav-row bav-warn"><span>Milk</span><span class="bav-num">???</span><span class="bav-num">29</span><span class="bav-note">check again</span></div>
-            <div class="bav-row"><span>Pastry</span><span class="bav-num">198</span><span class="bav-num">—</span><span class="bav-note">update?</span></div>
-            <div class="bav-row bav-warn"><span>Sugar</span><span class="bav-num">???</span><span class="bav-num">55</span><span class="bav-note">OLD DATA</span></div>
-            <div class="bav-row"><span>Total</span><span class="bav-num">—</span><span class="bav-num">—</span><span class="bav-note">?</span></div>
-          </div>
-          <div class="bav-chaos">
-            <span class="bav-sticky">📝 check milk supplier</span>
-            <span class="bav-sticky bav-sticky2">⚠️ numbers don't match!</span>
-          </div>
+        <div class="bph">
+          <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=700&q=80" alt="Stressed over spreadsheets" loading="lazy"/>
+          <div class="bph-overlay bph-overlay-before"></div>
+          <div class="bph-label"><span>😓</span> Before Clarix</div>
         </div>
-
-        <ul>
-          <li>❌ Tracking sales on paper or basic spreadsheets</li>
-          <li>❌ No idea which products are most profitable</li>
-          <li>❌ Running out of stock without warning</li>
-          <li>❌ Spending hours every week on manual reports</li>
-          <li>❌ Data scattered across notebooks and files</li>
-        </ul>
-      </div>
-
-      <!-- ARROW -->
-      <div class="ba-divider"><div class="ba-arrow">→</div></div>
-
-      <!-- AFTER CARD -->
-      <div class="ba-card ba-after">
-        <div class="ba-header"><span>🚀</span> After Clarix</div>
-
-        <!-- Clean Dashboard Mockup -->
-        <div class="ba-visual ba-visual-after">
-          <div class="bav-bar bav-bar-after">
-            <div class="bav-dots"><span></span><span></span><span></span></div>
-            <span class="bav-title">Clarix Dashboard — Live</span>
-            <span class="bav-live-dot">● Live</span>
-          </div>
-          <div class="bav-kpis">
-            <div class="bav-kpi"><div class="bav-kpi-label">Revenue</div><div class="bav-kpi-val">$18,420</div><div class="bav-kpi-up">▲ 22%</div></div>
-            <div class="bav-kpi"><div class="bav-kpi-label">Orders</div><div class="bav-kpi-val">934</div><div class="bav-kpi-up">▲ 15%</div></div>
-            <div class="bav-kpi"><div class="bav-kpi-label">Stock</div><div class="bav-kpi-val">97%</div><div class="bav-kpi-up">▲ 8%</div></div>
-          </div>
-          <div class="bav-bars-wrap">
-            <div class="bav-bars-label">Weekly Sales</div>
-            <div class="bav-bars">
-              <div class="bav-b"><div class="bav-b-fill" style="height:55%"></div><span>M</span></div>
-              <div class="bav-b"><div class="bav-b-fill" style="height:72%"></div><span>T</span></div>
-              <div class="bav-b"><div class="bav-b-fill" style="height:48%"></div><span>W</span></div>
-              <div class="bav-b"><div class="bav-b-fill" style="height:91%"></div><span>T</span></div>
-              <div class="bav-b"><div class="bav-b-fill" style="height:67%"></div><span>F</span></div>
-              <div class="bav-b bav-b-peak"><div class="bav-b-fill" style="height:100%"></div><span>S</span></div>
-              <div class="bav-b"><div class="bav-b-fill" style="height:78%"></div><span>S</span></div>
+        <div class="ba-body">
+          <div class="ba-visual ba-visual-before">
+            <div class="bav-bar">
+              <div class="bav-dots"><span></span><span></span><span></span></div>
+              <span class="bav-title">sales_data_FINAL_v3.xlsx</span>
+            </div>
+            <div class="bav-sheet">
+              <div class="bav-row bav-head"><span>Item</span><span>Feb</span><span>Mar</span><span>Notes</span></div>
+              <div class="bav-row"><span>Coffee</span><span class="bav-num">142</span><span class="bav-num">—</span><span class="bav-note">missing</span></div>
+              <div class="bav-row bav-warn"><span>Milk</span><span class="bav-num">???</span><span class="bav-num">29</span><span class="bav-note">check again</span></div>
+              <div class="bav-row"><span>Pastry</span><span class="bav-num">198</span><span class="bav-num">—</span><span class="bav-note">update?</span></div>
+              <div class="bav-row bav-warn"><span>Sugar</span><span class="bav-num">???</span><span class="bav-num">55</span><span class="bav-note">OLD DATA</span></div>
+            </div>
+            <div class="bav-chaos">
+              <span class="bav-sticky">📝 check milk supplier</span>
+              <span class="bav-sticky bav-sticky2">⚠️ numbers don't match!</span>
             </div>
           </div>
-          <div class="bav-alert">🔔 <strong>Low Stock Alert:</strong> Whole Milk — Reorder now</div>
+          <ul class="ba-list">
+            <li>❌ Tracking sales on paper or basic spreadsheets</li>
+            <li>❌ No idea which products are most profitable</li>
+            <li>❌ Running out of stock without warning</li>
+            <li>❌ Spending hours every week on manual reports</li>
+            <li>❌ Data scattered across notebooks and files</li>
+          </ul>
         </div>
+      </div>
 
-        <ul>
-          <li>✅ Live sales and revenue updated in real time</li>
-          <li>✅ Clear view of best and worst performing products</li>
-          <li>✅ Automatic low-stock alerts before you run out</li>
-          <li>✅ Reports generated instantly — no manual work</li>
-          <li>✅ Everything in one place, organized and clear</li>
-        </ul>
+      <div class="ba-divider"><div class="ba-arrow">→</div></div>
+
+      <!-- AFTER -->
+      <div class="ba-card ba-after">
+        <div class="bph">
+          <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=700&q=80" alt="Clean business dashboard" loading="lazy"/>
+          <div class="bph-overlay bph-overlay-after"></div>
+          <div class="bph-label"><span>🚀</span> After Clarix</div>
+        </div>
+        <div class="ba-body">
+          <div class="ba-visual ba-visual-after">
+            <div class="bav-bar bav-bar-after">
+              <div class="bav-dots"><span></span><span></span><span></span></div>
+              <span class="bav-title">Clarix Dashboard — Live</span>
+              <span class="bav-live-dot">● Live</span>
+            </div>
+            <div class="bav-kpis">
+              <div class="bav-kpi"><div class="bav-kpi-label">Revenue</div><div class="bav-kpi-val">$18,420</div><div class="bav-kpi-up">▲ 22%</div></div>
+              <div class="bav-kpi"><div class="bav-kpi-label">Orders</div><div class="bav-kpi-val">934</div><div class="bav-kpi-up">▲ 15%</div></div>
+              <div class="bav-kpi"><div class="bav-kpi-label">Stock</div><div class="bav-kpi-val">97%</div><div class="bav-kpi-up">▲ 8%</div></div>
+            </div>
+            <div class="bav-bars-wrap">
+              <div class="bav-bars-label">Weekly Sales</div>
+              <div class="bav-bars">
+                <div class="bav-b"><div class="bav-b-fill" style="height:55%"></div><span>M</span></div>
+                <div class="bav-b"><div class="bav-b-fill" style="height:72%"></div><span>T</span></div>
+                <div class="bav-b"><div class="bav-b-fill" style="height:48%"></div><span>W</span></div>
+                <div class="bav-b"><div class="bav-b-fill" style="height:91%"></div><span>T</span></div>
+                <div class="bav-b"><div class="bav-b-fill" style="height:67%"></div><span>F</span></div>
+                <div class="bav-b bav-b-peak"><div class="bav-b-fill" style="height:100%"></div><span>S</span></div>
+                <div class="bav-b"><div class="bav-b-fill" style="height:78%"></div><span>S</span></div>
+              </div>
+            </div>
+            <div class="bav-alert">🔔 <strong>Low Stock Alert:</strong> Whole Milk — Reorder now</div>
+          </div>
+          <ul class="ba-list">
+            <li>✅ Live sales and revenue updated in real time</li>
+            <li>✅ Instant view of best and worst performing products</li>
+            <li>✅ Automatic low-stock alerts before you run out</li>
+            <li>✅ Reports generated instantly — zero manual work</li>
+            <li>✅ Everything in one place, organized and clear</li>
+          </ul>
+        </div>
       </div>
 
     </div>
-
     <div class="ba-cta">
       <a href="#contact" class="btn-primary">Get Your Custom Dashboard →</a>
     </div>
   </div>
 </section>
 
-<!-- INDUSTRIES SECTION -->
+<!-- ④ HOW IT WORKS — process with real photos -->
+<section id="process">
+  <div class="container">
+    <div class="sec-label">How It Works</div>
+    <h2>From First Call to <span class="text-blue">Live in Days</span></h2>
+    <p class="sec-sub">A clear 4-step process — from understanding your business to a running system.</p>
+    <div class="process-steps">
+
+      <div class="process-step">
+        <div class="ps-photo-wrap">
+          <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=500&q=80" alt="Free Consultation" class="ps-photo" loading="lazy"/>
+          <div class="ps-photo-overlay"></div>
+          <div class="ps-step-num">01</div>
+          <div class="ps-step-label">Free Consultation</div>
+        </div>
+        <div class="ps-content">
+          <h4>Free Consultation</h4>
+          <p>We listen to your business, understand your pain points, and map out exactly what you need — at no cost.</p>
+        </div>
+      </div>
+
+      <div class="process-connector"><div class="pc-arrow">→</div></div>
+
+      <div class="process-step">
+        <div class="ps-photo-wrap">
+          <img src="https://images.unsplash.com/photo-1542744094-24638eff58bb?auto=format&fit=crop&w=500&q=80" alt="Custom Design" class="ps-photo" loading="lazy"/>
+          <div class="ps-photo-overlay"></div>
+          <div class="ps-step-num">02</div>
+          <div class="ps-step-label">Custom Design</div>
+        </div>
+        <div class="ps-content">
+          <h4>Custom Design</h4>
+          <p>We design a solution built specifically around your operations — not a template, not generic.</p>
+        </div>
+      </div>
+
+      <div class="process-connector"><div class="pc-arrow">→</div></div>
+
+      <div class="process-step">
+        <div class="ps-photo-wrap">
+          <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=500&q=80" alt="Build and Test" class="ps-photo" loading="lazy"/>
+          <div class="ps-photo-overlay"></div>
+          <div class="ps-step-num">03</div>
+          <div class="ps-step-label">Build &amp; Test</div>
+        </div>
+        <div class="ps-content">
+          <h4>Build &amp; Test</h4>
+          <p>Our team builds and tests everything using real data from your own business before you see it.</p>
+        </div>
+      </div>
+
+      <div class="process-connector"><div class="pc-arrow">→</div></div>
+
+      <div class="process-step">
+        <div class="ps-photo-wrap">
+          <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=500&q=80" alt="Go Live" class="ps-photo" loading="lazy"/>
+          <div class="ps-photo-overlay"></div>
+          <div class="ps-step-num">04</div>
+          <div class="ps-step-label">Go Live &amp; Grow</div>
+        </div>
+        <div class="ps-content">
+          <h4>Go Live &amp; Grow</h4>
+          <p>You get full access, full training, and ongoing support — then watch your business run smarter.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ⑤ INDUSTRIES — real photos, hover reveal -->
 <section id="industries">
   <div class="container">
     <div class="sec-label">Industries We Serve</div>
-    <h2>Trusted by Businesses <span class="text-blue">Across Sectors</span></h2>
-    <p class="sec-sub">From a small coffee kiosk to a multi-branch supermarket — Clarix Solutions delivers custom systems for every business type.</p>
-    <div class="ind-grid">
-      <div class="ind-card"><span>☕</span><strong>Coffee Shops</strong><p>Sales tracking, ingredient management & loyalty programs</p></div>
-      <div class="ind-card"><span>🏪</span><strong>Supermarkets</strong><p>Inventory control, supplier management & category analytics</p></div>
-      <div class="ind-card"><span>🛒</span><strong>Retail Stores</strong><p>Product performance, sales trends & operational metrics</p></div>
-      <div class="ind-card"><span>💍</span><strong>Jewelry Shops</strong><p>Stock valuation, sales mix analysis & high-value tracking</p></div>
-      <div class="ind-card"><span>👗</span><strong>Clothing Stores</strong><p>Size/color analytics, return rate analysis & seasonal trends</p></div>
-      <div class="ind-card"><span>🍽️</span><strong>Restaurants</strong><p>Order management, table tracking & kitchen operations</p></div>
-      <div class="ind-card"><span>💊</span><strong>Pharmacies</strong><p>Medicine inventory, expiry tracking & sales performance reports</p></div>
-      <div class="ind-card"><span>🥐</span><strong>Bakeries</strong><p>Daily production planning, waste reduction & ingredient cost tracking</p></div>
+    <h2>Built for Every <span class="text-blue">Business Type</span></h2>
+    <p class="sec-sub">From a small café to a multi-branch supermarket — every solution is built around your specific operations.</p>
+    <div class="ind-photo-grid">
+
+      <div class="ind-photo-card">
+        <img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=600&q=80" alt="Coffee Shops" loading="lazy"/>
+        <div class="ind-photo-overlay">
+          <span class="ind-emoji-big">☕</span>
+          <strong>Coffee Shops</strong>
+          <p>Sales tracking, ingredient management & loyalty programs</p>
+        </div>
+      </div>
+
+      <div class="ind-photo-card">
+        <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80" alt="Supermarkets" loading="lazy"/>
+        <div class="ind-photo-overlay">
+          <span class="ind-emoji-big">🏪</span>
+          <strong>Supermarkets</strong>
+          <p>Inventory control, supplier management & category analytics</p>
+        </div>
+      </div>
+
+      <div class="ind-photo-card">
+        <img src="https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?auto=format&fit=crop&w=600&q=80" alt="Retail Stores" loading="lazy"/>
+        <div class="ind-photo-overlay">
+          <span class="ind-emoji-big">🛒</span>
+          <strong>Retail Stores</strong>
+          <p>Product performance, sales trends & operational metrics</p>
+        </div>
+      </div>
+
+      <div class="ind-photo-card">
+        <img src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=600&q=80" alt="Jewelry Shops" loading="lazy"/>
+        <div class="ind-photo-overlay">
+          <span class="ind-emoji-big">💍</span>
+          <strong>Jewelry Shops</strong>
+          <p>Stock valuation, sales mix analysis & high-value tracking</p>
+        </div>
+      </div>
+
+      <div class="ind-photo-card">
+        <img src="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?auto=format&fit=crop&w=600&q=80" alt="Clothing Stores" loading="lazy"/>
+        <div class="ind-photo-overlay">
+          <span class="ind-emoji-big">👗</span>
+          <strong>Clothing Stores</strong>
+          <p>Size/color analytics, return rates & seasonal trends</p>
+        </div>
+      </div>
+
+      <div class="ind-photo-card">
+        <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80" alt="Restaurants" loading="lazy"/>
+        <div class="ind-photo-overlay">
+          <span class="ind-emoji-big">🍽️</span>
+          <strong>Restaurants</strong>
+          <p>Order management, table tracking & kitchen operations</p>
+        </div>
+      </div>
+
+      <div class="ind-photo-card">
+        <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80" alt="Pharmacies" loading="lazy"/>
+        <div class="ind-photo-overlay">
+          <span class="ind-emoji-big">💊</span>
+          <strong>Pharmacies</strong>
+          <p>Medicine inventory, expiry tracking & sales performance</p>
+        </div>
+      </div>
+
+      <div class="ind-photo-card">
+        <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=600&q=80" alt="Bakeries" loading="lazy"/>
+        <div class="ind-photo-overlay">
+          <span class="ind-emoji-big">🥐</span>
+          <strong>Bakeries</strong>
+          <p>Daily production planning, waste reduction & ingredient costs</p>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
 
-<!-- BENEFITS SECTION -->
-<section id="benefits">
+<!-- ⑥ RESULTS — redesigned impact cards with animated numbers -->
+<section id="results">
   <div class="container">
-    <div class="sec-label light">Why Choose Clarix</div>
-    <h2 class="white-h">Real Results for <span class="text-blue-l">Real Businesses</span></h2>
-    <div class="ben-grid">
-      <div class="ben-card"><div class="ben-icon">⏱️</div><h4>Save Time on Manual Work</h4><p>Our dashboards update automatically — freeing your team hours every week.</p></div>
-      <div class="ben-card"><div class="ben-icon">📡</div><h4>Real-Time Performance Tracking</h4><p>See sales, stock levels, and orders as they happen — not yesterday's numbers.</p></div>
-      <div class="ben-card"><div class="ben-icon">📦</div><h4>Eliminate Inventory Errors</h4><p>Automatic low-stock alerts prevent costly over-ordering or stockouts.</p></div>
-      <div class="ben-card"><div class="ben-icon">🧠</div><h4>Data-Driven Decisions</h4><p>Stop guessing. Every decision backed by your own real business data.</p></div>
-      <div class="ben-card"><div class="ben-icon">📈</div><h4>Increase Profits</h4><p>Spot opportunities, reduce waste, and act on insights before they cost you.</p></div>
-      <div class="ben-card"><div class="ben-icon">🛠️</div><h4>Built Just for You</h4><p>No generic templates. Every solution is custom-built around your specific business needs.</p></div>
+    <div class="sec-label light">Our Impact</div>
+    <h2 class="white-h">Numbers That Speak <span class="text-blue-l">For Themselves</span></h2>
+    <p class="sec-sub" style="color:rgba(255,255,255,0.5)">Measured results from real businesses we've built custom systems for across Jordan.</p>
+
+    <div class="results-grid">
+
+      <div class="result-card">
+        <div class="rc-emoji">☕</div>
+        <div class="rc-sector">Coffee Shops &amp; Cafés</div>
+        <div class="rc-big"><span class="counter" data-target="32" data-suffix="%">0%</span></div>
+        <div class="rc-title">Average Revenue Increase</div>
+        <div class="rc-chips">
+          <div class="rc-chip"><strong>5h</strong><span>Saved / week</span></div>
+          <div class="rc-chip"><strong>-24%</strong><span>Waste reduced</span></div>
+        </div>
+      </div>
+
+      <div class="result-card result-card-feature">
+        <div class="rc-badge">Most Common Result</div>
+        <div class="rc-emoji">🏪</div>
+        <div class="rc-sector">Supermarkets &amp; Retail</div>
+        <div class="rc-big"><span class="counter" data-target="18" data-suffix="%">0%</span></div>
+        <div class="rc-title">Average Profit Growth</div>
+        <div class="rc-chips">
+          <div class="rc-chip"><strong>0</strong><span>Stockout events</span></div>
+          <div class="rc-chip"><strong>3x</strong><span>Faster reporting</span></div>
+        </div>
+      </div>
+
+      <div class="result-card">
+        <div class="rc-emoji">🍽️</div>
+        <div class="rc-sector">Restaurants &amp; Food</div>
+        <div class="rc-big"><span class="counter" data-target="40" data-suffix="%">0%</span></div>
+        <div class="rc-title">Better Inventory Control</div>
+        <div class="rc-chips">
+          <div class="rc-chip"><strong>-22%</strong><span>Food cost</span></div>
+          <div class="rc-chip"><strong>+15%</strong><span>Daily orders</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="results-totals">
+      <div class="rt-item"><strong class="counter" data-target="50" data-suffix="+">0</strong><span>Projects Delivered</span></div>
+      <div class="rt-div"></div>
+      <div class="rt-item"><strong class="counter" data-target="10" data-suffix="+">0</strong><span>Industries Served</span></div>
+      <div class="rt-div"></div>
+      <div class="rt-item"><strong>100%</strong><span>Custom Built</span></div>
+      <div class="rt-div"></div>
+      <div class="rt-item"><strong>24h</strong><span>Response Time</span></div>
     </div>
   </div>
 </section>
 
-<!-- ABOUT SECTION -->
+<!-- ⑦ ABOUT -->
 <section id="about">
   <div class="about-bg-accent"></div>
   <div class="container">
@@ -314,39 +494,34 @@
       <div class="sec-label">About Us</div>
       <h2>The Team Behind <span class="text-blue">Your Success</span></h2>
     </div>
-
     <div class="about-body">
       <div class="about-quote-bar">"We don't sell software. We solve business problems."</div>
-      <p>We are Clarix Solutions, a data and web development company based in Amman, Jordan. We specialize in building custom business dashboards and professional websites that help business owners understand their numbers, manage their operations, and make smarter decisions every day.</p>
-      <p>Our team combines expertise in data analytics, software development, and business operations. We have worked with coffee shops, supermarkets, retail stores, restaurants, and many other businesses across Jordan — each one with unique needs, and each one getting a solution built specifically for them.</p>
-      <p>We believe that every business, no matter its size, deserves access to the same powerful tools that large companies use. That is why we build affordable, custom systems — not generic templates — so that you get exactly what your business needs to grow and stay ahead of the competition.</p>
+      <p>We are Clarix Solutions, a data and web development company based in Amman, Jordan. We specialize in custom business dashboards and professional websites that help owners understand their numbers, manage operations, and make smarter decisions every single day.</p>
+      <p>Our team combines expertise in data analytics, software development, and business operations. We have worked with coffee shops, supermarkets, retail stores, restaurants, and many other businesses across Jordan — each with unique needs, and each getting a system built specifically for them.</p>
+      <p>We believe every business, no matter its size, deserves access to the same powerful tools large companies use — at an affordable price, with a solution that fits exactly how you work.</p>
     </div>
-
     <div class="about-stats">
-      <div class="as-item"><strong>50+</strong><span>Projects Delivered</span></div>
+      <div class="as-item"><strong class="counter" data-target="50" data-suffix="+">0</strong><span>Projects Delivered</span></div>
       <div class="as-div"></div>
-      <div class="as-item"><strong>10+</strong><span>Industries Served</span></div>
+      <div class="as-item"><strong class="counter" data-target="10" data-suffix="+">0</strong><span>Industries Served</span></div>
       <div class="as-div"></div>
       <div class="as-item"><strong>100%</strong><span>Custom Built</span></div>
       <div class="as-div"></div>
       <div class="as-item"><strong>24h</strong><span>Response Time</span></div>
     </div>
-
     <div class="about-cta">
       <a href="#contact" class="btn-primary">Partner With Us</a>
     </div>
   </div>
 </section>
 
-
-
-<!-- URGENCY / CTA SECTION -->
+<!-- ⑧ URGENCY -->
 <section id="urgency">
   <div class="container">
     <div class="urgency-inner">
       <div class="urgency-text">
         <h2>Every Day Without a Dashboard<br/><span class="text-blue-l">Is Money You're Losing.</span></h2>
-        <p>Most business owners only find out about problems after it's too late — an item ran out, a supplier overcharged, a slow week was ignored. A custom Clarix dashboard gives you the visibility to catch these issues before they cost you.</p>
+        <p>Most business owners only find out about problems after it's too late — an item ran out, a supplier overcharged, a slow week went unnoticed. A Clarix dashboard gives you visibility to catch these before they cost you.</p>
         <div class="urgency-points">
           <div class="up-item"><span>💸</span> Stop losing revenue from stockouts and over-ordering</div>
           <div class="up-item"><span>⏳</span> Stop wasting hours on reports you could have in seconds</div>
@@ -367,13 +542,13 @@
   </div>
 </section>
 
-<!-- CONTACT SECTION -->
+<!-- ⑨ CONTACT -->
 <section id="contact">
   <div class="container contact-layout">
     <div class="contact-left">
       <div class="sec-label light">Get In Touch</div>
-      <h2 class="white-h">Ready to Transform<br/><span class="text-blue-l">Your Business Operations?</span></h2>
-      <p>Tell us about your business and what you're struggling to track. Our team will reply within 24 hours with a clear plan.</p>
+      <h2 class="white-h">Ready to Transform<br/><span class="text-blue-l">Your Business?</span></h2>
+      <p>Tell us what you're struggling to track. Our team replies within 24 hours with a clear, personalised plan.</p>
       <div class="contact-info">
         <div class="ci-row"><span>📧</span><a href="mailto:clarix.solutions.jo@gmail.com">clarix.solutions.jo@gmail.com</a></div>
         <div class="ci-row"><span>📞</span><a href="tel:+962792803075">+962 792 803 075</a></div>
@@ -389,8 +564,26 @@
     <form id="contactForm" class="contact-form">
       <div class="fg"><label>Full Name</label><input type="text" name="name" placeholder="Your name" required/></div>
       <div class="fg"><label>Email Address</label><input type="email" name="email" placeholder="you@yourbusiness.com" required/></div>
-      <div class="fg"><label>Business Type</label><select name="business_type"><option>Coffee Shop / Café</option><option>Supermarket / Grocery</option><option>Retail Store</option><option>Jewelry Shop</option><option>Clothing Store</option><option>Restaurant</option><option>Other</option></select></div>
-      <div class="fg"><label>What Do You Need?</label><div class="radio-opts"><label class="ro"><input type="radio" name="svc" value="dashboard"/> 📊 Dashboard Only</label><label class="ro"><input type="radio" name="svc" value="website"/> 🌐 Website Only</label><label class="ro"><input type="radio" name="svc" value="both" checked/> 🚀 Both (Bundle)</label></div></div>
+      <div class="fg"><label>Business Type</label>
+        <select name="business_type">
+          <option>Coffee Shop / Café</option>
+          <option>Supermarket / Grocery</option>
+          <option>Retail Store</option>
+          <option>Jewelry Shop</option>
+          <option>Clothing Store</option>
+          <option>Restaurant</option>
+          <option>Pharmacy</option>
+          <option>Bakery</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="fg"><label>What Do You Need?</label>
+        <div class="radio-opts">
+          <label class="ro"><input type="radio" name="svc" value="dashboard"/> 📊 Dashboard Only</label>
+          <label class="ro"><input type="radio" name="svc" value="website"/> 🌐 Website Only</label>
+          <label class="ro"><input type="radio" name="svc" value="both" checked/> 🚀 Both (Bundle)</label>
+        </div>
+      </div>
       <div class="fg"><label>Message</label><textarea name="message" rows="4" placeholder="Tell us about your business and what you'd like to improve or track..."></textarea></div>
       <button type="submit" class="btn-primary full">Send Message — Free Consultation →</button>
       <div id="formMsg"></div>
@@ -416,7 +609,12 @@
       <div class="fl-col"><div class="fl-head">Connect</div><a href="#contact">Free Consultation</a><a href="mailto:clarix.solutions.jo@gmail.com">clarix.solutions.jo@gmail.com</a></div>
     </div>
   </div>
-  <div class="footer-bottom"><div class="container"><span>&copy; 2026 Clarix Solutions — Amman, Jordan. All rights reserved.</span><span>Powered by data analytics</span></div></div>
+  <div class="footer-bottom">
+    <div class="container">
+      <span>&copy; 2026 Clarix Solutions — Amman, Jordan. All rights reserved.</span>
+      <span>Powered by data analytics</span>
+    </div>
+  </div>
 </footer>
 
 <script src="script.js"></script>

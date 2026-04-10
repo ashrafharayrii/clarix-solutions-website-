@@ -159,3 +159,60 @@ function showToast(message) {
 }
 
 console.log('Clarix Solutions — Ready to help your business grow!');
+
+/* ════════════════════════════════════════
+   CREATIVE UPGRADE — Motions & Photos
+   ════════════════════════════════════════ */
+
+// 9. Animated number counters
+function animateCounter(el) {
+  const target = parseInt(el.getAttribute('data-target'), 10);
+  const suffix = el.getAttribute('data-suffix') || '';
+  const duration = 1600;
+  const start = performance.now();
+
+  function tick(now) {
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    el.textContent = Math.floor(eased * target) + suffix;
+    if (progress < 1) requestAnimationFrame(tick);
+    else el.textContent = target + suffix;
+  }
+  requestAnimationFrame(tick);
+}
+
+const counterObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      animateCounter(entry.target);
+      counterObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.6 });
+
+document.querySelectorAll('.counter[data-target]').forEach(el => {
+  counterObserver.observe(el);
+});
+
+// 10. 3D perspective tilt on service cards
+document.querySelectorAll('.svc-card').forEach(card => {
+  card.addEventListener('mousemove', (e) => {
+    const rect = card.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width  - 0.5;
+    const y = (e.clientY - rect.top)  / rect.height - 0.5;
+    card.style.transform = `perspective(900px) rotateY(${x * 7}deg) rotateX(${-y * 7}deg) translateY(-4px)`;
+    card.style.transition = 'transform 0.05s ease';
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transition = 'transform 0.45s ease, border-color 0.3s, box-shadow 0.3s';
+    card.style.transform = '';
+  });
+});
+
+// 11. Add new card types to the existing reveal observer (fixes opacity:0 bug)
+document.querySelectorAll('.process-step, .ind-photo-card, .result-card').forEach((el, i) => {
+  el.classList.add('reveal');
+  el.style.transitionDelay = (i % 4) * 0.09 + 's';
+  revealObserver.observe(el);
+});
