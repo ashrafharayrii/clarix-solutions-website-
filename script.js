@@ -164,6 +164,31 @@ console.log('Clarix Solutions — Ready to help your business grow!');
    CREATIVE UPGRADE — Motions & Photos
    ════════════════════════════════════════ */
 
+// 9-pre. Typewriter cycling industries
+(function () {
+  const el = document.getElementById('typedIndustry');
+  if (!el) return;
+
+  const words = [
+    'Coffee Houses', 'Supermarkets', 'Restaurants',
+    'Retail Stores', 'Jewelry Shops', 'Pharmacies',
+    'Clothing Stores', 'Bakeries'
+  ];
+  let wi = 0, ci = 0, deleting = false;
+
+  function tick() {
+    const word = words[wi];
+    el.textContent = deleting ? word.slice(0, ci - 1) : word.slice(0, ci + 1);
+    deleting ? ci-- : ci++;
+
+    let delay = deleting ? 55 : 100;
+    if (!deleting && ci === word.length)  { delay = 1800; deleting = true; }
+    if ( deleting && ci === 0)            { deleting = false; wi = (wi + 1) % words.length; delay = 320; }
+    setTimeout(tick, delay);
+  }
+  setTimeout(tick, 900);
+})();
+
 // 9. Animated number counters
 function animateCounter(el) {
   const target = parseInt(el.getAttribute('data-target'), 10);

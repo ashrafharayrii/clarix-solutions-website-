@@ -52,9 +52,12 @@
         Trusted by 50+ businesses · Amman, Jordan
       </div>
       <h1>Track Your Business.<br/><span class="text-gradient-anim">Increase Your Profits.</span></h1>
+      <div class="hero-typewriter">
+        Built for <span id="typedIndustry" class="typed-word"></span><span class="typed-cursor">|</span>
+      </div>
       <p class="hero-sub">We build custom business dashboards and professional websites — tailored to your exact operations. Real-time sales, inventory, supplier tracking, and employee performance, all in one place so you make smarter decisions every day.</p>
       <div class="hero-btns">
-        <a href="#services" class="btn-primary">Explore Our Services</a>
+        <a href="#services" class="btn-primary btn-hero-main">Explore Our Services ↓</a>
         <a href="#contact" class="btn-outline-white">Free Consultation</a>
       </div>
       <div class="hero-metrics">
@@ -70,41 +73,260 @@
         <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=700&q=80" alt="Business Analytics" class="hero-photo-img" loading="lazy"/>
         <div class="hero-photo-mask"></div>
       </div>
+
+      <!-- ═══ REALISTIC DASHBOARD CARD ═══ -->
       <div class="hv-card">
+
+        <!-- Top bar -->
         <div class="hv-topbar">
           <div class="hv-dots"><span></span><span></span><span></span></div>
-          <span class="hv-title">Business Overview</span>
-          <span class="hv-live">● Live Demo</span>
+          <span class="hv-title">Clarix — Live Dashboard</span>
+          <span class="hv-live">● Live</span>
         </div>
+
+        <!-- Navigation tabs -->
+        <div class="hv-tabs">
+          <div class="hv-tab hv-tab-active">Overview</div>
+          <div class="hv-tab">Sales</div>
+          <div class="hv-tab">Inventory</div>
+          <div class="hv-tab">Suppliers</div>
+          <div class="hv-tab">Staff</div>
+        </div>
+
+        <!-- KPI row -->
         <div class="hv-kpis">
-          <div class="hv-kpi"><div class="hv-kpi-label">Revenue</div><div class="hv-kpi-val">$24,850</div><div class="hv-kpi-delta up">▲ 18%</div></div>
-          <div class="hv-kpi"><div class="hv-kpi-label">Orders</div><div class="hv-kpi-val">1,284</div><div class="hv-kpi-delta up">▲ 12%</div></div>
-          <div class="hv-kpi"><div class="hv-kpi-label">Stock</div><div class="hv-kpi-val">94%</div><div class="hv-kpi-delta down">▼ 2%</div></div>
-        </div>
-        <div class="hv-chart">
-          <div class="hv-chart-label">Weekly Sales</div>
-          <div class="hv-bars">
-            <div class="hv-bar-wrap"><div class="hv-bar" style="--h:52%"></div><span>Mon</span></div>
-            <div class="hv-bar-wrap"><div class="hv-bar" style="--h:71%"></div><span>Tue</span></div>
-            <div class="hv-bar-wrap"><div class="hv-bar" style="--h:47%"></div><span>Wed</span></div>
-            <div class="hv-bar-wrap"><div class="hv-bar" style="--h:88%"></div><span>Thu</span></div>
-            <div class="hv-bar-wrap"><div class="hv-bar" style="--h:64%"></div><span>Fri</span></div>
-            <div class="hv-bar-wrap"><div class="hv-bar" style="--h:95%"></div><span>Sat</span></div>
-            <div class="hv-bar-wrap"><div class="hv-bar" style="--h:73%"></div><span>Sun</span></div>
+          <div class="hv-kpi">
+            <div class="hv-kpi-ico">💰</div>
+            <div class="hv-kpi-info">
+              <div class="hv-kpi-label">Revenue</div>
+              <div class="hv-kpi-val">$24,850</div>
+            </div>
+            <div class="hv-kpi-delta up">▲ 18%</div>
+          </div>
+          <div class="hv-kpi">
+            <div class="hv-kpi-ico">🛒</div>
+            <div class="hv-kpi-info">
+              <div class="hv-kpi-label">Orders</div>
+              <div class="hv-kpi-val">1,284</div>
+            </div>
+            <div class="hv-kpi-delta up">▲ 12%</div>
+          </div>
+          <div class="hv-kpi">
+            <div class="hv-kpi-ico">📦</div>
+            <div class="hv-kpi-info">
+              <div class="hv-kpi-label">Stock</div>
+              <div class="hv-kpi-val">94%</div>
+            </div>
+            <div class="hv-kpi-delta down">▼ 2%</div>
           </div>
         </div>
-        <div class="hv-table">
-          <div class="hv-tr head"><span>Item</span><span>Stock</span><span>Status</span></div>
-          <div class="hv-tr"><span>Coffee Beans</span><span>24 kg</span><span class="status-ok">OK</span></div>
-          <div class="hv-tr"><span>Whole Milk</span><span>3 L</span><span class="status-low">Low</span></div>
-          <div class="hv-tr"><span>Pastries</span><span>38</span><span class="status-ok">OK</span></div>
+
+        <!-- Chart + Products -->
+        <div class="hv-body">
+
+          <!-- SVG Line chart -->
+          <div class="hv-chart-panel">
+            <div class="hv-chart-hdr">
+              <span class="hv-chart-lbl">Revenue This Week</span>
+              <span class="hv-chart-total">$24,850</span>
+            </div>
+            <svg class="hv-linechart" viewBox="0 0 220 65" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="lg1" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#2B68E9" stop-opacity="0.28"/>
+                  <stop offset="100%" stop-color="#2B68E9" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <path d="M0,54 C14,50 24,47 40,41 S58,44 76,31 S98,35 116,20 S136,25 155,11 S176,17 220,15 L220,65 L0,65Z" fill="url(#lg1)"/>
+              <path d="M0,54 C14,50 24,47 40,41 S58,44 76,31 S98,35 116,20 S136,25 155,11 S176,17 220,15" fill="none" stroke="#2B68E9" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="155" cy="11" r="3.5" fill="#2B68E9" class="hv-peak-dot"/>
+              <line x1="155" y1="11" x2="155" y2="65" stroke="rgba(43,104,233,0.18)" stroke-width="1" stroke-dasharray="3,3"/>
+              <circle cx="220" cy="15" r="2.5" fill="#10B981"/>
+            </svg>
+            <div class="hv-chart-days">
+              <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+            </div>
+          </div>
+
+          <!-- Top products -->
+          <div class="hv-products-panel">
+            <div class="hv-prod-hdr">Top Items Today</div>
+            <div class="hv-prod-row">
+              <span class="hv-prod-dot" style="background:#2B68E9"></span>
+              <span class="hv-prod-name">Espresso</span>
+              <div class="hv-prod-bar"><div class="hv-prod-fill" style="width:88%;background:#2B68E9"></div></div>
+              <span class="hv-prod-qty">124</span>
+            </div>
+            <div class="hv-prod-row">
+              <span class="hv-prod-dot" style="background:#10B981"></span>
+              <span class="hv-prod-name">Latte</span>
+              <div class="hv-prod-bar"><div class="hv-prod-fill" style="width:70%;background:#10B981"></div></div>
+              <span class="hv-prod-qty">98</span>
+            </div>
+            <div class="hv-prod-row">
+              <span class="hv-prod-dot" style="background:#F59E0B"></span>
+              <span class="hv-prod-name">Cappuccino</span>
+              <div class="hv-prod-bar"><div class="hv-prod-fill" style="width:54%;background:#F59E0B"></div></div>
+              <span class="hv-prod-qty">76</span>
+            </div>
+            <div class="hv-prod-row">
+              <span class="hv-prod-dot" style="background:#8B5CF6"></span>
+              <span class="hv-prod-name">Cold Brew</span>
+              <div class="hv-prod-bar"><div class="hv-prod-fill" style="width:32%;background:#8B5CF6"></div></div>
+              <span class="hv-prod-qty">45</span>
+            </div>
+          </div>
+
         </div>
+
+        <!-- Inventory status row -->
+        <div class="hv-inv-hdr">
+          <span class="hv-inv-label">Inventory</span>
+          <span class="hv-inv-alert">⚠ 1 item low</span>
+        </div>
+        <div class="hv-stock-row">
+          <div class="hv-stock-item"><span class="hv-si-name">Coffee Beans</span><span class="hv-si-val">24 kg</span><span class="status-ok">OK</span></div>
+          <div class="hv-stock-item"><span class="hv-si-name">Whole Milk</span><span class="hv-si-val">3 L</span><span class="status-low">Low !</span></div>
+          <div class="hv-stock-item"><span class="hv-si-name">Sugar</span><span class="hv-si-val">12 kg</span><span class="status-ok">OK</span></div>
+          <div class="hv-stock-item"><span class="hv-si-name">Cups</span><span class="hv-si-val">340</span><span class="status-ok">OK</span></div>
+          <div class="hv-stock-item"><span class="hv-si-name">Pastries</span><span class="hv-si-val">38 pcs</span><span class="status-ok">OK</span></div>
+          <div class="hv-stock-item"><span class="hv-si-name">Cream</span><span class="hv-si-val">8 L</span><span class="status-ok">OK</span></div>
+        </div>
+
+        <!-- Suppliers + Demand Forecast -->
+        <div class="hv-bottom-row">
+
+          <!-- Suppliers panel -->
+          <div class="hv-suppliers">
+            <div class="hv-section-hdr">
+              <span>Suppliers</span>
+              <span class="hv-sec-badge">4 Active</span>
+            </div>
+            <div class="hv-sup-item">
+              <div class="hv-sup-dot ok"></div>
+              <div class="hv-sup-info">
+                <span class="hv-sup-name">Al-Reef Dairy</span>
+                <span class="hv-sup-detail">Milk · Delivered Today</span>
+              </div>
+              <span class="hv-sup-score">98%</span>
+            </div>
+            <div class="hv-sup-item">
+              <div class="hv-sup-dot warn"></div>
+              <div class="hv-sup-info">
+                <span class="hv-sup-name">Hassan Coffee Co.</span>
+                <span class="hv-sup-detail">Beans · Delayed 1 day</span>
+              </div>
+              <span class="hv-sup-score warn">84%</span>
+            </div>
+            <div class="hv-sup-item">
+              <div class="hv-sup-dot ok"></div>
+              <div class="hv-sup-info">
+                <span class="hv-sup-name">Sweet Bakehouse</span>
+                <span class="hv-sup-detail">Pastries · Yesterday</span>
+              </div>
+              <span class="hv-sup-score">96%</span>
+            </div>
+            <div class="hv-sup-item">
+              <div class="hv-sup-dot ok"></div>
+              <div class="hv-sup-info">
+                <span class="hv-sup-name">Amman Sugar Ltd</span>
+                <span class="hv-sup-detail">Sugar · 3 days ago</span>
+              </div>
+              <span class="hv-sup-score">91%</span>
+            </div>
+          </div>
+
+          <!-- Demand Forecast panel -->
+          <div class="hv-demand">
+            <div class="hv-section-hdr">
+              <span>Demand Forecast</span>
+              <span class="hv-sec-badge up">+7 Days</span>
+            </div>
+            <div class="hv-demand-bars">
+              <div class="hv-dem-col">
+                <div class="hv-dem-bar" style="--bh:32px"></div>
+                <span class="hv-dem-day">Mon</span>
+              </div>
+              <div class="hv-dem-col">
+                <div class="hv-dem-bar" style="--bh:41px"></div>
+                <span class="hv-dem-day">Tue</span>
+              </div>
+              <div class="hv-dem-col">
+                <div class="hv-dem-bar" style="--bh:29px"></div>
+                <span class="hv-dem-day">Wed</span>
+              </div>
+              <div class="hv-dem-col">
+                <div class="hv-dem-bar" style="--bh:46px"></div>
+                <span class="hv-dem-day">Thu</span>
+              </div>
+              <div class="hv-dem-col">
+                <div class="hv-dem-bar" style="--bh:50px"></div>
+                <span class="hv-dem-day">Fri</span>
+              </div>
+              <div class="hv-dem-col">
+                <div class="hv-dem-bar hv-dem-forecast" style="--bh:37px"></div>
+                <span class="hv-dem-day fc">Sat</span>
+              </div>
+              <div class="hv-dem-col">
+                <div class="hv-dem-bar hv-dem-forecast" style="--bh:42px"></div>
+                <span class="hv-dem-day fc">Sun</span>
+              </div>
+            </div>
+            <div class="hv-dem-legend">
+              <span class="hv-dem-leg-actual">Actual</span>
+              <span class="hv-dem-leg-forecast">Forecast</span>
+            </div>
+          </div>
+
+        </div>
+
       </div>
-      <div class="hv-float f1"><span>📦</span><div><div class="hf-title">Low Stock Alert</div><div class="hf-sub">Whole Milk — Reorder now</div></div></div>
-      <div class="hv-float f2"><span>🏆</span><div><div class="hf-title">Best Seller Today</div><div class="hf-sub">Espresso × 124 cups</div></div></div>
+
+      <!-- Floating: stock alert -->
+      <div class="hv-float f1">
+        <span>📦</span>
+        <div><div class="hf-title">Low Stock Alert</div><div class="hf-sub">Whole Milk — Reorder now</div></div>
+      </div>
+
+      <!-- Floating: real website preview — Clarix Coffee -->
+      <div class="hv-float f2 hv-web-prev">
+        <div class="hwp-bar">
+          <div class="hwp-dots">
+            <span style="background:#ff5f56"></span>
+            <span style="background:#ffbd2e"></span>
+            <span style="background:#27c93f"></span>
+          </div>
+          <div class="hwp-url">clarixcoffee.com</div>
+        </div>
+        <!-- Mini nav -->
+        <div class="hwp-nav">
+          <span class="hwp-brand">CLARIX COFFEE</span>
+          <div class="hwp-nav-links"><span>Menu</span><span>Order</span><span>About</span></div>
+        </div>
+        <!-- Hero with real coffee photo -->
+        <div class="hwp-hero">
+          <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=400&q=80" alt="Clarix Coffee" class="hwp-hero-photo" loading="lazy"/>
+          <div class="hwp-hero-overlay">
+            <div class="hwp-hero-title">CLARIX COFFEE</div>
+            <div class="hwp-hero-sub">The Best Coffee in Amman</div>
+            <div class="hwp-hero-btn">Order Now →</div>
+          </div>
+        </div>
+        <!-- Mini service cards -->
+        <div class="hwp-cards">
+          <div class="hwp-card">☕<span>Espresso</span></div>
+          <div class="hwp-card">🥛<span>Latte</span></div>
+          <div class="hwp-card">🧁<span>Pastries</span></div>
+        </div>
+        <div class="hwp-label">🌐 Clarix Website Preview</div>
+      </div>
+
     </div>
   </div>
-  <div class="hero-scroll-hint"><span>Scroll to explore</span><div class="scroll-arrow"></div></div>
+  <div class="hero-scroll-hint">
+    <span>Scroll to explore</span>
+    <div class="scroll-mouse"><div class="scroll-dot"></div></div>
+  </div>
 </section>
 
 <!-- ② SERVICES — what we offer -->
@@ -130,7 +352,7 @@
             <li><div class="sli-icon">👥</div><div><strong>Customer Behavior Analytics</strong> — purchase patterns & lifetime value</div></li>
             <li><div class="sli-icon">📌</div><div><strong>Employee Performance KPIs</strong> — efficiency metrics & contribution tracking</div></li>
           </ul>
-          <div class="svc-works-for"><span>Perfect for:</span> Coffee Shops · Supermarkets · Restaurants · Retail · Jewelry · Clothing</div>
+          <div class="svc-works-for"><span>Perfect for:</span> Coffee Houses · Supermarkets · Restaurants · Retail · Jewelry · Clothing</div>
           <a href="#contact" class="btn-primary">Request Dashboard</a>
         </div>
       </div>
@@ -354,10 +576,10 @@
     <div class="ind-photo-grid">
 
       <div class="ind-photo-card">
-        <img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=600&q=80" alt="Coffee Shops" loading="lazy"/>
+        <img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=600&q=80" alt="Coffee Houses" loading="lazy"/>
         <div class="ind-photo-overlay">
           <span class="ind-emoji-big">☕</span>
-          <strong>Coffee Shops</strong>
+          <strong>Coffee Houses</strong>
           <p>Sales tracking, ingredient management & loyalty programs</p>
         </div>
       </div>
@@ -440,7 +662,7 @@
 
       <div class="result-card">
         <div class="rc-emoji">☕</div>
-        <div class="rc-sector">Coffee Shops &amp; Cafés</div>
+        <div class="rc-sector">Coffee Houses &amp; Cafés</div>
         <div class="rc-big"><span class="counter" data-target="32" data-suffix="%">0%</span></div>
         <div class="rc-title">Average Revenue Increase</div>
         <div class="rc-chips">
@@ -497,7 +719,7 @@
     <div class="about-body">
       <div class="about-quote-bar">"We don't sell software. We solve business problems."</div>
       <p>We are Clarix Solutions, a data and web development company based in Amman, Jordan. We specialize in custom business dashboards and professional websites that help owners understand their numbers, manage operations, and make smarter decisions every single day.</p>
-      <p>Our team combines expertise in data analytics, software development, and business operations. We have worked with coffee shops, supermarkets, retail stores, restaurants, and many other businesses across Jordan — each with unique needs, and each getting a system built specifically for them.</p>
+      <p>Our team combines expertise in data analytics, software development, and business operations. We have worked with coffee houses, supermarkets, retail stores, restaurants, and many other businesses across Jordan — each with unique needs, and each getting a system built specifically for them.</p>
       <p>We believe every business, no matter its size, deserves access to the same powerful tools large companies use — at an affordable price, with a solution that fits exactly how you work.</p>
     </div>
     <div class="about-stats">
@@ -566,7 +788,7 @@
       <div class="fg"><label>Email Address</label><input type="email" name="email" placeholder="you@yourbusiness.com" required/></div>
       <div class="fg"><label>Business Type</label>
         <select name="business_type">
-          <option>Coffee Shop / Café</option>
+          <option>Coffee House / Café</option>
           <option>Supermarket / Grocery</option>
           <option>Retail Store</option>
           <option>Jewelry Shop</option>
