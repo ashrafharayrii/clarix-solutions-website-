@@ -11,8 +11,8 @@ import Footer from './components/Footer'
 
 export default function App() {
   return (
-    <div className="bg-grid" style={{ minHeight:'100vh' }}>
-      {/* Particle mesh — fixed behind all content */}
+    <>
+      {/* Particle mesh canvas — fixed behind all content */}
       <ParticleBackground />
 
       {/* All page content sits above the canvas */}
@@ -27,6 +27,6 @@ export default function App() {
         <Contact />
         <Footer />
       </div>
-    </div>
+    </>
   )
 }

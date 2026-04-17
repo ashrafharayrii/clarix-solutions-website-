@@ -1,378 +1,407 @@
-import { useRef, useEffect, useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion'
-import { ArrowRight, TrendingUp, TrendingDown } from 'lucide-react'
 
-/* ── Typewriter ─────────────────────────────────────────── */
-const WORDS = ['Coffee Houses','Supermarkets','Retail Stores','Restaurants','Jewelry Shops','Pharmacies','Bakeries','Clothing Stores']
+/* ── Typewriter ───────────────────────────────────────────── */
+const WORDS = ['Coffee Houses', 'Supermarkets', 'Restaurants', 'Retail Stores', 'Jewelry Shops', 'Pharmacies', 'Clothing Stores', 'Bakeries']
 
 function useTypewriter(words) {
-  const [text, setText]       = useState('')
+  const [text, setText] = useState('')
   const [wordIdx, setWordIdx] = useState(0)
   const [charIdx, setCharIdx] = useState(0)
-  const [del, setDel]         = useState(false)
+  const [deleting, setDeleting] = useState(false)
 
   useEffect(() => {
-    const word  = words[wordIdx]
-    let delay   = del ? 55 : 100
-    if (!del && charIdx === word.length) delay = 1800
-    if (del  && charIdx === 0)           delay = 320
+    const word = words[wordIdx]
+    let delay = deleting ? 55 : 100
+    if (!deleting && charIdx === word.length) delay = 1800
+    if (deleting && charIdx === 0) delay = 320
     const t = setTimeout(() => {
-      if (!del && charIdx === word.length) { setDel(true); return }
-      if (del  && charIdx === 0)           { setDel(false); setWordIdx(i => (i+1) % words.length); return }
-      setText(word.slice(0, del ? charIdx - 1 : charIdx + 1))
-      setCharIdx(i => del ? i - 1 : i + 1)
+      if (!deleting && charIdx === word.length) { setDeleting(true); return }
+      if (deleting && charIdx === 0) { setDeleting(false); setWordIdx(i => (i + 1) % words.length); return }
+      setText(word.slice(0, deleting ? charIdx - 1 : charIdx + 1))
+      setCharIdx(i => deleting ? i - 1 : i + 1)
     }, delay)
     return () => clearTimeout(t)
-  }, [charIdx, del, wordIdx, words])
+  }, [charIdx, deleting, wordIdx, words])
+
   return text
 }
 
-/* ── Animated counter ───────────────────────────────────── */
-function useCounter(target, active) {
+/* ── Animated counter ─────────────────────────────────────── */
+function useCounter(target, triggered) {
   const [val, setVal] = useState(0)
   useEffect(() => {
-    if (!active) return
+    if (!triggered) return
+    const duration = 1500
     const start = performance.now()
-    const tick  = (now) => {
-      const p     = Math.min((now - start) / 1500, 1)
+    const tick = (now) => {
+      const p = Math.min((now - start) / duration, 1)
       const eased = 1 - Math.pow(1 - p, 3)
       setVal(Math.floor(eased * target))
       if (p < 1) requestAnimationFrame(tick)
       else setVal(target)
     }
     requestAnimationFrame(tick)
-  }, [active, target])
+  }, [triggered, target])
   return val
 }
 
-/* ── Animated SVG data mesh ─────────────────────────────── */
-function DataMesh() {
+/* ── Animated vertical bar (grow-up then breathe) ────────── */
+const BAR_MAXH = 58
+const BAR_W = 17
+const BAR_GAP = 8
+
+const WEEK_BARS = [
+  { label: 'Mo', pct: 52, hi: false },
+  { label: 'Tu', pct: 70, hi: false },
+  { label: 'We', pct: 44, hi: false },
+  { label: 'Th', pct: 85, hi: true  },
+  { label: 'Fr', pct: 96, hi: true  },
+  { label: 'Sa', pct: 73, hi: false },
+  { label: 'Su', pct: 55, hi: false },
+]
+
+function AnimatedBar({ x, barH, delay, gradId, label }) {
+  const [phase, setPhase] = useState('enter')
+
   return (
-    <svg viewBox="0 0 500 500" style={{ width: '100%', height: '100%' }} aria-hidden="true">
-      {/* Grid */}
-      <g opacity="0.12">
-        {[100,200,300,400].map(v => (
-          <g key={v}>
-            <line x1={v} y1="0"   x2={v} y2="500" stroke="#3B82F6" strokeWidth="0.6"/>
-            <line x1="0" y1={v}   x2="500" y2={v}  stroke="#3B82F6" strokeWidth="0.6"/>
-          </g>
-        ))}
-      </g>
-
-      {/* Dashed connection lines */}
-      {[
-        [250,250, 150,150],[250,250, 350,150],[250,250, 400,280],
-        [250,250, 340,385],[250,250, 148,370],[250,250, 98,250],
-        [150,150, 350,150],[350,150, 400,280],[400,280, 340,385],
-        [340,385, 148,370],[148,370,  98,250],[ 98,250, 150,150],
-        [250,80,  150,150],[250,80,  350,150],
-      ].map(([x1,y1,x2,y2], i) => (
-        <line key={i} x1={x1} y1={y1} x2={x2} y2={y2}
-          className="mesh-line"
-          style={{ animationDelay: `${-i * 0.22}s` }}
-        />
-      ))}
-
-      {/* Secondary faint connections */}
-      {[
-        [50,180, 150,150],[50,320, 98,250],
-        [450,180,400,280],[450,380,340,385],
-      ].map(([x1,y1,x2,y2], i) => (
-        <line key={i} x1={x1} y1={y1} x2={x2} y2={y2}
-          stroke="rgba(96,165,250,0.22)" strokeWidth="1"
-          strokeDasharray="4 6"
-          style={{ animation: `dash-flow ${3.5 + i * 0.5}s linear infinite`, animationDelay: `${-i * 0.7}s` }}
-        />
-      ))}
-
-      {/* Centre pulsing node */}
-      <circle cx="250" cy="250" r="8" fill="#3B82F6" opacity="0.9">
-        <animate attributeName="r"       values="8;13;8"     dur="3s" repeatCount="indefinite"/>
-        <animate attributeName="opacity" values="0.9;1;0.9"  dur="3s" repeatCount="indefinite"/>
-      </circle>
-      <circle cx="250" cy="250" r="22" fill="none" stroke="#3B82F6" strokeWidth="1" opacity="0.25">
-        <animate attributeName="r"       values="22;34;22"   dur="3s" repeatCount="indefinite"/>
-        <animate attributeName="opacity" values="0.25;0;0.25" dur="3s" repeatCount="indefinite"/>
-      </circle>
-
-      {/* Satellite nodes */}
-      {[
-        [150,150,2.4],[350,150,2.8],[400,280,3.2],
-        [340,385,2.6],[148,370,3.6],[ 98,250,3.0],[250,80,2.2],
-      ].map(([cx,cy,dur], i) => (
-        <circle key={i} cx={cx} cy={cy} r="5" fill="#3B82F6">
-          <animate attributeName="r"       values="5;8;5"   dur={`${dur}s`} repeatCount="indefinite" begin={`${-i*0.4}s`}/>
-          <animate attributeName="opacity" values="0.5;1;0.5" dur={`${dur}s`} repeatCount="indefinite" begin={`${-i*0.4}s`}/>
-        </circle>
-      ))}
-
-      {/* Outer accent dots */}
-      {[[50,180],[50,320],[450,180],[450,380]].map(([cx,cy], i) => (
-        <circle key={i} cx={cx} cy={cy} r="3" fill="#60A5FA" opacity="0.4"/>
-      ))}
-
-      {/* Data labels */}
-      <text x="358" y="142" fill="#60A5FA" fontSize="10" opacity="0.65" fontFamily="Plus Jakarta Sans,sans-serif">Sales</text>
-      <text x="406" y="275" fill="#60A5FA" fontSize="10" opacity="0.65" fontFamily="Plus Jakarta Sans,sans-serif">Revenue</text>
-      <text x="346" y="406" fill="#60A5FA" fontSize="10" opacity="0.65" fontFamily="Plus Jakarta Sans,sans-serif">KPIs</text>
-      <text x="52"  y="142" fill="#60A5FA" fontSize="10" opacity="0.65" fontFamily="Plus Jakarta Sans,sans-serif">Inventory</text>
-      <text x="44"  y="378" fill="#60A5FA" fontSize="10" opacity="0.65" fontFamily="Plus Jakarta Sans,sans-serif">Analytics</text>
-    </svg>
+    <g>
+      <motion.rect
+        x={x}
+        width={BAR_W}
+        rx={3}
+        fill={`url(#${gradId})`}
+        initial={{ height: 0, y: BAR_MAXH }}
+        animate={
+          phase === 'enter'
+            ? { height: barH, y: BAR_MAXH - barH }
+            : {
+                height: [barH, barH + 5, barH],
+                y: [BAR_MAXH - barH, BAR_MAXH - barH - 5, BAR_MAXH - barH],
+              }
+        }
+        transition={
+          phase === 'enter'
+            ? { duration: 0.65, delay, ease: [0.34, 1.56, 0.64, 1] }
+            : { duration: 2.2 + delay * 0.4, repeat: Infinity, ease: 'easeInOut' }
+        }
+        onAnimationComplete={() => { if (phase === 'enter') setPhase('breathe') }}
+      />
+      <text
+        x={x + BAR_W / 2}
+        y={BAR_MAXH + 10}
+        textAnchor="middle"
+        fontSize="7"
+        fill="rgba(255,255,255,0.28)"
+      >
+        {label}
+      </text>
+    </g>
   )
 }
 
-/* ── Hero ───────────────────────────────────────────────── */
-export default function Hero() {
-  const typed       = useTypewriter(WORDS)
-  const [statsOn, setStatsOn] = useState(false)
-  const c50 = useCounter(50,  statsOn)
-  const c99 = useCounter(99,  statsOn)
+/* ── Dashboard Card ───────────────────────────────────────── */
+function DashboardCard() {
+  const cardRef = useRef(null)
+  const [inView, setInView] = useState(false)
 
-  /* cursor parallax */
-  const sectionRef  = useRef(null)
-  const rawX        = useMotionValue(0)
-  const rawY        = useMotionValue(0)
-  const springX     = useSpring(useTransform(rawX, [-1,1], [-22,22]), { stiffness:80, damping:22 })
-  const springY     = useSpring(useTransform(rawY, [-1,1], [-22,22]), { stiffness:80, damping:22 })
+  // KPI counters
+  const revenue = useCounter(24850, inView)
+  const orders  = useCounter(1284,  inView)
 
-  const handleMouse = (e) => {
-    const rect = sectionRef.current?.getBoundingClientRect()
+  // 3D tilt
+  const mouseX = useMotionValue(0)
+  const mouseY = useMotionValue(0)
+  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [9, -9]),  { stiffness: 180, damping: 22 })
+  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-12, 12]), { stiffness: 180, damping: 22 })
+
+  const onMouseMove = (e) => {
+    const rect = cardRef.current?.getBoundingClientRect()
     if (!rect) return
-    rawX.set((e.clientX - rect.left) / rect.width  * 2 - 1)
-    rawY.set((e.clientY - rect.top)  / rect.height * 2 - 1)
+    mouseX.set((e.clientX - rect.left) / rect.width  - 0.5)
+    mouseY.set((e.clientY - rect.top)  / rect.height - 0.5)
   }
-  const handleLeave = () => { rawX.set(0); rawY.set(0) }
+  const onMouseLeave = () => { mouseX.set(0); mouseY.set(0) }
 
-  /* magnetic buttons */
-  useEffect(() => {
-    const btns = document.querySelectorAll('.magnetic')
-    btns.forEach(btn => {
-      const move  = (e) => {
-        const r = btn.getBoundingClientRect()
-        const x = (e.clientX - r.left - r.width  / 2) * 0.28
-        const y = (e.clientY - r.top  - r.height / 2) * 0.28
-        btn.style.transform = `translate(${x}px,${y}px)`
-      }
-      const leave = () => { btn.style.transform = 'translate(0,0)' }
-      btn.addEventListener('mousemove', move)
-      btn.addEventListener('mouseleave', leave)
-      return () => { btn.removeEventListener('mousemove', move); btn.removeEventListener('mouseleave', leave) }
-    })
-  }, [])
+  const SVG_W = WEEK_BARS.length * (BAR_W + BAR_GAP) - BAR_GAP
+  const SVG_H = BAR_MAXH + 14
 
   return (
-    <section
-      id="hero"
-      ref={sectionRef}
-      onMouseMove={handleMouse}
-      onMouseLeave={handleLeave}
-      style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center',
-               paddingTop: 100, paddingBottom: 80, overflow: 'hidden' }}
+    <motion.div
+      ref={cardRef}
+      className="hv-card hv-card-glow"
+      onMouseMove={onMouseMove}
+      onMouseLeave={onMouseLeave}
+      onViewportEnter={() => setInView(true)}
+      style={{ rotateX, rotateY, transformStyle: 'preserve-3d', perspective: 1200 }}
+      whileHover={{ scale: 1.025 }}
+      transition={{ scale: { duration: 0.3 } }}
     >
-      {/* Background orbs */}
-      <div aria-hidden="true">
-        <div className="orb" style={{ top: '-120px', left: '-80px',  width: 380, height: 380,
-          background: 'radial-gradient(circle,rgba(59,130,246,0.28),transparent 70%)' }}/>
-        <div className="orb" style={{ top: '40%',  right: '-100px', width: 300, height: 300,
-          background: 'radial-gradient(circle,rgba(79,70,229,0.2),transparent 70%)',
-          animationDelay: '-2.5s' }}/>
-        <div className="orb" style={{ bottom: 0, left: '30%', width: 240, height: 240,
-          background: 'radial-gradient(circle,rgba(59,130,246,0.12),transparent 70%)',
-          animationDelay: '-4s' }}/>
+      {/* ── Top bar ── */}
+      <div className="hv-topbar">
+        <div className="hv-dots"><span /><span /><span /></div>
+        <span className="hv-title">Clarix — Live Dashboard</span>
+        <span className="hv-live">● Live</span>
       </div>
 
-      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px', width: '100%' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(300px,1fr))',
-                      gap: 64, alignItems: 'center' }}>
-
-          {/* ── Text column ── */}
-          <motion.div
-            initial={{ opacity: 0, y: 32 }}
-            animate={{ opacity: 1,  y:  0 }}
-            transition={{ duration: 0.7, ease: [0.16,1,0.3,1] }}
-            style={{ position: 'relative', zIndex: 1 }}
-          >
-            {/* Badge */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.85 }}
-              animate={{ opacity: 1,  scale: 1     }}
-              transition={{ duration: 0.5, delay: 0.15 }}
-            >
-              <span className="sec-badge">
-                <span style={{ width:7, height:7, borderRadius:'50%', background:'#3B82F6',
-                               animation:'pulse-orb 2s ease-in-out infinite' }}/>
-                Trusted by 50+ businesses · Amman, Jordan
-              </span>
-            </motion.div>
-
-            {/* Headline */}
-            <motion.h1
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1,  y:  0 }}
-              transition={{ duration: 0.65, delay: 0.2 }}
-              style={{ fontSize: 'clamp(2.4rem,5vw,3.8rem)', fontWeight: 800,
-                       lineHeight: 1.1, letterSpacing: '-0.03em', marginBottom: 20 }}
-            >
-              <span style={{ color: '#F8FAFC' }}>Transform Data</span><br/>
-              <span className="gradient-text">Into Decisions</span><br/>
-              <span style={{ color: '#F8FAFC' }}>That Win.</span>
-            </motion.h1>
-
-            {/* Typewriter */}
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1,  y:  0 }}
-              transition={{ duration: 0.5, delay: 0.28 }}
-              style={{ fontSize: 18, color: '#64748B', marginBottom: 16 }}
-            >
-              Built for{' '}
-              <span style={{ color: '#60A5FA', fontWeight: 600 }}>{typed}</span>
-              <span style={{ color:'#3B82F6', fontWeight:400, animation:'pulse-orb 1s steps(1) infinite' }}>|</span>
-            </motion.div>
-
-            {/* Sub */}
-            <motion.p
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1,  y:  0 }}
-              transition={{ duration: 0.5, delay: 0.32 }}
-              style={{ fontSize: 16, color: '#94A3B8', lineHeight: 1.7,
-                       maxWidth: 520, marginBottom: 36 }}
-            >
-              We craft intelligent dashboards and premium websites that don't just look extraordinary —
-              they drive measurable growth for your business.
-            </motion.p>
-
-            {/* Buttons */}
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1,  y:  0 }}
-              transition={{ duration: 0.5, delay: 0.38 }}
-              style={{ display: 'flex', flexWrap: 'wrap', gap: 14, marginBottom: 44 }}
-            >
-              <button
-                onClick={() => { const el=document.getElementById('services'); el?.scrollIntoView({behavior:'smooth',block:'start'}) }}
-                className="btn-primary magnetic"
-                style={{ padding: '14px 28px', borderRadius: 18, fontSize: 15, fontWeight: 700, border: 'none' }}
-              >
-                Explore Services
-                <ArrowRight size={16} />
-              </button>
-              <button
-                onClick={() => { const el=document.getElementById('contact'); el?.scrollIntoView({behavior:'smooth',block:'start'}) }}
-                className="btn-outline magnetic"
-                style={{ padding: '14px 28px', borderRadius: 18, fontSize: 15, fontWeight: 600, border:'1px solid rgba(255,255,255,0.14)' }}
-              >
-                Free Consultation
-              </button>
-            </motion.div>
-
-            {/* Stats */}
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1,  y:  0 }}
-              transition={{ duration: 0.5, delay: 0.46 }}
-              onViewportEnter={() => setStatsOn(true)}
-              style={{ display: 'flex', alignItems: 'center', gap: 28 }}
-            >
-              {[
-                { val: `${c50}+`, label: 'Projects Delivered' },
-                { val: `${c99}%`, label: 'Client Satisfaction' },
-                { val: '100%',    label: 'Custom Built' },
-              ].map((s, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                  {i > 0 && <div style={{ width:1, height:36, background:'#1E293B' }}/>}
-                  <div>
-                    <div style={{ fontSize: 22, fontWeight: 800, color: '#F8FAFC', letterSpacing:'-0.03em' }}>{s.val}</div>
-                    <div style={{ fontSize: 11, color: '#475569', fontWeight: 500 }}>{s.label}</div>
-                  </div>
-                </div>
-              ))}
-            </motion.div>
-          </motion.div>
-
-          {/* ── Visual column ── */}
-          <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            animate={{ opacity: 1,  x:  0 }}
-            transition={{ duration: 0.8, delay: 0.2, ease: [0.16,1,0.3,1] }}
-            style={{ position: 'relative', height: 520, display: 'flex',
-                     alignItems: 'center', justifyContent: 'center' }}
-          >
-            {/* Centre radial glow */}
-            <div aria-hidden="true" style={{
-              position: 'absolute', inset: 0, display: 'flex',
-              alignItems: 'center', justifyContent: 'center', pointerEvents: 'none',
-            }}>
-              <div style={{
-                width: 340, height: 340, borderRadius: '50%',
-                background: 'radial-gradient(circle,rgba(59,130,246,0.22) 0%,transparent 70%)',
-                filter: 'blur(40px)',
-              }}/>
-            </div>
-
-            {/* Parallax mesh layer */}
-            <motion.div
-              style={{ x: springX, y: springY, position: 'absolute',
-                       inset: 0, display:'flex', alignItems:'center', justifyContent:'center' }}
-            >
-              <div style={{ width: '90%', height: '90%', maxWidth: 440 }}>
-                <DataMesh />
-              </div>
-            </motion.div>
-
-            {/* Floating metric card — top right */}
-            <motion.div
-              className="metric-float glass"
-              style={{
-                position: 'absolute', top: 48, right: 0,
-                padding: '14px 18px', borderRadius: 18, minWidth: 160,
-              }}
-            >
-              <div style={{ fontSize: 11, color: '#64748B', marginBottom: 4 }}>Monthly Revenue</div>
-              <div style={{ fontSize: 20, fontWeight: 800, color: '#F8FAFC', letterSpacing: '-0.03em' }}>
-                $284,500
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 4 }}>
-                <TrendingUp size={12} color="#22C55E" />
-                <span style={{ fontSize: 11, color: '#22C55E', fontWeight: 600 }}>+18.4% this month</span>
-              </div>
-            </motion.div>
-
-            {/* Floating metric card — bottom left */}
-            <motion.div
-              className="metric-float glass"
-              style={{
-                position: 'absolute', bottom: 80, left: 0,
-                padding: '14px 18px', borderRadius: 18, minWidth: 155,
-              }}
-            >
-              <div style={{ fontSize: 11, color: '#64748B', marginBottom: 4 }}>Inventory Level</div>
-              <div style={{ fontSize: 20, fontWeight: 800, color: '#F8FAFC', letterSpacing: '-0.03em' }}>
-                94.2%
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 4 }}>
-                <TrendingDown size={12} color="#F59E0B" />
-                <span style={{ fontSize: 11, color: '#F59E0B', fontWeight: 600 }}>Reorder 3 items</span>
-              </div>
-            </motion.div>
-          </motion.div>
+      {/* ── KPI row with counters ── */}
+      <div className="hv-kpis">
+        <div className="hv-kpi">
+          <div className="hv-kpi-ico">💰</div>
+          <div className="hv-kpi-info">
+            <div className="hv-kpi-label">Revenue</div>
+            <div className="hv-kpi-val">${revenue.toLocaleString()}</div>
+          </div>
+          <div className="hv-kpi-delta up">▲ 18%</div>
+        </div>
+        <div className="hv-kpi">
+          <div className="hv-kpi-ico">🛒</div>
+          <div className="hv-kpi-info">
+            <div className="hv-kpi-label">Orders</div>
+            <div className="hv-kpi-val">{orders.toLocaleString()}</div>
+          </div>
+          <div className="hv-kpi-delta up">▲ 12%</div>
+        </div>
+        <div className="hv-kpi">
+          <div className="hv-kpi-ico">📦</div>
+          <div className="hv-kpi-info">
+            <div className="hv-kpi-label">Stock</div>
+            <div className="hv-kpi-val">94%</div>
+          </div>
+          <div className="hv-kpi-delta down">▼ 2%</div>
         </div>
       </div>
 
-      {/* Scroll hint */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.2, duration: 0.6 }}
-        style={{ position: 'absolute', bottom: 28, left: '50%', transform: 'translateX(-50%)',
-                 display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}
-      >
-        <span style={{ fontSize: 10, color: '#334155', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-          Scroll
-        </span>
-        <div style={{ width: 1, height: 40,
-          background: 'linear-gradient(to bottom,rgba(59,130,246,0.5),transparent)' }}/>
-      </motion.div>
+      {/* ── Charts body ── */}
+      <div className="hv-body">
+
+        {/* LEFT — self-drawing line chart */}
+        <div className="hv-chart-panel">
+          <div className="hv-chart-hdr">
+            <span className="hv-chart-lbl">Revenue Trend</span>
+            <span className="hv-chart-total">$24,850</span>
+          </div>
+
+          <svg className="hv-linechart" viewBox="0 0 220 65" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%"   stopColor="#2B68E9" stopOpacity="0.32" />
+                <stop offset="100%" stopColor="#2B68E9" stopOpacity="0" />
+              </linearGradient>
+            </defs>
+
+            {/* Area fill — fades in once line is drawn */}
+            <motion.path
+              d="M0,54 C14,50 24,47 40,41 S58,44 76,31 S98,35 116,20 S136,25 155,11 S176,17 220,15 L220,65 L0,65Z"
+              fill="url(#areaGrad)"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.7, delay: 2.1 }}
+            />
+
+            {/* Line — draws itself left to right */}
+            <motion.path
+              d="M0,54 C14,50 24,47 40,41 S58,44 76,31 S98,35 116,20 S136,25 155,11 S176,17 220,15"
+              fill="none"
+              stroke="#2B68E9"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              initial={{ pathLength: 0, opacity: 0.6 }}
+              animate={{ pathLength: 1, opacity: 1 }}
+              transition={{ duration: 1.8, ease: 'easeInOut', delay: 0.35 }}
+            />
+
+            {/* Peak point — appears then pulses indefinitely */}
+            <motion.circle
+              cx={155} cy={11} r={3.5} fill="#2B68E9"
+              filter="url(#dotGlow)"
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.25, delay: 1.9 }}
+            >
+              <animate attributeName="r"       values="3.5;5.8;3.5" dur="2s"   repeatCount="indefinite" begin="2.2s" />
+              <animate attributeName="opacity" values="1;0.35;1"    dur="2s"   repeatCount="indefinite" begin="2.2s" />
+            </motion.circle>
+
+            {/* Trailing end point */}
+            <motion.circle
+              cx={220} cy={15} r={2.5} fill="#10B981"
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.25, delay: 2.05 }}
+            >
+              <animate attributeName="r"       values="2.5;4.5;2.5" dur="1.8s" repeatCount="indefinite" begin="2.3s" />
+              <animate attributeName="opacity" values="1;0.4;1"     dur="1.8s" repeatCount="indefinite" begin="2.3s" />
+            </motion.circle>
+
+            {/* Glow filter for the peak point */}
+            <defs>
+              <filter id="dotGlow" x="-80%" y="-80%" width="260%" height="260%">
+                <feGaussianBlur stdDeviation="2.5" result="blur" />
+                <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+              </filter>
+            </defs>
+          </svg>
+
+          <div className="hv-chart-days">
+            <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+          </div>
+        </div>
+
+        {/* RIGHT — animated vertical bar chart */}
+        <div className="hv-products-panel">
+          <div className="hv-prod-hdr">Daily Sales</div>
+          <svg
+            viewBox={`0 0 ${SVG_W} ${SVG_H}`}
+            className="hv-bars-svg"
+            overflow="visible"
+          >
+            <defs>
+              {WEEK_BARS.map((b, i) => (
+                <linearGradient key={i} id={`barGrad${i}`} x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%"   stopColor={b.hi ? '#7AAEFF' : '#3B78F5'} stopOpacity="0.95" />
+                  <stop offset="100%" stopColor={b.hi ? '#2B68E9' : '#0E2870'} stopOpacity="0.35" />
+                </linearGradient>
+              ))}
+            </defs>
+            {WEEK_BARS.map((bar, i) => (
+              <AnimatedBar
+                key={bar.label}
+                x={i * (BAR_W + BAR_GAP)}
+                barH={(bar.pct / 100) * BAR_MAXH}
+                delay={0.28 + i * 0.08}
+                gradId={`barGrad${i}`}
+                label={bar.label}
+              />
+            ))}
+          </svg>
+        </div>
+
+      </div>
+    </motion.div>
+  )
+}
+
+/* ── Hero section ─────────────────────────────────────────── */
+export default function Hero() {
+  const typed = useTypewriter(WORDS)
+  const [countersStarted, setCountersStarted] = useState(false)
+  const c50 = useCounter(50, countersStarted)
+  const c10 = useCounter(10, countersStarted)
+
+  const scrollTo = (id) => {
+    const el = document.getElementById(id)
+    if (!el) return
+    window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 80, behavior: 'smooth' })
+  }
+
+  return (
+    <section id="hero" style={{ position: 'relative' }}>
+      <div className="hero-orb orb-1" />
+      <div className="hero-orb orb-2" />
+      <div className="hero-orb orb-3" />
+      <div className="hero-bg-grid" />
+      <div className="hero-bg-logo" />
+
+      {/* Floating geometric shapes */}
+      <div className="hero-geo hero-geo-1" />
+      <div className="hero-geo hero-geo-2" />
+      <div className="hero-geo hero-geo-3" />
+      <div className="hero-geo hero-geo-4" />
+
+      <div className="container hero-layout">
+
+        {/* ── Text column ── */}
+        <motion.div
+          className="hero-text"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: 'easeOut' }}
+        >
+          <motion.div
+            className="hero-badge"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <span className="hb-dot" />
+            Trusted by 50+ businesses · Amman, Jordan
+          </motion.div>
+
+          <h1>Track Your Business.<br /><span className="text-gradient-anim">Increase Your Profits.</span></h1>
+
+          <div className="hero-typewriter">
+            Built for <span className="typed-word">{typed}</span><span className="typed-cursor">|</span>
+          </div>
+
+          <p className="hero-sub">
+            We build custom business dashboards and professional websites — tailored to your exact operations. Real-time sales, inventory, supplier tracking, and employee performance, all in one place so you make smarter decisions every day.
+          </p>
+
+          <motion.div
+            className="hero-btns"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
+            <button className="btn-primary btn-hero-main" onClick={() => scrollTo('services')}>Explore Our Services ↓</button>
+            <button className="btn-outline-white" onClick={() => scrollTo('contact')}>Free Consultation</button>
+          </motion.div>
+
+          <motion.div
+            className="hero-metrics"
+            onViewportEnter={() => setCountersStarted(true)}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+          >
+            <div className="hm-item"><strong>{c50}+</strong><span>Projects Delivered</span></div>
+            <div className="hm-div" />
+            <div className="hm-item"><strong>{c10}+</strong><span>Industries Served</span></div>
+            <div className="hm-div" />
+            <div className="hm-item"><strong>100%</strong><span>Custom Built</span></div>
+          </motion.div>
+        </motion.div>
+
+        {/* ── Visual column ── */}
+        <motion.div
+          className="hero-visual"
+          initial={{ opacity: 0, x: 40 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, delay: 0.2, ease: 'easeOut' }}
+        >
+          <div className="hero-photo-wrap">
+            <img
+              src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=700&q=80"
+              alt="Business Analytics"
+              className="hero-photo-img"
+              loading="lazy"
+            />
+            <div className="hero-photo-mask" />
+          </div>
+
+          <DashboardCard />
+
+          <motion.div
+            className="hv-float f1"
+            animate={{ y: [0, -7, 0] }}
+            transition={{ duration: 2.8, repeat: Infinity, ease: 'easeInOut' }}
+          >
+            <span>📦</span>
+            <div>
+              <div className="hf-title">Low Stock Alert</div>
+              <div className="hf-sub">Whole Milk — Reorder now</div>
+            </div>
+          </motion.div>
+        </motion.div>
+
+      </div>
+
+      <div className="hero-scroll-hint">
+        <span>Scroll to explore</span>
+        <div className="scroll-mouse"><div className="scroll-dot" /></div>
+      </div>
     </section>
   )
 }
