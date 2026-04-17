@@ -26,6 +26,7 @@ jobs:
       - run: npm run build
       - name: Copy demo sites into dist
         run: |
+          touch dist/.nojekyll
           cp -r "coffee house" dist/
           cp -r resorant dist/
           cp -r jewllery dist/
