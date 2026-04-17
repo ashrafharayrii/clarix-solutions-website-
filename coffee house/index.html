@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clarix Coffee House — Amman, Jordan</title>
+  <meta name="description" content="Clarix Coffee House — Premium coffee, handcrafted desserts, and fresh juices in the heart of Amman, Jordan." />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar" id="navbar">
+  <a href="#home" class="logo">
+    <div class="logo-icon">
+      <img src="photos/cup of coffee.jpg" alt="Clarix Coffee Logo" class="logo-img" />
+    </div>
+    <span class="logo-text">Clari<span>x</span></span>
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#home">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#location">Location</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="dashboard.html" class="nav-cta"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+    <li><a href="../index.html" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);padding:9px 18px;border-radius:50px;font-size:13px;display:flex;align-items:center;gap:6px;transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.18)'" onmouseout="this.style.background='rgba(255,255,255,0.08)'"><i class="fas fa-arrow-left"></i> Back to Clarix</a></li>
+  </ul>
+  <div class="hamburger" id="hamburger">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-particles"></div>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <i class="fas fa-map-marker-alt"></i> Amman, Jordan
+    </div>
+    <h1>Where Every Sip Tells <span>A Story</span></h1>
+    <p>Experience the finest handcrafted coffee, indulgent desserts, and refreshing juices in a warm atmosphere that feels like home.</p>
+    <div class="hero-buttons">
+      <a href="#menu" class="btn-primary"><i class="fas fa-utensils"></i> Explore Menu</a>
+      <a href="#location" class="btn-outline"><i class="fas fa-directions"></i> Find Us</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-card">
+        <span class="num" data-target="850" data-suffix="+">0+</span>
+        <span class="label">Daily Visitors</span>
+      </div>
+      <div class="stat-card">
+        <span class="num" data-target="45" data-suffix="+">0+</span>
+        <span class="label">Menu Items</span>
+      </div>
+      <div class="stat-card">
+        <span class="num" data-target="4.8" data-decimal="true" data-prefix="★ ">★ 0</span>
+        <span class="label">Google Rating</span>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-indicator">
+    <span>Scroll</span>
+    <span class="arrow">↓</span>
+  </div>
+</section>
+
+<!-- ===== ABOUT ===== -->
+<section class="about" id="about">
+  <div class="about-images fade-in">
+    <img
+      src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&q=80"
+      alt="Clarix Coffee House interior"
+      class="about-img-main"
+      loading="lazy"
+    />
+    <img
+      src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&q=80"
+      alt="Latte art"
+      class="about-img-float"
+      loading="lazy"
+    />
+    <div class="about-badge">
+      <span class="num">5+</span>
+      <span class="text">Years of Passion</span>
+    </div>
+  </div>
+  <div class="about-content fade-in">
+    <div class="section-tag"><span></span> Our Story <span></span></div>
+    <h2 class="section-title">Crafting Moments, One Cup at a Time</h2>
+    <p class="section-subtitle">
+      Born in the heart of Amman, Clarix Coffee House is a sanctuary for coffee lovers, sweet seekers, and juice enthusiasts. We source the finest beans from around the world and pair them with locally inspired desserts and hand-pressed juices.
+    </p>
+    <p class="section-subtitle" style="margin-top:16px;">
+      Every corner of our space is designed to make you feel at home — whether you're here for a morning espresso, a midday meeting, or an evening treat.
+    </p>
+    <div class="about-features">
+      <div class="feature-item">
+        <div class="feature-icon">☕</div>
+        <div>
+          <h4>Specialty Coffee</h4>
+          <p>Single-origin & blended roasts</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🎂</div>
+        <div>
+          <h4>Handmade Desserts</h4>
+          <p>Baked fresh every morning</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🍊</div>
+        <div>
+          <h4>Fresh Juices</h4>
+          <p>Cold-pressed daily</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🌿</div>
+        <div>
+          <h4>Organic Ingredients</h4>
+          <p>Locally sourced produce</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== MENU ===== -->
+<section class="menu" id="menu">
+  <div class="menu-header text-center fade-in">
+    <div class="section-tag"><span></span> Our Menu <span></span></div>
+    <h2 class="section-title">Something for Every Craving</h2>
+    <p class="section-subtitle">From velvety espressos to tropical juices, indulgent sweets, and hearty bites — every item crafted with love.</p>
+  </div>
+
+  <div class="menu-tabs">
+    <button class="menu-tab active" data-tab="coffee">☕ Coffee</button>
+    <button class="menu-tab" data-tab="cold">🧊 Cold Drinks</button>
+    <button class="menu-tab" data-tab="juices">🍊 Fresh Juices</button>
+    <button class="menu-tab" data-tab="desserts">🎂 Desserts</button>
+    <button class="menu-tab" data-tab="food">🍳 Food</button>
+    <button class="menu-tab" data-tab="tea">🍵 Tea & Hot</button>
+  </div>
+
+  <!-- ══ COFFEE ══ -->
+  <div class="menu-section menu-grid" data-menu="coffee">
+    <div class="menu-card fade-in">
+      <div class="menu-card-img-wrap">
+        <img src="photos/espressoo.jpg" alt="Espresso" class="menu-card-img" loading="lazy" />
+        <span class="menu-card-badge">Best Seller</span>
+      </div>
+      <div class="menu-card-body">
+        <h3>Clarix Espresso</h3>
+        <p>Our signature double shot — rich, bold, and perfectly balanced with a velvety crema.</p>
+        <div class="menu-card-footer">
+          <div class="price">JD 2.50 <small>/ cup</small></div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card fade-in">
+      <div class="menu-card-img-wrap">
+        <img src="https://images.unsplash.com/photo-1541167760496-1628856ab772?w=600&q=80" alt="Cappuccino" class="menu-card-img" loading="lazy" />
+      </div>
+      <div class="menu-card-body">
+        <h3>Silky Cappuccino</h3>
+        <p>Espresso crowned with steamed milk foam — smooth, creamy, and absolutely satisfying.</p>
+        <div class="menu-card-footer">
+          <div class="price">JD 3.00 <small>/ cup</small></div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card fade-in">
+      <div class="menu-card-img-wrap">
+        <img src="https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=600&q=80" alt="Latte Art" class="menu-card-img" loading="lazy" />
+        <span class="menu-card-badge">Signature</span>
+      </div>
+      <div class="menu-card-body">
+        <h3>Caramel Latte Art</h3>
+        <p>Espresso with steamed milk, house caramel drizzle, and barista latte art on every cup.</p>
+        <div class="menu-card-footer">
+          <div class="price">JD 3.80 <small>/ cup</small></div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card fade-in">
+      <div class="menu-card-img-wrap">
+        <img src="https://images.unsplash.com/photo-1504630083234-14187a9df0f5?w=600&q=80" alt="Mocha" class="menu-card-img" loading="lazy" />
+      </div>
+      <div class="menu-card-body">
+        <h3>Dark Mocha</h3>
+        <p>Rich espresso, dark Belgian chocolate, and steamed milk — the perfect indulgence.</p>
+        <div class="menu-card-footer">
+          <div class="price">JD 4.00 <small>/ cup</small></div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card fade-in">
+      <div class="menu-card-img-wrap">
+        <img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600&q=80" alt="Flat White" class="menu-card-img" loading="lazy" />
+      </div>
+      <div class="menu-card-body">
+        <h3>Flat White</h3>
+        <p>Double ristretto with micro-foamed whole milk — the connoisseur's choice.</p>
+        <div class="menu-card-footer">
+          <div class="price">JD 3.50 <small>/ cup</small></div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card fade-in">
+      <div class="menu-card-img-wrap">
+        <img src="photos/cup of coffee.jpg" alt="Turkish Coffee" class="menu-card-img" loading="lazy" />
+        <span class="menu-card-badge">Local Fav</span>
+      </div>
+      <div class="menu-card-body">
+        <h3>Turkish Coffee</h3>
+        <p>Traditional Jordanian-style coffee with cardamom, served in an ornate copper pot.</p>
+        <div class="menu-card-footer">
+          <div class="price">JD 2.80 <small>/ serving</small></div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card fade-in">
+      <div class="menu-card-img-wrap">
+        <img src="https://images.unsplash.com/photo-1519082274554-1ca37fb8abb4?w=600&q=80" alt="Americano" class="menu-card-img" loading="lazy" />
+      </div>
+      <div class="menu-card-body">
+        <h3>Americano</h3>
+        <p>Espresso diluted with hot water for a longer, smooth black coffee experience.</p>
+        <div class="menu-card-footer">
+          <div class="price">JD 2.80 <small>/ cup</small></div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card fade-in">
+      <div class="menu-card-img-wrap">
+        <img src="https://images.unsplash.com/photo-1558857563-b371033873b8?w=600&q=80" alt="Macchiato" class="menu-card-img" loading="lazy" />
+        <span class="menu-card-badge">New</span>
+      </div>
+      <div class="menu-card-body">
+        <h3>Vanilla Macchiato</h3>
+        <p>Espresso marked with velvety steamed milk and a vanilla syrup swirl.</p>
+        <div class="menu-card-footer">
+          <div class="price">JD 3.50 <small>/ cup</small></div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ COLD DRINKS ══ -->
+  <div class="menu-section menu-grid" data-menu="cold">
+    <div class="menu-card fade-in">
+      <div class="menu-card-img-wrap">
+        <img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600&q=80" alt="Cold Brew" class="menu-card-img" loading="lazy" />
+        <span class="menu-card-badge">Best Seller</span>
+      </div>
+      <div class="menu-card-body">
+        <h3>24hr Cold Brew</h3>
+        <p>Steeped for 24 hours for maximum smoothness — served over hand-cut ice.</p>
+        <div class="menu-card-footer">
+          <div class="price">JD 4.50 <small>/ glass</small></div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card fade-in">
+      <div class="menu-card-img-wrap">
+        <img src="photos/iced latte.jpg" alt="Iced Latte" class="menu-card-img" loading="lazy" />
+      </div>
+      <div class="menu-card-body">
+        <h3>Iced Caramel Latte</h3>
+        <p>Double espresso, cold milk, house caramel, and crushed ice — summer in a glass.</p>
+        <div class="menu-card-footer">
+          <div class="price">JD 4.00 <small>/ glass</small></div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card fade-in">
+      <div class="menu-card-img-wrap">
+        <img src="https://images.unsplash.com/photo-1534353436294-0dbd4bdac845?w=600&q=80" alt="Frappuccino" class="menu-card-img" loading="lazy" />
+        <span class="menu-card-badge">New</span>
+      </div>
+      <div class="menu-card-body">
+        <h3>Vanilla Frappé</h3>
+        <p>Blended espresso, vanilla cream, crushed ice, topped with whipped cream & drizzle.</p>
+        <div class="menu-card-footer">
+          <div class="price">JD 5.00 <small>/ cup</small></div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card fade-in">
+      <div class="menu-card-img-wrap">
+        <img src="photos/milke shake.jpg" alt="Milkshake" class="menu-card-img" loading="lazy" />
+        <span class="menu-card-badge">Crowd Fav</span>
+      </div>
+      <div class="menu-card-body">
+        <h3>Classic Milkshake</h3>
+        <p>Thick and creamy milkshake blended with premium ice cream — choose your flavour.</p>
+        <div class="menu-card-footer">
+          <div class="price">JD 5.50 <small>/ glass</small></div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card fade-in">
+      <div class="menu-card-img-wrap">
+        <img src="https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=600&q=80" alt="Iced Matcha" class="menu-card-img" loading="lazy" />
+      </div>
+      <div class="menu-card-body">
+        <h3>Iced Matcha Latte</h3>
+        <p>Ceremonial-grade matcha shaken with oat milk and poured over ice — vibrant and refreshing.</p>
+        <div class="menu-card-footer">
+          <div class="price">JD 4.80 <small>/ glass</small></div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card fade-in">
+      <div class="menu-card-img-wrap">
+        <img src="https://images.unsplash.com/photo-1553361371-9b22f78e8b1d?w=600&q=80" alt="Nitro Cold Brew" class="menu-card-img" loading="lazy" />
+        <span class="menu-card-badge">New</span>
+      </div>
+      <div class="menu-card-body">
+        <h3>Nitro Cold Brew</h3>
+        <p>Nitrogen-infused cold brew with a silky, Guinness-like foam — served straight from the tap.</p>
+        <div class="menu-card-footer">
+          <div class="price">JD 5.50 <small>/ glass</small></div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ JUICES ══ -->
+  <div class="menu-section menu-grid" data-menu="juices">
+    <div class="menu-card fade-in">
+      <div class="menu-card-img-wrap">
+        <img src="https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=600&q=80" alt="Orange Juice" class="menu-card-img" loading="lazy" />
+        <span class="menu-card-badge">Fresh Daily</span>
+      </div>
+      <div class="menu-card-body">
+        <h3>Freshly Squeezed Orange</h3>
+        <p>100% pure Valencia orange juice, cold-pressed and served chilled with no additives.</p>
+        <div class="menu-card-footer">
+          <div class="price">JD 3.00 <small>/ glass</small></div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card fade-in">
+      <div class="menu-card-img-wrap">
+        <img src="https://images.unsplash.com/photo-1570197571499-166b36435e9f?w=600&q=80" alt="Green Detox" class="menu-card-img" loading="lazy" />
+      </div>
+      <div class="menu-card-body">
+        <h3>Green Detox Blend</h3>
+        <p>Spinach, cucumber, green apple, lemon & ginger — the ultimate cleansing juice.</p>
+        <div class="menu-card-footer">
+          <div class="price">JD 4.00 <small>/ glass</small></div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card fade-in">
+      <div class="menu-card-img-wrap">
+        <img src="https://images.unsplash.com/photo-1553530979-7ee52a2670c4?w=600&q=80" alt="Mango Smoothie" class="menu-card-img" loading="lazy" />
+        <span class="menu-card-badge">Tropical</span>
+      </div>
+      <div class="menu-card-body">
+        <h3>Mango Tropicana</h3>
+        <p>Alphonso mango, pineapple, and coconut water blended into a tropical paradise.</p>
+        <div class="menu-card-footer">
+          <div class="price">JD 4.50 <small>/ glass</small></div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card fade-in">
+      <div class="menu-card-img-wrap">
+        <img src="https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=600&q=80" alt="Strawberry Lemonade" class="menu-card-img" loading="lazy" />
+      </div>
+      <div class="menu-card-body">
+        <h3>Strawberry Lemonade</h3>
+        <p>Hand-muddled fresh strawberries, freshly squeezed lemon, and sparkling water.</p>
+        <div class="menu-card-footer">
+          <div class="price">JD 3.80 <small>/ glass</small></div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card fade-in">
+      <div class="menu-card-img-wrap">
+        <img src="https://images.unsplash.com/photo-1622597467836-f3e8716e93aa?w=600&q=80" alt="Avocado Smoothie" class="menu-card-img" loading="lazy" />
+      </div>
+      <div class="menu-card-body">
+        <h3>Avocado Mint Smoothie</h3>
+        <p>Creamy avocado blended with banana, fresh mint, honey, and almond milk.</p>
+        <div class="menu-card-footer">
+          <div class="price">JD 5.00 <small>/ glass</small></div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card fade-in">
+      <div class="menu-card-img-wrap">
+        <img src="https://images.unsplash.com/photo-1589733955941-5eeaf752f6dd?w=600&q=80" alt="Watermelon" class="menu-card-img" loading="lazy" />
+        <span class="menu-card-badge">Summer Hit</span>
+      </div>
+      <div class="menu-card-body">
+        <h3>Watermelon Mint Chill</h3>
+        <p>Chilled seedless watermelon juice with fresh mint leaves and a hint of lime zest.</p>
+        <div class="menu-card-footer">
+          <div class="price">JD 3.50 <small>/ glass</small></div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card fade-in">
+      <div class="menu-card-img-wrap">
+        <img src="https://images.unsplash.com/photo-1525385133512-2f3bdd039054?w=600&q=80" alt="Pomegranate Juice" class="menu-card-img" loading="lazy" />
+        <span class="menu-card-badge">Antioxidant</span>
+      </div>
+      <div class="menu-card-body">
+        <h3>Pomegranate Delight</h3>
+        <p>Freshly pressed ruby-red pomegranate juice — rich in antioxidants and naturally sweet.</p>
+        <div class="menu-card-footer">
+          <div class="price">JD 4.50 <small>/ glass</small></div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card fade-in">
+      <div class="menu-card-img-wrap">
+        <img src="https://images.unsplash.com/photo-1546171753-97d7676e4602?w=600&q=80" alt="Mixed Berry" class="menu-card-img" loading="lazy" />
+      </div>
+      <div class="menu-card-body">
+        <h3>Mixed Berry Blast</h3>
+        <p>Blueberry, raspberry, and blackberry blended with apple juice and a squeeze of lemon.</p>
+        <div class="menu-card-footer">
+          <div class="price">JD 4.00 <small>/ glass</small></div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ DESSERTS ══ -->
+  <div class="menu-section menu-grid" data-menu="desserts">
+    <div class="menu-card fade-in">
+      <div class="menu-card-img-wrap">
+        <img src="photos/dessert.jpg" alt="Chocolate Cake" class="menu-card-img" loading="lazy" />
+        <span class="menu-card-badge">Signature</span>
+      </div>
+      <div class="menu-card-body">
+        <h3>Dark Chocolate Cake</h3>
+        <p>Three layers of moist Belgian chocolate sponge, ganache frosting, and gold flakes.</p>
+        <div class="menu-card-footer">
+          <div class="price">JD 4.50 <small>/ slice</small></div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card fade-in">
+      <div class="menu-card-img-wrap">
+        <img src="https://images.unsplash.com/photo-1551024601-bec78aea704b?w=600&q=80" alt="Waffles" class="menu-card-img" loading="lazy" />
+        <span class="menu-card-badge">Crowd Fav</span>
+      </div>
+      <div class="menu-card-body">
+        <h3>Belgian Waffles</h3>
+        <p>Crispy Belgian waffles with Nutella, fresh strawberries, and vanilla ice cream.</p>
+        <div class="menu-card-footer">
+          <div class="price">JD 6.00 <small>/ plate</small></div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card fade-in">
+      <div class="menu-card-img-wrap">
+        <img src="photos/dessert 2.jpg" alt="Cheesecake" class="menu-card-img" loading="lazy" />
+      </div>
+      <div class="menu-card-body">
+        <h3>New York Cheesecake</h3>
+        <p>Classic baked cheesecake with a buttery graham crust and seasonal berry compote.</p>
+        <div class="menu-card-footer">
+          <div class="price">JD 4.80 <small>/ slice</small></div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card fade-in">
+      <div class="menu-card-img-wrap">
+        <img src="photos/dessert3.jpg" alt="Tiramisu" class="menu-card-img" loading="lazy" />
+        <span class="menu-card-badge">New</span>
+      </div>
+      <div class="menu-card-body">
+        <h3>Clarix Tiramisu</h3>
+        <p>Espresso-soaked ladyfingers, mascarpone cream, dusted with fine cocoa powder.</p>
+        <div class="menu-card-footer">
+          <div class="price">JD 5.50 <small>/ portion</small></div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card fade-in">
+      <div class="menu-card-img-wrap">
+        <img src="photos/croissant.jpg" alt="Croissant" class="menu-card-img" loading="lazy" />
+      </div>
+      <div class="menu-card-body">
+        <h3>Butter Croissant</h3>
+        <p>Flaky, golden French croissant — enjoy plain or filled with almond cream.</p>
+        <div class="menu-card-footer">
+          <div class="price">JD 2.50 <small>/ piece</small></div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card fade-in">
+      <div class="menu-card-img-wrap">
+        <img src="photos/ice creem.jpg" alt="Ice Cream" class="menu-card-img" loading="lazy" />
+        <span class="menu-card-badge">Summer Fav</span>
+      </div>
+      <div class="menu-card-body">
+        <h3>Artisan Ice Cream</h3>
+        <p>Two generous scoops of house-made ice cream — rotating daily flavours, always fresh.</p>
+        <div class="menu-card-footer">
+          <div class="price">JD 3.50 <small>/ 2 scoops</small></div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card fade-in">
+      <div class="menu-card-img-wrap">
+        <img src="https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=600&q=80" alt="Cinnamon Roll" class="menu-card-img" loading="lazy" />
+      </div>
+      <div class="menu-card-body">
+        <h3>Cinnamon Roll</h3>
+        <p>Warm, pillowy cinnamon rolls glazed with cream cheese frosting — baked fresh daily.</p>
+        <div class="menu-card-footer">
+          <div class="price">JD 3.50 <small>/ piece</small></div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card fade-in">
+      <div class="menu-card-img-wrap">
+        <img src="https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=600&q=80" alt="Brownie" class="menu-card-img" loading="lazy" />
+        <span class="menu-card-badge">Choco Lover</span>
+      </div>
+      <div class="menu-card-body">
+        <h3>Fudge Brownie</h3>
+        <p>Dense, gooey chocolate brownie with walnut chunks — served warm with vanilla ice cream.</p>
+        <div class="menu-card-footer">
+          <div class="price">JD 4.00 <small>/ piece</small></div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ FOOD ══ -->
+  <div class="menu-section menu-grid" data-menu="food">
+    <div class="menu-card fade-in">
+      <div class="menu-card-img-wrap">
+        <img src="photos/egg sandwish.jpg" alt="Egg Sandwich" class="menu-card-img" loading="lazy" />
+        <span class="menu-card-badge">Breakfast</span>
+      </div>
+      <div class="menu-card-body">
+        <h3>Classic Egg Sandwich</h3>
+        <p>Freshly fried eggs with cheddar cheese and fresh veggies on toasted artisan bread.</p>
+        <div class="menu-card-footer">
+          <div class="price">JD 4.00 <small>/ sandwich</small></div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card fade-in">
+      <div class="menu-card-img-wrap">
+        <img src="photos/pancake.jpg" alt="Pancakes" class="menu-card-img" loading="lazy" />
+        <span class="menu-card-badge">Best Seller</span>
+      </div>
+      <div class="menu-card-body">
+        <h3>Fluffy Pancake Stack</h3>
+        <p>Three cloud-soft pancakes drizzled with maple syrup, fresh berries, and whipped butter.</p>
+        <div class="menu-card-footer">
+          <div class="price">JD 5.50 <small>/ stack</small></div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card fade-in">
+      <div class="menu-card-img-wrap">
+        <img src="https://images.unsplash.com/photo-1525351484163-7529414344d8?w=600&q=80" alt="Avocado Toast" class="menu-card-img" loading="lazy" />
+        <span class="menu-card-badge">Healthy</span>
+      </div>
+      <div class="menu-card-body">
+        <h3>Avocado Toast</h3>
+        <p>Smashed avocado on sourdough with cherry tomatoes, feta, red chili flakes, and a poached egg.</p>
+        <div class="menu-card-footer">
+          <div class="price">JD 5.00 <small>/ plate</small></div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card fade-in">
+      <div class="menu-card-img-wrap">
+        <img src="https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=600&q=80" alt="Club Sandwich" class="menu-card-img" loading="lazy" />
+      </div>
+      <div class="menu-card-body">
+        <h3>Clarix Club Sandwich</h3>
+        <p>Grilled chicken, crispy bacon, fresh lettuce, tomato, and mayo between toasted white bread.</p>
+        <div class="menu-card-footer">
+          <div class="price">JD 6.50 <small>/ sandwich</small></div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card fade-in">
+      <div class="menu-card-img-wrap">
+        <img src="https://images.unsplash.com/photo-1607532941433-304659e8198a?w=600&q=80" alt="Granola Bowl" class="menu-card-img" loading="lazy" />
+        <span class="menu-card-badge">Healthy</span>
+      </div>
+      <div class="menu-card-body">
+        <h3>Granola Yoghurt Bowl</h3>
+        <p>Greek yoghurt with house granola, seasonal fruits, honey drizzle, and chia seeds.</p>
+        <div class="menu-card-footer">
+          <div class="price">JD 4.50 <small>/ bowl</small></div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card fade-in">
+      <div class="menu-card-img-wrap">
+        <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&q=80" alt="Salad" class="menu-card-img" loading="lazy" />
+      </div>
+      <div class="menu-card-body">
+        <h3>Caesar Salad</h3>
+        <p>Crisp romaine, parmesan shavings, house-made Caesar dressing, and sourdough croutons.</p>
+        <div class="menu-card-footer">
+          <div class="price">JD 5.00 <small>/ bowl</small></div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ TEA & HOT ══ -->
+  <div class="menu-section menu-grid" data-menu="tea">
+    <div class="menu-card fade-in">
+      <div class="menu-card-img-wrap">
+        <img src="https://images.unsplash.com/photo-1597318181409-cf64d0b5d8a2?w=600&q=80" alt="Matcha" class="menu-card-img" loading="lazy" />
+        <span class="menu-card-badge">Trending</span>
+      </div>
+      <div class="menu-card-body">
+        <h3>Ceremonial Matcha</h3>
+        <p>Grade A Japanese matcha whisked with steamed oat milk and organic honey.</p>
+        <div class="menu-card-footer">
+          <div class="price">JD 4.50 <small>/ cup</small></div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card fade-in">
+      <div class="menu-card-img-wrap">
+        <img src="https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=600&q=80" alt="Chai Latte" class="menu-card-img" loading="lazy" />
+      </div>
+      <div class="menu-card-body">
+        <h3>Masala Chai Latte</h3>
+        <p>Spiced black tea with cinnamon, cardamom, cloves, steamed milk, and honey.</p>
+        <div class="menu-card-footer">
+          <div class="price">JD 3.80 <small>/ cup</small></div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card fade-in">
+      <div class="menu-card-img-wrap">
+        <img src="https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=600&q=80" alt="Passion Iced Tea" class="menu-card-img" loading="lazy" />
+      </div>
+      <div class="menu-card-body">
+        <h3>Passion Iced Tea</h3>
+        <p>Hibiscus & passion fruit cold brew tea, lightly sweetened with honey and fresh mint.</p>
+        <div class="menu-card-footer">
+          <div class="price">JD 3.50 <small>/ glass</small></div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card fade-in">
+      <div class="menu-card-img-wrap">
+        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80" alt="Herbal Tea" class="menu-card-img" loading="lazy" />
+      </div>
+      <div class="menu-card-body">
+        <h3>Chamomile & Honey</h3>
+        <p>Organic dried chamomile blossoms steeped to perfection with local wildflower honey.</p>
+        <div class="menu-card-footer">
+          <div class="price">JD 3.00 <small>/ pot</small></div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card fade-in">
+      <div class="menu-card-img-wrap">
+        <img src="https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=600&q=80" alt="Hot Chocolate" class="menu-card-img" loading="lazy" />
+        <span class="menu-card-badge">Winter Fav</span>
+      </div>
+      <div class="menu-card-body">
+        <h3>Belgian Hot Chocolate</h3>
+        <p>Rich, velvety Belgian dark chocolate melted into steamed milk with marshmallows.</p>
+        <div class="menu-card-footer">
+          <div class="price">JD 4.00 <small>/ cup</small></div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card fade-in">
+      <div class="menu-card-img-wrap">
+        <img src="https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=600&q=80" alt="Green Tea" class="menu-card-img" loading="lazy" />
+      </div>
+      <div class="menu-card-body">
+        <h3>Japanese Green Tea</h3>
+        <p>Delicate sencha leaves brewed at the perfect temperature — clean, grassy, and refreshing.</p>
+        <div class="menu-card-footer">
+          <div class="price">JD 3.00 <small>/ pot</small></div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card fade-in">
+      <div class="menu-card-img-wrap">
+        <img src="https://images.unsplash.com/photo-1612975248325-62b76e2c6d22?w=600&q=80" alt="Mint Tea" class="menu-card-img" loading="lazy" />
+        <span class="menu-card-badge">Local Fav</span>
+      </div>
+      <div class="menu-card-body">
+        <h3>Moroccan Mint Tea</h3>
+        <p>Traditional loose-leaf green tea steeped with fresh spearmint — poured from height for a frothy top.</p>
+        <div class="menu-card-footer">
+          <div class="price">JD 2.80 <small>/ pot</small></div>
+          <button class="add-btn">+</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== GALLERY ===== -->
+<section class="gallery" id="gallery">
+  <div class="text-center fade-in">
+    <div class="section-tag"><span></span> Our Space <span></span></div>
+    <h2 class="section-title">Step Into Clarix</h2>
+  </div>
+  <div class="gallery-grid">
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=900&q=80" alt="Coffee shop atmosphere" loading="lazy" />
+      <div class="gallery-overlay"><p>Our Signature Lounge</p></div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600&q=80" alt="Latte art" loading="lazy" />
+      <div class="gallery-overlay"><p>Barista Craft</p></div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1551024601-bec78aea704b?w=600&q=80" alt="Desserts" loading="lazy" />
+      <div class="gallery-overlay"><p>Fresh Desserts</p></div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&q=80" alt="Coffee" loading="lazy" />
+      <div class="gallery-overlay"><p>Morning Ritual</p></div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=600&q=80" alt="Fresh juices" loading="lazy" />
+      <div class="gallery-overlay"><p>Cold-Pressed Juices</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TESTIMONIALS ===== -->
+<section class="testimonials" id="reviews">
+  <div class="text-center fade-in">
+    <div class="section-tag"><span></span> What People Say <span></span></div>
+    <h2 class="section-title">Loved by Amman's Coffee Community</h2>
+  </div>
+  <div class="testimonials-grid">
+    <div class="testimonial-card fade-in">
+      <div class="stars">★★★★★</div>
+      <p>"Clarix is hands down the best coffee experience in Amman. The baristas actually care about their craft — every cup is perfect. The caramel latte is life-changing!"</p>
+      <div class="reviewer">
+        <img src="https://i.pravatar.cc/100?img=12" alt="Layla" class="reviewer-avatar" />
+        <div class="reviewer-info">
+          <h4>Layla Al-Hassan</h4>
+          <p>Regular Customer · Amman</p>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card fade-in">
+      <div class="stars">★★★★★</div>
+      <p>"The Belgian waffles are absolutely divine, and the ambiance is so cozy. Perfect for working remotely or catching up with friends. Always a 5-star experience."</p>
+      <div class="reviewer">
+        <img src="https://i.pravatar.cc/100?img=32" alt="Omar" class="reviewer-avatar" />
+        <div class="reviewer-info">
+          <h4>Omar Khalil</h4>
+          <p>Food Blogger · Amman</p>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card fade-in">
+      <div class="stars">★★★★★</div>
+      <p>"I discovered Clarix three months ago and haven't stopped coming since. The fresh juices are incredible and the staff is incredibly warm and welcoming. Highly recommended!"</p>
+      <div class="reviewer">
+        <img src="https://i.pravatar.cc/100?img=47" alt="Nour" class="reviewer-avatar" />
+        <div class="reviewer-info">
+          <h4>Nour Abdallah</h4>
+          <p>Yoga Instructor · Amman</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== LOCATION ===== -->
+<section class="location" id="location">
+  <div class="location-info fade-in">
+    <div class="section-tag"><span></span> Find Us <span></span></div>
+    <h2 class="section-title">Visit Us in Amman</h2>
+    <p class="section-subtitle">We're located in the heart of Amman — easily accessible and always welcoming.</p>
+    <div class="info-cards">
+      <div class="info-card">
+        <div class="info-card-icon">📍</div>
+        <div class="info-card-text">
+          <h4>Address</h4>
+          <p>7th Circle, Khalda Street, Amman, Jordan</p>
+        </div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-icon">🕐</div>
+        <div class="info-card-text">
+          <h4>Opening Hours</h4>
+          <p>Mon–Thu: 7:00 AM – 11:00 PM<br />Fri–Sun: 7:00 AM – 12:00 AM</p>
+        </div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-icon">📞</div>
+        <div class="info-card-text">
+          <h4>Phone & WhatsApp</h4>
+          <p>+962 6 555 1234<br />+962 79 555 6789</p>
+        </div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-icon">📧</div>
+        <div class="info-card-text">
+          <h4>Email</h4>
+          <p>hello@clarixcoffee.jo</p>
+        </div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-icon">🅿️</div>
+        <div class="info-card-text">
+          <h4>Parking</h4>
+          <p>Free parking available on premises for up to 30 cars</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="map-container fade-in">
+    <iframe
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3384.6!2d35.8533!3d31.9730!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x151ca1e09c00000%3A0x000000000000001!2s7th%20Circle%2C%20Amman%2C%20Jordan!5e0!3m2!1sen!2sjo!4v1680000000000"
+      allowfullscreen=""
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"
+      title="Clarix Coffee House location in Amman"
+    ></iframe>
+  </div>
+</section>
+
+<!-- ===== NEWSLETTER ===== -->
+<section class="newsletter" id="contact">
+  <div class="section-tag" style="justify-content:center;color:var(--accent-light)"><span></span> Stay Connected <span></span></div>
+  <h2 class="section-title">Get Exclusive Offers & News</h2>
+  <p class="section-subtitle">Subscribe and be the first to know about seasonal specials, new menu items, and exclusive member deals.</p>
+  <form class="newsletter-form">
+    <input type="email" placeholder="Enter your email address..." required />
+    <button type="submit" class="btn-primary">Subscribe</button>
+  </form>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="#home" class="logo" style="display:inline-flex;margin-bottom:4px;">
+        <div class="logo-icon">☕</div>
+        <span class="logo-text">Clari<span>x</span></span>
+      </a>
+      <p>Where every sip is a moment worth savoring. Premium coffee, handcrafted desserts, and fresh juices in the heart of Amman.</p>
+      <div class="social-links">
+        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
+        <a href="#" class="social-link"><i class="fab fa-whatsapp"></i></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#menu">Our Menu</a></li>
+        <li><a href="#gallery">Gallery</a></li>
+        <li><a href="#location">Location</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Menu</h4>
+      <ul>
+        <li><a href="#menu">Hot Coffee</a></li>
+        <li><a href="#menu">Cold Drinks</a></li>
+        <li><a href="#menu">Desserts</a></li>
+        <li><a href="#menu">Fresh Juices</a></li>
+        <li><a href="#menu">Tea & Others</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Info</h4>
+      <ul>
+        <li><a href="#">Loyalty Program</a></li>
+        <li><a href="#">Events & Catering</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Franchise</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 <a href="#">Clarix Coffee House</a>. All rights reserved. Amman, Jordan.</p>
+    <p>Made with ❤️ for coffee lovers</p>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>

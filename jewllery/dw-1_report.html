@@ -1,0 +1,1638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DW 1 - Retail Jewelry Sales Performance Report</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Import main design system */
+        :root {
+            --color-primary: #2563eb;
+            --color-success: #10b981;
+            --color-warning: #f59e0b;
+            --color-danger: #ef4444;
+            --color-overtarget: #8b5cf6;
+            --color-gold: #fbbf24;
+            --color-diamond: #06b6d4;
+            --color-silver: #9ca3af;
+            --color-bg-light: #f8fafc;
+            --color-bg-white: #ffffff;
+            --color-text-primary: #1e293b;
+            --color-text-secondary: #475569;
+            --color-border: #e2e8f0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--color-bg-light);
+            color: var(--color-text-primary);
+            line-height: 1.6;
+            padding: 2rem;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        /* Header */
+        .header {
+            background: var(--color-bg-white);
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            border: 1px solid var(--color-border);
+        }
+        
+        .branch-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .branch-subtitle {
+            font-size: 1.1rem;
+            color: var(--color-text-secondary);
+            margin-bottom: 2rem;
+        }
+        
+        /* CHANGED: Visible Back to Main Report button */
+        .back-button-container {
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: flex-start;
+            width: 100%;
+            min-height: 3.5rem;
+        }
+        
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9375rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4), 0 2px 4px rgba(0, 0, 0, 0.1);
+            border: 2px solid transparent;
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+        }
+        
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.5);
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+        }
+
+        
+        /* Summary Grid - UPDATED with new metrics */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .summary-item {
+            background: var(--color-bg-white);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            border: 1px solid var(--color-border);
+            transition: transform 0.3s ease;
+        }
+        
+        .summary-item:hover {
+            transform: translateY(-4px);
+        }
+        
+        .summary-label {
+            font-size: 0.875rem;
+            color: var(--color-text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .summary-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+        
+        /* Target Cards */
+        .target-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        @media (max-width: 1024px) {
+            .target-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .target-card {
+            padding: 1.5rem;
+            border-radius: 1rem;
+            border: 2px solid;
+        }
+        
+        .target-card.gold {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(245, 158, 11, 0.1) 100%);
+            border-color: var(--color-gold);
+        }
+        
+        .target-card.diamond {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(8, 145, 178, 0.1) 100%);
+            border-color: var(--color-diamond);
+        }
+        
+        .target-card.silver {
+            background: linear-gradient(135deg, rgba(156, 163, 175, 0.1) 0%, rgba(107, 114, 128, 0.1) 100%);
+            border-color: var(--color-silver);
+        }
+        
+        .target-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .target-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+        
+        .target-item {
+            text-align: center;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 0.5rem;
+            border: 1px solid var(--color-border);
+        }
+        
+        .target-label {
+            font-size: 0.75rem;
+            color: var(--color-text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .target-value {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-top: 0.25rem;
+        }
+        
+        /* Employee Cards */
+        .employee-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .employee-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .employee-card {
+            background: var(--color-bg-white);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid var(--color-border);
+            transition: transform 0.3s ease;
+        }
+        
+        .employee-card:hover {
+            transform: translateY(-8px);
+        }
+        
+        .employee-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--color-border);
+        }
+        
+        .employee-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-text-primary);
+        }
+        
+        .employee-status {
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+        
+        .status-achieved {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--color-success);
+            border: 2px solid var(--color-success);
+        }
+        
+        .status-overtarget {
+            background: rgba(139, 92, 246, 0.15);
+            color: var(--color-overtarget);
+            border: 2px solid var(--color-overtarget);
+        }
+        
+        .status-not-achieved {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--color-danger);
+            border: 2px solid var(--color-danger);
+        }
+        
+        /* Performance Grid - UPDATED with new metrics */
+        .performance-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .performance-item {
+            text-align: center;
+            padding: 1rem;
+            background: var(--color-bg-light);
+            border-radius: 0.75rem;
+            border: 1px solid var(--color-border);
+        }
+        
+        .performance-label {
+            font-size: 0.75rem;
+            color: var(--color-text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .performance-value {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-top: 0.5rem;
+        }
+        
+        /* CHANGED: Today Required Sale section - made more visible */
+        .today-required-board {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.15) 0%, rgba(29, 78, 216, 0.15) 100%);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border: 3px solid var(--color-primary);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+        
+        .today-required-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .today-required-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        
+        .today-required-item {
+            text-align: center;
+            padding: 1.25rem;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 0.75rem;
+            border: 2px solid;
+        }
+        
+        .today-required-item.gold {
+            border-color: var(--color-gold);
+        }
+        
+        .today-required-item.diamond {
+            border-color: var(--color-diamond);
+        }
+        
+        .today-required-label {
+            font-size: 0.875rem;
+            color: var(--color-text-secondary);
+            font-weight: 600;
+        }
+        
+        .today-required-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-top: 0.5rem;
+            color: var(--color-primary);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .today-required-value.achieved {
+            color: var(--color-success);
+        }
+        
+        /* Daily Required */
+        .daily-required {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border: 2px solid var(--color-success);
+        }
+        
+        .daily-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .daily-item {
+            text-align: center;
+            padding: 1.25rem;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 0.75rem;
+            border: 2px solid;
+        }
+        
+        .daily-item.gold {
+            border-color: var(--color-gold);
+        }
+        
+        .daily-item.diamond {
+            border-color: var(--color-diamond);
+        }
+        
+        .daily-label {
+            font-size: 0.875rem;
+            color: var(--color-text-secondary);
+            font-weight: 600;
+        }
+        
+        .daily-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-top: 0.5rem;
+        }
+        
+        /* Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            font-size: 0.9375rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            min-height: 48px;   
+            text-align: center;
+            justify-content: center;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            color: white;
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, var(--color-success) 0%, #059669 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4), 0 2px 4px rgba(0, 0, 0, 0.1);
+            border: 2px solid transparent;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        /* Footer */
+        .footer {
+            background: var(--color-bg-white);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-top: 3rem;
+            text-align: center;
+            border: 1px solid var(--color-border);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .performance-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .today-required-grid,
+            .daily-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .employee-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <div class="header">
+            <h1 class="branch-title">
+                <i class="fas fa-store"></i>
+                DW 1 Sales Performance
+            </h1>
+            <div class="branch-subtitle">Detailed Month-to-Date Analysis • 2026-01-14</div>
+            
+            <div class="action-buttons">
+                        <div class="back-button-container">
+            <a href="Sales_Performance_Report_MTD_2026-01-14.html" class="back-button">
+                <i class="fas fa-arrow-left"></i> Back to Main Report
+            </a>
+        </div>
+            </div>
+        </div>
+        
+        <!-- Branch Summary - UPDATED with new metrics -->
+        <div class="summary-grid">
+            <div class="summary-item">
+                <div class="summary-label">Total Gold Sales</div>
+                <div class="summary-value">JOD 167,956.00</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-label">Total Diamond Sales</div>
+                <div class="summary-value">JOD 3,500.00</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-label">Total Gold Weight</div>
+                <div class="summary-value">277.62g</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-label">Gold MTD %</div>
+                <div class="summary-value">7.3%</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-label">Gold Month %</div>
+                <div class="summary-value">3.8%</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-label">Diamond MTD %</div>
+                <div class="summary-value">32.1%</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-label">Diamond Month %</div>
+                <div class="summary-value">16.6%</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-label">Sales Employees</div>
+                <div class="summary-value">12</div>
+            </div>
+        </div>
+        
+        <!-- Target Summary -->
+        <div class="target-cards">
+            <div class="target-card gold">
+                <div class="target-title" style="color: var(--color-gold);">
+                    <i class="fas fa-weight-hanging"></i> GOLD TARGET
+                </div>
+                <div class="target-grid">
+                    <div class="target-item">
+                        <div class="target-label">MTD Target</div>
+                        <div class="target-value">3,822.00g</div>
+                    </div>
+                    <div class="target-item">
+                        <div class="target-label">Monthly Target</div>
+                        <div class="target-value">7,371.00g</div>
+                    </div>
+                    <div class="target-item">
+                        <div class="target-label">MTD %</div>
+                        <div class="target-value">7.3%</div>
+                    </div>
+                    <div class="target-item">
+                        <div class="target-label">Today Req for MTD</div>
+                        <div class="target-value">3,544.38g</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="target-card diamond">
+                <div class="target-title" style="color: var(--color-diamond);">
+                    <i class="fas fa-gem"></i> DIAMOND TARGET
+                </div>
+                <div class="target-grid">
+                    <div class="target-item">
+                        <div class="target-label">MTD Target</div>
+                        <div class="target-value">JOD 10,920.00</div>
+                    </div>
+                    <div class="target-item">
+                        <div class="target-label">Monthly Target</div>
+                        <div class="target-value">JOD 21,060.00</div>
+                    </div>
+                    <div class="target-item">
+                        <div class="target-label">MTD %</div>
+                        <div class="target-value">32.1%</div>
+                    </div>
+                    <div class="target-item">
+                        <div class="target-label">Today Req for MTD</div>
+                        <div class="target-value">JOD 7,420.00</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="target-card silver">
+                <div class="target-title" style="color: var(--color-silver);">
+                    <i class="fas fa-plus-circle"></i> Ounces, Coins & Silver SALES
+                </div>
+                <div class="target-grid">
+                    <div class="target-item">
+                        <div class="target-label">Silver Sales</div>
+                        <div class="target-value">JOD 24,786.00</div>
+                    </div>
+                    <div class="target-item">
+                        <div class="target-label">Extra Gold Sales</div>
+                        <div class="target-value">JOD 68,441.00</div>
+                    </div>
+                    <div class="target-item">
+                        <div class="target-label">Extra Gold Weight</div>
+                        <div class="target-value">685.48g</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Employee Performance -->
+        <h2 style="margin: 3rem 0 1.5rem 0; color: var(--color-text-primary);">
+            <i class="fas fa-users"></i> Employee Performance
+        </h2>
+        
+        <div class="employee-cards">
+        
+            <div class="employee-card">
+                <div class="employee-header">
+                    <div class="employee-name">باسم سماوي</div>
+                    <div class="employee-status status-overtarget">🚀 OVERTARGET</div>
+                </div>
+                
+                <!-- UPDATED: Performance grid with new metrics -->
+                <div class="performance-grid">
+                    <div class="performance-item">
+                        <div class="performance-label">Total Gold Sales</div>
+                        <div class="performance-value">JOD 8,462.00</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Total Diamond Sales</div>
+                        <div class="performance-value">JOD 1,750.00</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Total Gold Weight</div>
+                        <div class="performance-value">88.36g</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Gold MTD %</div>
+                        <div class="performance-value">30.1%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Gold Month %</div>
+                        <div class="performance-value">15.6%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Diamond MTD %</div>
+                        <div class="performance-value">208.3%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Diamond Month %</div>
+                        <div class="performance-value">108.0%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Invoices</div>
+                        <div class="performance-value">12</div>
+                    </div>
+                </div>
+                
+                <!-- CHANGED: Today Required Sale section - made more visible -->
+                <div class="today-required-board">
+                    <div class="today-required-title">
+                        <i class="fas fa-bullseye"></i> Today Required Sale (to achieve MTD target)
+                    </div>
+                    <div class="today-required-grid">
+                        <div class="today-required-item gold">
+                            <div class="today-required-label">GOLD REQUIRED TODAY</div>
+                            <div class="today-required-value ">
+                                205.64g
+                            </div>
+                        </div>
+                        <div class="today-required-item diamond">
+                            <div class="today-required-label">DIAMOND REQUIRED TODAY</div>
+                            <div class="today-required-value achieved">
+                                ✅ ACHIEVED
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="daily-required">
+                    <div style="font-weight: 700; color: var(--color-success); margin-bottom: 1rem;">
+                        Daily Required Performance (Next 17 Work Days)
+                    </div>
+                    <div class="daily-grid">
+                        <div class="daily-item gold">
+                            <div class="daily-label">GOLD DAILY REQUIRED</div>
+                            <div class="daily-value">
+                                28.16g/day
+                            </div>
+                        </div>
+                        <div class="daily-item diamond">
+                            <div class="daily-label">DIAMOND DAILY REQUIRED</div>
+                            <div class="daily-value">
+                                ✅ ACHIEVED
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="employee-card">
+                <div class="employee-header">
+                    <div class="employee-name">ماري عماد</div>
+                    <div class="employee-status status-not-achieved">❌ MTD NOT ACHIEVED</div>
+                </div>
+                
+                <!-- UPDATED: Performance grid with new metrics -->
+                <div class="performance-grid">
+                    <div class="performance-item">
+                        <div class="performance-label">Total Gold Sales</div>
+                        <div class="performance-value">JOD 22,341.00</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Total Diamond Sales</div>
+                        <div class="performance-value">JOD 0</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Total Gold Weight</div>
+                        <div class="performance-value">226.94g</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Gold MTD %</div>
+                        <div class="performance-value">77.2%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Gold Month %</div>
+                        <div class="performance-value">40.0%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Diamond MTD %</div>
+                        <div class="performance-value">0.0%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Diamond Month %</div>
+                        <div class="performance-value">0.0%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Invoices</div>
+                        <div class="performance-value">6</div>
+                    </div>
+                </div>
+                
+                <!-- CHANGED: Today Required Sale section - made more visible -->
+                <div class="today-required-board">
+                    <div class="today-required-title">
+                        <i class="fas fa-bullseye"></i> Today Required Sale (to achieve MTD target)
+                    </div>
+                    <div class="today-required-grid">
+                        <div class="today-required-item gold">
+                            <div class="today-required-label">GOLD REQUIRED TODAY</div>
+                            <div class="today-required-value ">
+                                67.06g
+                            </div>
+                        </div>
+                        <div class="today-required-item diamond">
+                            <div class="today-required-label">DIAMOND REQUIRED TODAY</div>
+                            <div class="today-required-value ">
+                                JOD 840.00
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="daily-required">
+                    <div style="font-weight: 700; color: var(--color-success); margin-bottom: 1rem;">
+                        Daily Required Performance (Next 17 Work Days)
+                    </div>
+                    <div class="daily-grid">
+                        <div class="daily-item gold">
+                            <div class="daily-label">GOLD DAILY REQUIRED</div>
+                            <div class="daily-value">
+                                20.00g/day
+                            </div>
+                        </div>
+                        <div class="daily-item diamond">
+                            <div class="daily-label">DIAMOND DAILY REQUIRED</div>
+                            <div class="daily-value">
+                                JOD 95.29/day
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="employee-card">
+                <div class="employee-header">
+                    <div class="employee-name">ابوطوق حمز</div>
+                    <div class="employee-status status-not-achieved">❌ MTD NOT ACHIEVED</div>
+                </div>
+                
+                <!-- UPDATED: Performance grid with new metrics -->
+                <div class="performance-grid">
+                    <div class="performance-item">
+                        <div class="performance-label">Total Gold Sales</div>
+                        <div class="performance-value">JOD 20,300.00</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Total Diamond Sales</div>
+                        <div class="performance-value">JOD 0</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Total Gold Weight</div>
+                        <div class="performance-value">200.95g</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Gold MTD %</div>
+                        <div class="performance-value">68.4%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Gold Month %</div>
+                        <div class="performance-value">35.4%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Diamond MTD %</div>
+                        <div class="performance-value">0.0%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Diamond Month %</div>
+                        <div class="performance-value">0.0%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Invoices</div>
+                        <div class="performance-value">6</div>
+                    </div>
+                </div>
+                
+                <!-- CHANGED: Today Required Sale section - made more visible -->
+                <div class="today-required-board">
+                    <div class="today-required-title">
+                        <i class="fas fa-bullseye"></i> Today Required Sale (to achieve MTD target)
+                    </div>
+                    <div class="today-required-grid">
+                        <div class="today-required-item gold">
+                            <div class="today-required-label">GOLD REQUIRED TODAY</div>
+                            <div class="today-required-value ">
+                                93.05g
+                            </div>
+                        </div>
+                        <div class="today-required-item diamond">
+                            <div class="today-required-label">DIAMOND REQUIRED TODAY</div>
+                            <div class="today-required-value ">
+                                JOD 840.00
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="daily-required">
+                    <div style="font-weight: 700; color: var(--color-success); margin-bottom: 1rem;">
+                        Daily Required Performance (Next 17 Work Days)
+                    </div>
+                    <div class="daily-grid">
+                        <div class="daily-item gold">
+                            <div class="daily-label">GOLD DAILY REQUIRED</div>
+                            <div class="daily-value">
+                                21.53g/day
+                            </div>
+                        </div>
+                        <div class="daily-item diamond">
+                            <div class="daily-label">DIAMOND DAILY REQUIRED</div>
+                            <div class="daily-value">
+                                JOD 95.29/day
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="employee-card">
+                <div class="employee-header">
+                    <div class="employee-name">اقطيش</div>
+                    <div class="employee-status status-not-achieved">❌ MTD NOT ACHIEVED</div>
+                </div>
+                
+                <!-- UPDATED: Performance grid with new metrics -->
+                <div class="performance-grid">
+                    <div class="performance-item">
+                        <div class="performance-label">Total Gold Sales</div>
+                        <div class="performance-value">JOD 20,021.00</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Total Diamond Sales</div>
+                        <div class="performance-value">JOD 0</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Total Gold Weight</div>
+                        <div class="performance-value">199.01g</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Gold MTD %</div>
+                        <div class="performance-value">67.7%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Gold Month %</div>
+                        <div class="performance-value">35.1%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Diamond MTD %</div>
+                        <div class="performance-value">0.0%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Diamond Month %</div>
+                        <div class="performance-value">0.0%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Invoices</div>
+                        <div class="performance-value">8</div>
+                    </div>
+                </div>
+                
+                <!-- CHANGED: Today Required Sale section - made more visible -->
+                <div class="today-required-board">
+                    <div class="today-required-title">
+                        <i class="fas fa-bullseye"></i> Today Required Sale (to achieve MTD target)
+                    </div>
+                    <div class="today-required-grid">
+                        <div class="today-required-item gold">
+                            <div class="today-required-label">GOLD REQUIRED TODAY</div>
+                            <div class="today-required-value ">
+                                94.99g
+                            </div>
+                        </div>
+                        <div class="today-required-item diamond">
+                            <div class="today-required-label">DIAMOND REQUIRED TODAY</div>
+                            <div class="today-required-value ">
+                                JOD 840.00
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="daily-required">
+                    <div style="font-weight: 700; color: var(--color-success); margin-bottom: 1rem;">
+                        Daily Required Performance (Next 17 Work Days)
+                    </div>
+                    <div class="daily-grid">
+                        <div class="daily-item gold">
+                            <div class="daily-label">GOLD DAILY REQUIRED</div>
+                            <div class="daily-value">
+                                21.65g/day
+                            </div>
+                        </div>
+                        <div class="daily-item diamond">
+                            <div class="daily-label">DIAMOND DAILY REQUIRED</div>
+                            <div class="daily-value">
+                                JOD 95.29/day
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="employee-card">
+                <div class="employee-header">
+                    <div class="employee-name">فارس فائق</div>
+                    <div class="employee-status status-not-achieved">❌ MTD NOT ACHIEVED</div>
+                </div>
+                
+                <!-- UPDATED: Performance grid with new metrics -->
+                <div class="performance-grid">
+                    <div class="performance-item">
+                        <div class="performance-label">Total Gold Sales</div>
+                        <div class="performance-value">JOD 20,859.00</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Total Diamond Sales</div>
+                        <div class="performance-value">JOD 1,100.00</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Total Gold Weight</div>
+                        <div class="performance-value">197.52g</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Gold MTD %</div>
+                        <div class="performance-value">67.2%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Gold Month %</div>
+                        <div class="performance-value">34.8%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Diamond MTD %</div>
+                        <div class="performance-value">131.0%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Diamond Month %</div>
+                        <div class="performance-value">67.9%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Invoices</div>
+                        <div class="performance-value">17</div>
+                    </div>
+                </div>
+                
+                <!-- CHANGED: Today Required Sale section - made more visible -->
+                <div class="today-required-board">
+                    <div class="today-required-title">
+                        <i class="fas fa-bullseye"></i> Today Required Sale (to achieve MTD target)
+                    </div>
+                    <div class="today-required-grid">
+                        <div class="today-required-item gold">
+                            <div class="today-required-label">GOLD REQUIRED TODAY</div>
+                            <div class="today-required-value ">
+                                96.48g
+                            </div>
+                        </div>
+                        <div class="today-required-item diamond">
+                            <div class="today-required-label">DIAMOND REQUIRED TODAY</div>
+                            <div class="today-required-value achieved">
+                                ✅ ACHIEVED
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="daily-required">
+                    <div style="font-weight: 700; color: var(--color-success); margin-bottom: 1rem;">
+                        Daily Required Performance (Next 17 Work Days)
+                    </div>
+                    <div class="daily-grid">
+                        <div class="daily-item gold">
+                            <div class="daily-label">GOLD DAILY REQUIRED</div>
+                            <div class="daily-value">
+                                21.73g/day
+                            </div>
+                        </div>
+                        <div class="daily-item diamond">
+                            <div class="daily-label">DIAMOND DAILY REQUIRED</div>
+                            <div class="daily-value">
+                                JOD 30.59/day
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="employee-card">
+                <div class="employee-header">
+                    <div class="employee-name">ايوب حداد</div>
+                    <div class="employee-status status-not-achieved">❌ MTD NOT ACHIEVED</div>
+                </div>
+                
+                <!-- UPDATED: Performance grid with new metrics -->
+                <div class="performance-grid">
+                    <div class="performance-item">
+                        <div class="performance-label">Total Gold Sales</div>
+                        <div class="performance-value">JOD 18,939.00</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Total Diamond Sales</div>
+                        <div class="performance-value">JOD 0</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Total Gold Weight</div>
+                        <div class="performance-value">195.62g</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Gold MTD %</div>
+                        <div class="performance-value">66.5%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Gold Month %</div>
+                        <div class="performance-value">34.5%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Diamond MTD %</div>
+                        <div class="performance-value">0.0%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Diamond Month %</div>
+                        <div class="performance-value">0.0%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Invoices</div>
+                        <div class="performance-value">4</div>
+                    </div>
+                </div>
+                
+                <!-- CHANGED: Today Required Sale section - made more visible -->
+                <div class="today-required-board">
+                    <div class="today-required-title">
+                        <i class="fas fa-bullseye"></i> Today Required Sale (to achieve MTD target)
+                    </div>
+                    <div class="today-required-grid">
+                        <div class="today-required-item gold">
+                            <div class="today-required-label">GOLD REQUIRED TODAY</div>
+                            <div class="today-required-value ">
+                                98.38g
+                            </div>
+                        </div>
+                        <div class="today-required-item diamond">
+                            <div class="today-required-label">DIAMOND REQUIRED TODAY</div>
+                            <div class="today-required-value ">
+                                JOD 840.00
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="daily-required">
+                    <div style="font-weight: 700; color: var(--color-success); margin-bottom: 1rem;">
+                        Daily Required Performance (Next 17 Work Days)
+                    </div>
+                    <div class="daily-grid">
+                        <div class="daily-item gold">
+                            <div class="daily-label">GOLD DAILY REQUIRED</div>
+                            <div class="daily-value">
+                                21.85g/day
+                            </div>
+                        </div>
+                        <div class="daily-item diamond">
+                            <div class="daily-label">DIAMOND DAILY REQUIRED</div>
+                            <div class="daily-value">
+                                JOD 95.29/day
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="employee-card">
+                <div class="employee-header">
+                    <div class="employee-name">احمد اسم</div>
+                    <div class="employee-status status-not-achieved">❌ MTD NOT ACHIEVED</div>
+                </div>
+                
+                <!-- UPDATED: Performance grid with new metrics -->
+                <div class="performance-grid">
+                    <div class="performance-item">
+                        <div class="performance-label">Total Gold Sales</div>
+                        <div class="performance-value">JOD 13,845.00</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Total Diamond Sales</div>
+                        <div class="performance-value">JOD 0</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Total Gold Weight</div>
+                        <div class="performance-value">136.46g</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Gold MTD %</div>
+                        <div class="performance-value">46.4%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Gold Month %</div>
+                        <div class="performance-value">24.1%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Diamond MTD %</div>
+                        <div class="performance-value">0.0%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Diamond Month %</div>
+                        <div class="performance-value">0.0%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Invoices</div>
+                        <div class="performance-value">4</div>
+                    </div>
+                </div>
+                
+                <!-- CHANGED: Today Required Sale section - made more visible -->
+                <div class="today-required-board">
+                    <div class="today-required-title">
+                        <i class="fas fa-bullseye"></i> Today Required Sale (to achieve MTD target)
+                    </div>
+                    <div class="today-required-grid">
+                        <div class="today-required-item gold">
+                            <div class="today-required-label">GOLD REQUIRED TODAY</div>
+                            <div class="today-required-value ">
+                                157.54g
+                            </div>
+                        </div>
+                        <div class="today-required-item diamond">
+                            <div class="today-required-label">DIAMOND REQUIRED TODAY</div>
+                            <div class="today-required-value ">
+                                JOD 840.00
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="daily-required">
+                    <div style="font-weight: 700; color: var(--color-success); margin-bottom: 1rem;">
+                        Daily Required Performance (Next 17 Work Days)
+                    </div>
+                    <div class="daily-grid">
+                        <div class="daily-item gold">
+                            <div class="daily-label">GOLD DAILY REQUIRED</div>
+                            <div class="daily-value">
+                                25.33g/day
+                            </div>
+                        </div>
+                        <div class="daily-item diamond">
+                            <div class="daily-label">DIAMOND DAILY REQUIRED</div>
+                            <div class="daily-value">
+                                JOD 95.29/day
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="employee-card">
+                <div class="employee-header">
+                    <div class="employee-name">عازر عصفور</div>
+                    <div class="employee-status status-not-achieved">❌ MTD NOT ACHIEVED</div>
+                </div>
+                
+                <!-- UPDATED: Performance grid with new metrics -->
+                <div class="performance-grid">
+                    <div class="performance-item">
+                        <div class="performance-label">Total Gold Sales</div>
+                        <div class="performance-value">JOD 10,519.00</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Total Diamond Sales</div>
+                        <div class="performance-value">JOD 0</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Total Gold Weight</div>
+                        <div class="performance-value">106.38g</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Gold MTD %</div>
+                        <div class="performance-value">36.2%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Gold Month %</div>
+                        <div class="performance-value">18.8%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Diamond MTD %</div>
+                        <div class="performance-value">0.0%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Diamond Month %</div>
+                        <div class="performance-value">0.0%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Invoices</div>
+                        <div class="performance-value">4</div>
+                    </div>
+                </div>
+                
+                <!-- CHANGED: Today Required Sale section - made more visible -->
+                <div class="today-required-board">
+                    <div class="today-required-title">
+                        <i class="fas fa-bullseye"></i> Today Required Sale (to achieve MTD target)
+                    </div>
+                    <div class="today-required-grid">
+                        <div class="today-required-item gold">
+                            <div class="today-required-label">GOLD REQUIRED TODAY</div>
+                            <div class="today-required-value ">
+                                187.62g
+                            </div>
+                        </div>
+                        <div class="today-required-item diamond">
+                            <div class="today-required-label">DIAMOND REQUIRED TODAY</div>
+                            <div class="today-required-value ">
+                                JOD 840.00
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="daily-required">
+                    <div style="font-weight: 700; color: var(--color-success); margin-bottom: 1rem;">
+                        Daily Required Performance (Next 17 Work Days)
+                    </div>
+                    <div class="daily-grid">
+                        <div class="daily-item gold">
+                            <div class="daily-label">GOLD DAILY REQUIRED</div>
+                            <div class="daily-value">
+                                27.10g/day
+                            </div>
+                        </div>
+                        <div class="daily-item diamond">
+                            <div class="daily-label">DIAMOND DAILY REQUIRED</div>
+                            <div class="daily-value">
+                                JOD 95.29/day
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="employee-card">
+                <div class="employee-header">
+                    <div class="employee-name">نصيف اللوح</div>
+                    <div class="employee-status status-not-achieved">❌ MTD NOT ACHIEVED</div>
+                </div>
+                
+                <!-- UPDATED: Performance grid with new metrics -->
+                <div class="performance-grid">
+                    <div class="performance-item">
+                        <div class="performance-label">Total Gold Sales</div>
+                        <div class="performance-value">JOD 8,972.00</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Total Diamond Sales</div>
+                        <div class="performance-value">JOD 0</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Total Gold Weight</div>
+                        <div class="performance-value">98.69g</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Gold MTD %</div>
+                        <div class="performance-value">33.6%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Gold Month %</div>
+                        <div class="performance-value">17.4%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Diamond MTD %</div>
+                        <div class="performance-value">0.0%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Diamond Month %</div>
+                        <div class="performance-value">0.0%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Invoices</div>
+                        <div class="performance-value">8</div>
+                    </div>
+                </div>
+                
+                <!-- CHANGED: Today Required Sale section - made more visible -->
+                <div class="today-required-board">
+                    <div class="today-required-title">
+                        <i class="fas fa-bullseye"></i> Today Required Sale (to achieve MTD target)
+                    </div>
+                    <div class="today-required-grid">
+                        <div class="today-required-item gold">
+                            <div class="today-required-label">GOLD REQUIRED TODAY</div>
+                            <div class="today-required-value ">
+                                195.31g
+                            </div>
+                        </div>
+                        <div class="today-required-item diamond">
+                            <div class="today-required-label">DIAMOND REQUIRED TODAY</div>
+                            <div class="today-required-value ">
+                                JOD 840.00
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="daily-required">
+                    <div style="font-weight: 700; color: var(--color-success); margin-bottom: 1rem;">
+                        Daily Required Performance (Next 17 Work Days)
+                    </div>
+                    <div class="daily-grid">
+                        <div class="daily-item gold">
+                            <div class="daily-label">GOLD DAILY REQUIRED</div>
+                            <div class="daily-value">
+                                27.55g/day
+                            </div>
+                        </div>
+                        <div class="daily-item diamond">
+                            <div class="daily-label">DIAMOND DAILY REQUIRED</div>
+                            <div class="daily-value">
+                                JOD 95.29/day
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="employee-card">
+                <div class="employee-header">
+                    <div class="employee-name">موسى دبور</div>
+                    <div class="employee-status status-not-achieved">❌ MTD NOT ACHIEVED</div>
+                </div>
+                
+                <!-- UPDATED: Performance grid with new metrics -->
+                <div class="performance-grid">
+                    <div class="performance-item">
+                        <div class="performance-label">Total Gold Sales</div>
+                        <div class="performance-value">JOD 8,105.00</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Total Diamond Sales</div>
+                        <div class="performance-value">JOD 0</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Total Gold Weight</div>
+                        <div class="performance-value">83.62g</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Gold MTD %</div>
+                        <div class="performance-value">28.4%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Gold Month %</div>
+                        <div class="performance-value">14.7%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Diamond MTD %</div>
+                        <div class="performance-value">0.0%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Diamond Month %</div>
+                        <div class="performance-value">0.0%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Invoices</div>
+                        <div class="performance-value">4</div>
+                    </div>
+                </div>
+                
+                <!-- CHANGED: Today Required Sale section - made more visible -->
+                <div class="today-required-board">
+                    <div class="today-required-title">
+                        <i class="fas fa-bullseye"></i> Today Required Sale (to achieve MTD target)
+                    </div>
+                    <div class="today-required-grid">
+                        <div class="today-required-item gold">
+                            <div class="today-required-label">GOLD REQUIRED TODAY</div>
+                            <div class="today-required-value ">
+                                210.38g
+                            </div>
+                        </div>
+                        <div class="today-required-item diamond">
+                            <div class="today-required-label">DIAMOND REQUIRED TODAY</div>
+                            <div class="today-required-value ">
+                                JOD 840.00
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="daily-required">
+                    <div style="font-weight: 700; color: var(--color-success); margin-bottom: 1rem;">
+                        Daily Required Performance (Next 17 Work Days)
+                    </div>
+                    <div class="daily-grid">
+                        <div class="daily-item gold">
+                            <div class="daily-label">GOLD DAILY REQUIRED</div>
+                            <div class="daily-value">
+                                28.43g/day
+                            </div>
+                        </div>
+                        <div class="daily-item diamond">
+                            <div class="daily-label">DIAMOND DAILY REQUIRED</div>
+                            <div class="daily-value">
+                                JOD 95.29/day
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="employee-card">
+                <div class="employee-header">
+                    <div class="employee-name">عامر الذهب</div>
+                    <div class="employee-status status-not-achieved">❌ MTD NOT ACHIEVED</div>
+                </div>
+                
+                <!-- UPDATED: Performance grid with new metrics -->
+                <div class="performance-grid">
+                    <div class="performance-item">
+                        <div class="performance-label">Total Gold Sales</div>
+                        <div class="performance-value">JOD 6,274.00</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Total Diamond Sales</div>
+                        <div class="performance-value">JOD 0</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Total Gold Weight</div>
+                        <div class="performance-value">60.96g</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Gold MTD %</div>
+                        <div class="performance-value">20.7%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Gold Month %</div>
+                        <div class="performance-value">10.8%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Diamond MTD %</div>
+                        <div class="performance-value">0.0%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Diamond Month %</div>
+                        <div class="performance-value">0.0%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Invoices</div>
+                        <div class="performance-value">6</div>
+                    </div>
+                </div>
+                
+                <!-- CHANGED: Today Required Sale section - made more visible -->
+                <div class="today-required-board">
+                    <div class="today-required-title">
+                        <i class="fas fa-bullseye"></i> Today Required Sale (to achieve MTD target)
+                    </div>
+                    <div class="today-required-grid">
+                        <div class="today-required-item gold">
+                            <div class="today-required-label">GOLD REQUIRED TODAY</div>
+                            <div class="today-required-value ">
+                                233.04g
+                            </div>
+                        </div>
+                        <div class="today-required-item diamond">
+                            <div class="today-required-label">DIAMOND REQUIRED TODAY</div>
+                            <div class="today-required-value ">
+                                JOD 840.00
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="daily-required">
+                    <div style="font-weight: 700; color: var(--color-success); margin-bottom: 1rem;">
+                        Daily Required Performance (Next 17 Work Days)
+                    </div>
+                    <div class="daily-grid">
+                        <div class="daily-item gold">
+                            <div class="daily-label">GOLD DAILY REQUIRED</div>
+                            <div class="daily-value">
+                                29.77g/day
+                            </div>
+                        </div>
+                        <div class="daily-item diamond">
+                            <div class="daily-label">DIAMOND DAILY REQUIRED</div>
+                            <div class="daily-value">
+                                JOD 95.29/day
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="employee-card">
+                <div class="employee-header">
+                    <div class="employee-name">انس الخوال</div>
+                    <div class="employee-status status-not-achieved">❌ MTD NOT ACHIEVED</div>
+                </div>
+                
+                <!-- UPDATED: Performance grid with new metrics -->
+                <div class="performance-grid">
+                    <div class="performance-item">
+                        <div class="performance-label">Total Gold Sales</div>
+                        <div class="performance-value">JOD 4,570.00</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Total Diamond Sales</div>
+                        <div class="performance-value">JOD 0</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Total Gold Weight</div>
+                        <div class="performance-value">45.35g</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Gold MTD %</div>
+                        <div class="performance-value">15.4%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Gold Month %</div>
+                        <div class="performance-value">8.0%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Diamond MTD %</div>
+                        <div class="performance-value">0.0%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Diamond Month %</div>
+                        <div class="performance-value">0.0%</div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">Invoices</div>
+                        <div class="performance-value">4</div>
+                    </div>
+                </div>
+                
+                <!-- CHANGED: Today Required Sale section - made more visible -->
+                <div class="today-required-board">
+                    <div class="today-required-title">
+                        <i class="fas fa-bullseye"></i> Today Required Sale (to achieve MTD target)
+                    </div>
+                    <div class="today-required-grid">
+                        <div class="today-required-item gold">
+                            <div class="today-required-label">GOLD REQUIRED TODAY</div>
+                            <div class="today-required-value ">
+                                248.65g
+                            </div>
+                        </div>
+                        <div class="today-required-item diamond">
+                            <div class="today-required-label">DIAMOND REQUIRED TODAY</div>
+                            <div class="today-required-value ">
+                                JOD 840.00
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="daily-required">
+                    <div style="font-weight: 700; color: var(--color-success); margin-bottom: 1rem;">
+                        Daily Required Performance (Next 17 Work Days)
+                    </div>
+                    <div class="daily-grid">
+                        <div class="daily-item gold">
+                            <div class="daily-label">GOLD DAILY REQUIRED</div>
+                            <div class="daily-value">
+                                30.69g/day
+                            </div>
+                        </div>
+                        <div class="daily-item diamond">
+                            <div class="daily-label">DIAMOND DAILY REQUIRED</div>
+                            <div class="daily-value">
+                                JOD 95.29/day
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <p><strong>Report Generated:</strong> 2026-01-14 16:46:39</p>
+            <p><strong>Branch:</strong> DW 1 • Work Days Left: 17 days</p>
+            <p><strong>Created By:</strong> Eng. Ashraf Harayri</p>
+        </div>
+    </div>
+</body>
+</html>

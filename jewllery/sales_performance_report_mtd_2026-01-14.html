@@ -1,0 +1,2439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retail Jewelry Sales Performance Report-clarix company- Month-to-Date Analysis</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* CSS Variables for Consistent Design System */
+        :root {
+            /* Color System — Clarix Dark Gold Theme */
+            --color-primary: #c9a84c;
+            --color-primary-dark: #a07830;
+            --color-primary-light: #e8c96d;
+            --color-secondary: #888;
+            --color-secondary-dark: #666;
+            --color-secondary-light: #aaa;
+            --color-success: #4caf7d;
+            --color-warning: #e0a030;
+            --color-danger: #e05555;
+            --color-overtarget: #b07de0;
+            --color-gold: #c9a84c;
+            --color-diamond: #5b8dee;
+            --color-silver: #9ca3af;
+            --color-bg-light: #0f0f0f;
+            --color-bg-white: #181818;
+            --color-bg-card: #1e1e1e;
+            --color-bg-header: #111;
+            --color-text-primary: #e8e0d0;
+            --color-text-secondary: #b0a898;
+            --color-text-light: #888;
+            --color-text-white: #ffffff;
+            --color-border: #2e2e2e;
+            --color-border-light: #222;
+            --color-border-dark: #3a3a3a;
+
+            /* Gradients */
+            --gradient-primary: linear-gradient(135deg, #a07830 0%, #c9a84c 100%);
+            --gradient-success: linear-gradient(135deg, #4caf7d 0%, #2d8a5a 100%);
+            --gradient-warning: linear-gradient(135deg, #e0a030 0%, #b07820 100%);
+            --gradient-danger: linear-gradient(135deg, #e05555 0%, #b03030 100%);
+            --gradient-overtarget: linear-gradient(135deg, #b07de0 0%, #8050b8 100%);
+            --gradient-gold: linear-gradient(135deg, #c9a84c 0%, #a07830 100%);
+            --gradient-diamond: linear-gradient(135deg, #5b8dee 0%, #3a6acc 100%);
+            --gradient-silver: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
+            
+            /* Typography */
+            --font-size-h1: 2.5rem;
+            --font-size-h2: 2rem;
+            --font-size-h3: 1.5rem;
+            --font-size-h4: 1.25rem;
+            --font-size-h5: 1.125rem;
+            --font-size-h6: 1rem;
+            --font-size-body-large: 1.125rem;
+            --font-size-body: 1rem;
+            --font-size-body-small: 0.875rem;
+            --font-size-caption: 0.75rem;
+            --font-size-button: 0.875rem;
+            
+            --font-weight-bold: 700;
+            --font-weight-semibold: 600;
+            --font-weight-medium: 500;
+            --font-weight-regular: 400;
+            
+            --line-height-tight: 1.25;
+            --line-height-normal: 1.5;
+            --line-height-relaxed: 1.75;
+            
+            /* Spacing */
+            --spacing-xs: 0.25rem;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+            --spacing-2xl: 3rem;
+            --spacing-3xl: 4rem;
+            
+            /* Border Radius */
+            --radius-sm: 0.25rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            --radius-2xl: 1.5rem;
+            --radius-full: 9999px;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+            
+            /* Animations */
+            --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            font-size: var(--font-size-body);
+            line-height: var(--line-height-normal);
+            color: var(--color-text-primary);
+            background: var(--color-bg-light);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            padding: var(--spacing-xl);
+        }
+
+        /* Clarix dark overrides */
+        h1,h2,h3,h4,h5,h6 { color: var(--color-text-primary); }
+        a { color: var(--color-primary-light); }
+        
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        /* Typography Classes */
+        h1, .h1 {
+            font-size: var(--font-size-h1);
+            font-weight: var(--font-weight-bold);
+            line-height: var(--line-height-tight);
+            color: var(--color-text-primary);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        h2, .h2 {
+            font-size: var(--font-size-h2);
+            font-weight: var(--font-weight-semibold);
+            line-height: var(--line-height-tight);
+            color: var(--color-text-primary);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        h3, .h3 {
+            font-size: var(--font-size-h3);
+            font-weight: var(--font-weight-semibold);
+            line-height: var(--line-height-tight);
+            color: var(--color-text-primary);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        h4, .h4 {
+            font-size: var(--font-size-h4);
+            font-weight: var(--font-weight-semibold);
+            line-height: var(--line-height-normal);
+            color: var(--color-text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        h5, .h5 {
+            font-size: var(--font-size-h5);
+            font-weight: var(--font-weight-semibold);
+            line-height: var(--line-height-normal);
+            color: var(--color-text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        h6, .h6 {
+            font-size: var(--font-size-h6);
+            font-weight: var(--font-weight-semibold);
+            line-height: var(--line-height-normal);
+            color: var(--color-text-secondary);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .text-body-large {
+            font-size: var(--font-size-body-large);
+            line-height: var(--line-height-normal);
+        }
+        
+        .text-body {
+            font-size: var(--font-size-body);
+            line-height: var(--line-height-normal);
+        }
+        
+        .text-body-small {
+            font-size: var(--font-size-body-small);
+            line-height: var(--line-height-normal);
+        }
+        
+        .text-caption {
+            font-size: var(--font-size-caption);
+            line-height: var(--line-height-normal);
+            color: var(--color-text-light);
+        }
+        
+        .text-strong {
+            font-weight: var(--font-weight-semibold);
+        }
+        
+        .text-muted {
+            color: var(--color-text-light);
+        }
+        
+        /* Header Section */
+        .header {
+            background: var(--color-bg-white);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-2xl);
+            margin-bottom: var(--spacing-2xl);
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--color-border);
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+        
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .header-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-primary);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-text-white);
+            font-size: 1.5rem;
+        }
+        
+        .header-subtitle {
+            color: var(--color-text-secondary);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        /* Download Button */
+        .download-btn {
+            position: absolute;
+            top: var(--spacing-xl);
+            right: var(--spacing-xl);
+            padding: var(--spacing-sm) var(--spacing-lg);
+            background: var(--gradient-success);
+            color: var(--color-text-white);
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: var(--font-weight-semibold);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            font-size: var(--font-size-button);
+            box-shadow: var(--shadow-md);
+            transition: all var(--transition-normal);
+            z-index: 10;
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        /* Note Box */
+        .note-box {
+            background: rgba(224,160,48,.08);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            margin: var(--spacing-xl) 0;
+            border-left: 4px solid var(--color-warning);
+        }
+
+        .note-title {
+            font-size: var(--font-size-h5);
+            font-weight: var(--font-weight-semibold);
+            color: var(--color-warning);
+            margin-bottom: var(--spacing-sm);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .note-content {
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-body-small);
+            line-height: var(--line-height-normal);
+        }
+        
+        /* Report Info Grid */
+        .report-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-xl);
+        }
+        
+        .info-item {
+            padding: var(--spacing-lg);
+            background: var(--color-bg-card);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--color-border);
+            transition: all var(--transition-normal);
+        }
+        
+        .info-item:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--color-primary-light);
+        }
+        
+        .info-label {
+            font-size: var(--font-size-caption);
+            color: var(--color-text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: var(--font-weight-semibold);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .info-value {
+            font-size: var(--font-size-h4);
+            font-weight: var(--font-weight-bold);
+            color: var(--color-primary);
+        }
+        
+        /* Section Styling */
+        .section {
+            margin-bottom: var(--spacing-3xl);
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        /* Summary Cards */
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-2xl);
+        }
+        
+        .summary-card {
+            background: var(--color-bg-white);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-xl);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--color-border);
+            transition: all var(--transition-normal);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .summary-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform var(--transition-normal);
+        }
+        
+        .summary-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--color-primary-light);
+        }
+        
+        .summary-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: var(--spacing-lg);
+            font-size: 1.5rem;
+            color: var(--color-text-white);
+        }
+        
+        .card-icon.gold {
+            background: var(--gradient-gold);
+        }
+        
+        .card-icon.diamond {
+            background: var(--gradient-diamond);
+        }
+        
+        .card-icon.sales {
+            background: var(--gradient-primary);
+        }
+        
+        .card-icon.achievement {
+            background: var(--gradient-success);
+        }
+        
+        .card-icon.overtarget {
+            background: var(--gradient-overtarget);
+        }
+        
+        .card-title {
+            font-size: var(--font-size-caption);
+            color: var(--color-text-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: var(--font-weight-semibold);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .card-value {
+            font-size: var(--font-size-h2);
+            font-weight: var(--font-weight-bold);
+            color: var(--color-text-primary);
+            margin-bottom: var(--spacing-xs);
+            line-height: 1;
+        }
+        
+        .card-detail {
+            font-size: var(--font-size-body-small);
+            color: var(--color-text-secondary);
+            font-weight: var(--font-weight-medium);
+        }
+        
+        /* Branch Cards */
+        .branch-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: var(--spacing-xl);
+            margin-bottom: var(--spacing-2xl);
+        }
+        
+        .branch-card {
+            background: var(--color-bg-white);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-xl);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--color-border);
+            transition: all var(--transition-normal);
+        }
+        
+        .branch-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--color-primary-light);
+        }
+        
+        .branch-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--spacing-lg);
+            padding-bottom: var(--spacing-lg);
+            border-bottom: 2px solid var(--color-border-light);
+        }
+        
+        .branch-name {
+            font-size: var(--font-size-h3);
+            font-weight: var(--font-weight-bold);
+            color: var(--color-text-primary);
+        }
+        
+        .branch-total {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: var(--spacing-xs);
+        }
+        
+        .branch-total-main {
+            font-size: var(--font-size-h4);
+            font-weight: var(--font-weight-bold);
+            color: var(--color-primary);
+        }
+        
+        .branch-total-extra {
+            font-size: var(--font-size-caption);
+            color: var(--color-text-light);
+        }
+        
+        .branch-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .branch-stat {
+            text-align: center;
+            padding: var(--spacing-md);
+            background: var(--color-bg-light);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--color-border);
+            transition: all var(--transition-fast);
+        }
+        
+        .branch-stat:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .stat-label {
+            font-size: var(--font-size-caption);
+            color: var(--color-text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: var(--font-weight-semibold);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .stat-value {
+            font-size: var(--font-size-h5);
+            font-weight: var(--font-weight-bold);
+            color: var(--color-text-primary);
+        }
+        
+        /* Product Summary Boxes */
+        .product-summary {
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-lg);
+            margin: var(--spacing-lg) 0;
+            border: 2px solid;
+        }
+        
+        .product-summary.gold {
+            background: rgba(201,168,76,.07);
+            border-color: var(--color-gold);
+        }
+
+        .product-summary.diamond {
+            background: rgba(91,141,238,.07);
+            border-color: var(--color-diamond);
+        }
+
+        .product-summary.silver {
+            background: rgba(156,163,175,.07);
+            border-color: var(--color-silver);
+        }
+        
+        .product-summary-header {
+            font-size: var(--font-size-h6);
+            font-weight: var(--font-weight-semibold);
+            margin-bottom: var(--spacing-md);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+        
+        .product-summary-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-sm);
+        }
+        
+        .product-summary-item {
+            text-align: center;
+            padding: var(--spacing-md);
+            background: rgba(255,255,255,.04);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--color-border);
+        }
+        
+        .product-summary-label {
+            font-size: var(--font-size-caption);
+            color: var(--color-text-light);
+            font-weight: var(--font-weight-medium);
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .product-summary-value {
+            font-size: var(--font-size-body);
+            font-weight: var(--font-weight-bold);
+        }
+        
+        /* Branch Actions */
+        .branch-actions {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-xl);
+            padding-top: var(--spacing-lg);
+            border-top: 1px solid var(--color-border);
+        }
+        
+        .btn {
+            flex: 1;
+            padding: var(--spacing-md) var(--spacing-lg);
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: var(--font-weight-semibold);
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+            font-size: var(--font-size-button);
+            text-decoration: none;
+        }
+        
+        .btn-primary {
+           background: linear-gradient(135deg, #a07830 0%, #c9a84c 100%);
+           color: #000;
+           box-shadow: 0 4px 12px rgba(201,168,76,0.3), 0 2px 4px rgba(0,0,0,0.2);
+           font-weight: 700;
+           border: none;
+           padding: 0.75rem 1.5rem;
+           border-radius: 0.5rem;
+           transition: all 0.2s ease;
+        }
+
+        .btn-primary:hover {
+          background: linear-gradient(135deg, #c9a84c 0%, #e8c96d 100%);
+          box-shadow: 0 6px 16px rgba(201,168,76,0.4);
+          transform: translateY(-1px);
+        }
+        
+        .btn-success {
+            background: var(--gradient-success);
+            color: var(--color-text-white);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        /* Performers Container */
+        .performers-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+            gap: var(--spacing-xl);
+            margin-bottom: var(--spacing-2xl);
+        }
+        
+        .performer-card {
+            background: var(--color-bg-white);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-xl);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--color-border);
+            transition: all var(--transition-normal);
+        }
+        
+        .best-performer-card {
+            border-top: 4px solid var(--color-success);
+        }
+        
+        .worst-performer-card {
+            border-top: 4px solid var(--color-warning);
+        }
+        
+        .performer-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--color-primary-light);
+        }
+        
+        .performer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--spacing-lg);
+            padding-bottom: var(--spacing-lg);
+            border-bottom: 2px solid var(--color-border-light);
+        }
+        
+        .performer-name-container {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--spacing-lg);
+        }
+        
+        .performer-badge {
+            width: 56px;
+            height: 56px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--color-text-white);
+            flex-shrink: 0;
+        }
+        
+        .best-badge {
+            background: var(--gradient-success);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .worst-badge {
+            background: var(--gradient-warning);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .performer-name {
+            font-size: var(--font-size-h4);
+            font-weight: var(--font-weight-bold);
+            color: var(--color-text-primary);
+            line-height: var(--line-height-tight);
+        }
+        
+        .performer-branch {
+            font-size: var(--font-size-body);
+            color: var(--color-text-secondary);
+            margin-top: var(--spacing-xs);
+            font-weight: var(--font-weight-medium);
+        }
+        
+        .performance-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .performance-stat {
+            text-align: center;
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-lg);
+            border: 2px solid;
+        }
+        
+        .performance-stat.gold {
+            background: rgba(201,168,76,.07);
+            border-color: var(--color-gold);
+        }
+
+        .performance-stat.diamond {
+            background: rgba(91,141,238,.07);
+            border-color: var(--color-diamond);
+        }
+        
+        /* Performance Tabs */
+        .performance-tabs {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .performance-tab {
+            padding: var(--spacing-md) var(--spacing-xl);
+            background: var(--color-bg-white);
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-md);
+            font-weight: var(--font-weight-semibold);
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            font-size: var(--font-size-button);
+        }
+        
+        .performance-tab.active {
+            background: var(--gradient-primary);
+            color: var(--color-text-white);
+            border-color: transparent;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .performance-tab:hover:not(.active) {
+            background: var(--color-bg-light);
+            transform: translateY(-2px);
+            border-color: var(--color-primary-light);
+        }
+        
+        /* Footer */
+        .footer {
+            background: var(--color-bg-white);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-2xl);
+            margin-top: var(--spacing-3xl);
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--color-border);
+        }
+        
+        .footer p {
+            margin: var(--spacing-sm) 0;
+            color: var(--color-text-secondary);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .branch-cards,
+            .performers-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .summary-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: var(--spacing-md);
+            }
+            
+            .header {
+                padding: var(--spacing-xl);
+            }
+            
+            .download-btn {
+                position: static;
+                width: 100%;
+                margin-top: var(--spacing-md);
+            }
+            
+            .summary-cards,
+            .branch-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .performance-tabs {
+                flex-direction: column;
+            }
+            
+            .branch-actions {
+                flex-direction: column;
+            }
+            
+            .performance-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .report-info {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: var(--font-size-h2);
+            }
+            
+            h2 {
+                font-size: var(--font-size-h3);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .performer-name-container {
+                flex-direction: column;
+                gap: var(--spacing-md);
+            }
+            
+            .performer-badge {
+                width: 48px;
+                height: 48px;
+            }
+            
+            .product-summary-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Performance tab override for dark */
+        .performance-tab {
+            background: var(--color-bg-card) !important;
+            border-color: var(--color-border) !important;
+            color: var(--color-text-secondary) !important;
+        }
+        .performance-tab.active {
+            background: var(--gradient-primary) !important;
+            color: #000 !important;
+            border-color: transparent !important;
+        }
+        .performance-tab:hover:not(.active) {
+            background: var(--color-bg-light) !important;
+            border-color: var(--color-primary-light) !important;
+            color: var(--color-primary-light) !important;
+        }
+
+        /* Print Styles */
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+
+            body {
+                padding: 0;
+                background: white;
+            }
+            
+            .header,
+            .section,
+            .footer {
+                box-shadow: none;
+                border: 1px solid #ddd;
+                break-inside: avoid;
+            }
+            
+            .summary-card,
+            .branch-card,
+            .performer-card {
+                break-inside: avoid;
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <button onclick="window.print()" class="download-btn no-print">
+                <i class="fas fa-download"></i> Download PDF
+            </button>
+            
+            <div class="header-title">
+                <div class="header-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div>
+                    <h1>Retail Jewelry Sales Performance Report(clarix)</h1>
+                    <div class="header-subtitle">Comprehensive Month-to-Date Analysis • 2026-01-14</div>
+                </div>
+            </div>
+            
+            <div class="note-box">
+                <div class="note-title"><i class="fas fa-info-circle"></i> Report Methodology</div>
+                <div class="note-content">
+                    <strong>Target Calculation:</strong> Gold targets measured in weight (grams), Diamond targets measured in sales (JOD).<br>
+                    <strong>Extra Sales:</strong> Gold ounces, coins, and silver sales tracked separately (not included in targets).<br>
+                    <strong>Achievement Criteria:</strong> Employee must achieve BOTH Gold and Diamond targets to be considered "ACHIEVED".<br>
+                </div>
+            </div>
+            
+            <div class="report-info">
+                <div class="info-item">
+                    <div class="info-label">Report Date</div>
+                    <div class="info-value">2026-01-14</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Sales Employees</div>
+                    <div class="info-value">58</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Total Sales</div>
+                    <div class="info-value">JOD 676,063.00</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Work Days Left</div>
+                    <div class="info-value">17</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Executive Summary -->
+        <div class="section">
+            <div class="section-header">
+                <h2><i class="fas fa-chart-bar"></i> Executive Summary</h2>
+            </div>
+            
+            <div class="summary-cards">
+                <div class="summary-card">
+                    <div class="card-icon sales">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="card-title">Total Sales</div>
+                    <div class="card-value">JOD 676,063.00</div>
+                    <div class="card-detail">Gold + Diamond Only</div>
+                </div>
+                
+                <div class="summary-card">
+                    <div class="card-icon sales">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="card-title">Total Sales</div>
+                    <div class="card-value">JOD 1,430,446.00</div>
+                    <div class="card-detail">Including Ounces, Coins & Silver</div>
+                </div>
+                
+                <!-- CHANGED: OVERTARGET Employees replaced with Total Diamond Sales -->
+                <div class="summary-card">
+                    <div class="card-icon diamond">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <div class="card-title">Total Diamond Sales</div>
+                    <div class="card-value">JOD 139,465.00</div>
+                    <div class="card-detail">All Diamond Sales</div>
+                </div>
+                
+                <div class="summary-card">
+                    <div class="card-icon gold">
+                        <i class="fas fa-weight-hanging"></i>
+                    </div>
+                    <div class="card-title">Total Weight</div>
+                    <div class="card-value">5,565.00g</div>
+                    <div class="card-detail">Total Gold Weight Sold</div>
+                </div>
+                
+                <!-- CHANGED: Total Quantity replaced with Gold Quantity -->
+                <div class="summary-card">
+                    <div class="card-icon gold">
+                        <i class="fas fa-cubes"></i>
+                    </div>
+                    <div class="card-title">Gold Quantity</div>
+                    <div class="card-value">628</div>
+                    <div class="card-detail">Gold Items Sold</div>
+                </div>
+                
+                <!-- CHANGED: Added Diamond Quantity -->
+                <div class="summary-card">
+                    <div class="card-icon diamond">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <div class="card-title">Diamond Quantity</div>
+                    <div class="card-value">72</div>
+                    <div class="card-detail">Diamond Items Sold</div>
+                </div>
+                
+                <div class="summary-card">
+                    <div class="card-icon achievement">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="card-title">MTD Achievement</div>
+                    <div class="card-value">3/49</div>
+                    <div class="card-detail">Employees Achieved Both MTD Targets</div>
+                </div>
+                
+                <div class="summary-card">
+                    <div class="card-icon achievement">
+                        <i class="fas fa-award"></i>
+                    </div>
+                    <div class="card-title">Monthly Achievement</div>
+                    <div class="card-value">0/49</div>
+                    <div class="card-detail">Employees Achieved Both Monthly Targets</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Branch Performance Overview -->
+        <div class="section">
+            <div class="section-header">
+                <h2><i class="fas fa-store"></i> Branch Performance Overview</h2>
+            </div>
+            
+            <div class="branch-cards">
+        
+                <div class="branch-card">
+                    <div class="branch-header">
+                        <div>
+                            <div class="branch-name">City Mall</div>
+                            <div class="text-caption">Sales Employees: 5</div>
+                        </div>
+                        <div class="branch-total">
+                             <div class="branch-total-main">Total Sales MTD</div>                       
+                            <div class="branch-total-main">JOD 59,753.00</div>
+                            <div class="branch-total-extra">(+JOD 49,092.00 extra)</div>
+                            <div class="text-caption" style="color: var(--color-overtarget); font-weight: 600;">OVERTARGET BRANCH</div>
+                        </div>
+                    </div>
+                    
+                    <!-- CHANGED: Updated branch stats to show new metrics -->
+                    <div class="branch-stats">
+                        <div class="branch-stat">
+                            <div class="stat-label">Gold Sales</div>
+                            <div class="stat-value">JOD 35,628.00</div>
+                        </div>
+                        <div class="branch-stat">
+                            <div class="stat-label">Diamond Sales</div>
+                            <div class="stat-value">JOD 24,125.00</div>
+                        </div>
+                        <div class="branch-stat">
+                            <div class="stat-label">Gold MTD %</div>
+                            <div class="stat-value">77.0%</div>
+                        </div>
+                        <div class="branch-stat">
+                            <div class="stat-label">Diamond MTD %</div>
+                            <div class="stat-value">328.2%</div>
+                        </div>
+                        <div class="branch-stat">
+                            <div class="stat-label">Gold Month %</div>
+                            <div class="stat-value">39.9%</div>
+                        </div>
+                        <div class="branch-stat">
+                            <div class="stat-label">Diamond Month %</div>
+                            <div class="stat-value">170.2%</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Gold Summary -->
+                    <div class="product-summary gold">
+                        <div class="product-summary-header" style="color: var(--color-gold);">
+                            <i class="fas fa-weight-hanging"></i> GOLD TARGET (Weight-Based)
+                        </div>
+                        <div class="product-summary-grid">
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">MTD Target</div>
+                                <div class="product-summary-value">420.00g</div>
+                            </div>
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">Monthly Target</div>
+                                <div class="product-summary-value">810.00g</div>
+                            </div>
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">MTD %</div>
+                                <div class="product-summary-value">77.0%</div>
+                            </div>
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">Today Req for MTD</div>
+                                <div class="product-summary-value">96.43g</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Diamond Summary -->
+                    <div class="product-summary diamond">
+                        <div class="product-summary-header" style="color: var(--color-diamond);">
+                            <i class="fas fa-gem"></i> DIAMOND TARGET (Sales-Based)
+                        </div>
+                        <div class="product-summary-grid">
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">MTD Target</div>
+                                <div class="product-summary-value">JOD 7,350.00</div>
+                            </div>
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">Monthly Target</div>
+                                <div class="product-summary-value">JOD 14,175.00</div>
+                            </div>
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">MTD %</div>
+                                <div class="product-summary-value">328.2%</div>
+                            </div>
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">Today Req for MTD</div>
+                                <div class="product-summary-value">JOD 0</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Extra Sales -->
+                    <div class="product-summary silver">
+                        <div class="product-summary-header" style="color: var(--color-silver);">
+                            <i class="fas fa-plus-circle"></i> Ounces, Coins & Silver SALES
+                        </div>
+                        <div class="product-summary-grid">
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">Silver Sales</div>
+                                <div class="product-summary-value">JOD 0</div>
+                            </div>
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">Extra Gold Sales</div>
+                                <div class="product-summary-value">JOD 49,092.00</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="branch-actions no-print">
+                        <a href="city-mall_report.html" class="btn btn-primary">
+                            <i class="fas fa-eye"></i> View Details
+                        </a>
+                        <button onclick="downloadBranchPDF('city-mall')" class="btn btn-success">
+                            <i class="fas fa-download"></i> Download PDF
+                        </button>
+                    </div>
+                </div>
+            
+                <div class="branch-card">
+                    <div class="branch-header">
+                        <div>
+                            <div class="branch-name">Macca Mall</div>
+                            <div class="text-caption">Sales Employees: 6</div>
+                        </div>
+                        <div class="branch-total">
+                             <div class="branch-total-main">Total Sales MTD</div>                       
+                            <div class="branch-total-main">JOD 35,929.00</div>
+                            <div class="branch-total-extra">(+JOD 123,686.00 extra)</div>
+                            
+                        </div>
+                    </div>
+                    
+                    <!-- CHANGED: Updated branch stats to show new metrics -->
+                    <div class="branch-stats">
+                        <div class="branch-stat">
+                            <div class="stat-label">Gold Sales</div>
+                            <div class="stat-value">JOD 28,909.00</div>
+                        </div>
+                        <div class="branch-stat">
+                            <div class="stat-label">Diamond Sales</div>
+                            <div class="stat-value">JOD 7,020.00</div>
+                        </div>
+                        <div class="branch-stat">
+                            <div class="stat-label">Gold MTD %</div>
+                            <div class="stat-value">60.1%</div>
+                        </div>
+                        <div class="branch-stat">
+                            <div class="stat-label">Diamond MTD %</div>
+                            <div class="stat-value">82.7%</div>
+                        </div>
+                        <div class="branch-stat">
+                            <div class="stat-label">Gold Month %</div>
+                            <div class="stat-value">31.2%</div>
+                        </div>
+                        <div class="branch-stat">
+                            <div class="stat-label">Diamond Month %</div>
+                            <div class="stat-value">37.8%</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Gold Summary -->
+                    <div class="product-summary gold">
+                        <div class="product-summary-header" style="color: var(--color-gold);">
+                            <i class="fas fa-weight-hanging"></i> GOLD TARGET (Weight-Based)
+                        </div>
+                        <div class="product-summary-grid">
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">MTD Target</div>
+                                <div class="product-summary-value">462.00g</div>
+                            </div>
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">Monthly Target</div>
+                                <div class="product-summary-value">891.00g</div>
+                            </div>
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">MTD %</div>
+                                <div class="product-summary-value">60.1%</div>
+                            </div>
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">Today Req for MTD</div>
+                                <div class="product-summary-value">184.38g</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Diamond Summary -->
+                    <div class="product-summary diamond">
+                        <div class="product-summary-header" style="color: var(--color-diamond);">
+                            <i class="fas fa-gem"></i> DIAMOND TARGET (Sales-Based)
+                        </div>
+                        <div class="product-summary-grid">
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">MTD Target</div>
+                                <div class="product-summary-value">JOD 8,484.00</div>
+                            </div>
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">Monthly Target</div>
+                                <div class="product-summary-value">JOD 18,595.00</div>
+                            </div>
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">MTD %</div>
+                                <div class="product-summary-value">82.7%</div>
+                            </div>
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">Today Req for MTD</div>
+                                <div class="product-summary-value">JOD 1,464.00</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Extra Sales -->
+                    <div class="product-summary silver">
+                        <div class="product-summary-header" style="color: var(--color-silver);">
+                            <i class="fas fa-plus-circle"></i> Ounces, Coins & Silver SALES
+                        </div>
+                        <div class="product-summary-grid">
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">Silver Sales</div>
+                                <div class="product-summary-value">JOD 3,577.00</div>
+                            </div>
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">Extra Gold Sales</div>
+                                <div class="product-summary-value">JOD 120,109.00</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="branch-actions no-print">
+                        <a href="macca-mall_report.html" class="btn btn-primary">
+                            <i class="fas fa-eye"></i> View Details
+                        </a>
+                        <button onclick="downloadBranchPDF('macca-mall')" class="btn btn-success">
+                            <i class="fas fa-download"></i> Download PDF
+                        </button>
+                    </div>
+                </div>
+            
+                <div class="branch-card">
+                    <div class="branch-header">
+                        <div>
+                            <div class="branch-name">Taj Mall</div>
+                            <div class="text-caption">Sales Employees: 6</div>
+                        </div>
+                        <div class="branch-total">
+                             <div class="branch-total-main">Total Sales MTD</div>                       
+                            <div class="branch-total-main">JOD 8,440.00</div>
+                            <div class="branch-total-extra">(+JOD 12,270.00 extra)</div>
+                            
+                        </div>
+                    </div>
+                    
+                    <!-- CHANGED: Updated branch stats to show new metrics -->
+                    <div class="branch-stats">
+                        <div class="branch-stat">
+                            <div class="stat-label">Gold Sales</div>
+                            <div class="stat-value">JOD 0</div>
+                        </div>
+                        <div class="branch-stat">
+                            <div class="stat-label">Diamond Sales</div>
+                            <div class="stat-value">JOD 8,440.00</div>
+                        </div>
+                        <div class="branch-stat">
+                            <div class="stat-label">Gold MTD %</div>
+                            <div class="stat-value">50.5%</div>
+                        </div>
+                        <div class="branch-stat">
+                            <div class="stat-label">Diamond MTD %</div>
+                            <div class="stat-value">56.1%</div>
+                        </div>
+                        <div class="branch-stat">
+                            <div class="stat-label">Gold Month %</div>
+                            <div class="stat-value">26.2%</div>
+                        </div>
+                        <div class="branch-stat">
+                            <div class="stat-label">Diamond Month %</div>
+                            <div class="stat-value">29.1%</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Gold Summary -->
+                    <div class="product-summary gold">
+                        <div class="product-summary-header" style="color: var(--color-gold);">
+                            <i class="fas fa-weight-hanging"></i> GOLD TARGET (Weight-Based)
+                        </div>
+                        <div class="product-summary-grid">
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">MTD Target</div>
+                                <div class="product-summary-value">378.00g</div>
+                            </div>
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">Monthly Target</div>
+                                <div class="product-summary-value">729.00g</div>
+                            </div>
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">MTD %</div>
+                                <div class="product-summary-value">50.5%</div>
+                            </div>
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">Today Req for MTD</div>
+                                <div class="product-summary-value">187.26g</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Diamond Summary -->
+                    <div class="product-summary diamond">
+                        <div class="product-summary-header" style="color: var(--color-diamond);">
+                            <i class="fas fa-gem"></i> DIAMOND TARGET (Sales-Based)
+                        </div>
+                        <div class="product-summary-grid">
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">MTD Target</div>
+                                <div class="product-summary-value">JOD 15,036.00</div>
+                            </div>
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">Monthly Target</div>
+                                <div class="product-summary-value">JOD 28,998.00</div>
+                            </div>
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">MTD %</div>
+                                <div class="product-summary-value">56.1%</div>
+                            </div>
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">Today Req for MTD</div>
+                                <div class="product-summary-value">JOD 6,596.00</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Extra Sales -->
+                    <div class="product-summary silver">
+                        <div class="product-summary-header" style="color: var(--color-silver);">
+                            <i class="fas fa-plus-circle"></i> Ounces, Coins & Silver SALES
+                        </div>
+                        <div class="product-summary-grid">
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">Silver Sales</div>
+                                <div class="product-summary-value">JOD 0</div>
+                            </div>
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">Extra Gold Sales</div>
+                                <div class="product-summary-value">JOD 12,270.00</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="branch-actions no-print">
+                        <a href="taj-mall_report.html" class="btn btn-primary">
+                            <i class="fas fa-eye"></i> View Details
+                        </a>
+                        <button onclick="downloadBranchPDF('taj-mall')" class="btn btn-success">
+                            <i class="fas fa-download"></i> Download PDF
+                        </button>
+                    </div>
+                </div>
+            
+                <div class="branch-card">
+                    <div class="branch-header">
+                        <div>
+                            <div class="branch-name">DW 1</div>
+                            <div class="text-caption">Sales Employees: 13</div>
+                        </div>
+                        <div class="branch-total">
+                             <div class="branch-total-main">Total Sales MTD</div>                       
+                            <div class="branch-total-main">JOD 171,456.00</div>
+                            <div class="branch-total-extra">(+JOD 93,227.00 extra)</div>
+                            
+                        </div>
+                    </div>
+                    
+                    <!-- CHANGED: Updated branch stats to show new metrics -->
+                    <div class="branch-stats">
+                        <div class="branch-stat">
+                            <div class="stat-label">Gold Sales</div>
+                            <div class="stat-value">JOD 167,956.00</div>
+                        </div>
+                        <div class="branch-stat">
+                            <div class="stat-label">Diamond Sales</div>
+                            <div class="stat-value">JOD 3,500.00</div>
+                        </div>
+                        <div class="branch-stat">
+                            <div class="stat-label">Gold MTD %</div>
+                            <div class="stat-value">7.3%</div>
+                        </div>
+                        <div class="branch-stat">
+                            <div class="stat-label">Diamond MTD %</div>
+                            <div class="stat-value">32.1%</div>
+                        </div>
+                        <div class="branch-stat">
+                            <div class="stat-label">Gold Month %</div>
+                            <div class="stat-value">3.8%</div>
+                        </div>
+                        <div class="branch-stat">
+                            <div class="stat-label">Diamond Month %</div>
+                            <div class="stat-value">16.6%</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Gold Summary -->
+                    <div class="product-summary gold">
+                        <div class="product-summary-header" style="color: var(--color-gold);">
+                            <i class="fas fa-weight-hanging"></i> GOLD TARGET (Weight-Based)
+                        </div>
+                        <div class="product-summary-grid">
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">MTD Target</div>
+                                <div class="product-summary-value">3,822.00g</div>
+                            </div>
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">Monthly Target</div>
+                                <div class="product-summary-value">7,371.00g</div>
+                            </div>
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">MTD %</div>
+                                <div class="product-summary-value">7.3%</div>
+                            </div>
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">Today Req for MTD</div>
+                                <div class="product-summary-value">3,544.38g</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Diamond Summary -->
+                    <div class="product-summary diamond">
+                        <div class="product-summary-header" style="color: var(--color-diamond);">
+                            <i class="fas fa-gem"></i> DIAMOND TARGET (Sales-Based)
+                        </div>
+                        <div class="product-summary-grid">
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">MTD Target</div>
+                                <div class="product-summary-value">JOD 10,920.00</div>
+                            </div>
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">Monthly Target</div>
+                                <div class="product-summary-value">JOD 21,060.00</div>
+                            </div>
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">MTD %</div>
+                                <div class="product-summary-value">32.1%</div>
+                            </div>
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">Today Req for MTD</div>
+                                <div class="product-summary-value">JOD 7,420.00</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Extra Sales -->
+                    <div class="product-summary silver">
+                        <div class="product-summary-header" style="color: var(--color-silver);">
+                            <i class="fas fa-plus-circle"></i> Ounces, Coins & Silver SALES
+                        </div>
+                        <div class="product-summary-grid">
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">Silver Sales</div>
+                                <div class="product-summary-value">JOD 24,786.00</div>
+                            </div>
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">Extra Gold Sales</div>
+                                <div class="product-summary-value">JOD 68,441.00</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="branch-actions no-print">
+                        <a href="dw-1_report.html" class="btn btn-primary">
+                            <i class="fas fa-eye"></i> View Details
+                        </a>
+                        <button onclick="downloadBranchPDF('dw-1')" class="btn btn-success">
+                            <i class="fas fa-download"></i> Download PDF
+                        </button>
+                    </div>
+                </div>
+            
+                <div class="branch-card">
+                    <div class="branch-header">
+                        <div>
+                            <div class="branch-name">DW 2</div>
+                            <div class="text-caption">Sales Employees: 4</div>
+                        </div>
+                        <div class="branch-total">
+                             <div class="branch-total-main">Total Sales MTD</div>                       
+                            <div class="branch-total-main">JOD 82,965.00</div>
+                            <div class="branch-total-extra">(+JOD 4,930.00 extra)</div>
+                            
+                        </div>
+                    </div>
+                    
+                    <!-- CHANGED: Updated branch stats to show new metrics -->
+                    <div class="branch-stats">
+                        <div class="branch-stat">
+                            <div class="stat-label">Gold Sales</div>
+                            <div class="stat-value">JOD 77,480.00</div>
+                        </div>
+                        <div class="branch-stat">
+                            <div class="stat-label">Diamond Sales</div>
+                            <div class="stat-value">JOD 5,485.00</div>
+                        </div>
+                        <div class="branch-stat">
+                            <div class="stat-label">Gold MTD %</div>
+                            <div class="stat-value">80.6%</div>
+                        </div>
+                        <div class="branch-stat">
+                            <div class="stat-label">Diamond MTD %</div>
+                            <div class="stat-value">150.7%</div>
+                        </div>
+                        <div class="branch-stat">
+                            <div class="stat-label">Gold Month %</div>
+                            <div class="stat-value">41.8%</div>
+                        </div>
+                        <div class="branch-stat">
+                            <div class="stat-label">Diamond Month %</div>
+                            <div class="stat-value">78.1%</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Gold Summary -->
+                    <div class="product-summary gold">
+                        <div class="product-summary-header" style="color: var(--color-gold);">
+                            <i class="fas fa-weight-hanging"></i> GOLD TARGET (Weight-Based)
+                        </div>
+                        <div class="product-summary-grid">
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">MTD Target</div>
+                                <div class="product-summary-value">952.00g</div>
+                            </div>
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">Monthly Target</div>
+                                <div class="product-summary-value">1,836.00g</div>
+                            </div>
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">MTD %</div>
+                                <div class="product-summary-value">80.6%</div>
+                            </div>
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">Today Req for MTD</div>
+                                <div class="product-summary-value">184.94g</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Diamond Summary -->
+                    <div class="product-summary diamond">
+                        <div class="product-summary-header" style="color: var(--color-diamond);">
+                            <i class="fas fa-gem"></i> DIAMOND TARGET (Sales-Based)
+                        </div>
+                        <div class="product-summary-grid">
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">MTD Target</div>
+                                <div class="product-summary-value">JOD 3,640.00</div>
+                            </div>
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">Monthly Target</div>
+                                <div class="product-summary-value">JOD 7,020.00</div>
+                            </div>
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">MTD %</div>
+                                <div class="product-summary-value">150.7%</div>
+                            </div>
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">Today Req for MTD</div>
+                                <div class="product-summary-value">JOD 0</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Extra Sales -->
+                    <div class="product-summary silver">
+                        <div class="product-summary-header" style="color: var(--color-silver);">
+                            <i class="fas fa-plus-circle"></i> Ounces, Coins & Silver SALES
+                        </div>
+                        <div class="product-summary-grid">
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">Silver Sales</div>
+                                <div class="product-summary-value">JOD 60.00</div>
+                            </div>
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">Extra Gold Sales</div>
+                                <div class="product-summary-value">JOD 4,870.00</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="branch-actions no-print">
+                        <a href="dw-2_report.html" class="btn btn-primary">
+                            <i class="fas fa-eye"></i> View Details
+                        </a>
+                        <button onclick="downloadBranchPDF('dw-2')" class="btn btn-success">
+                            <i class="fas fa-download"></i> Download PDF
+                        </button>
+                    </div>
+                </div>
+            
+                <div class="branch-card">
+                    <div class="branch-header">
+                        <div>
+                            <div class="branch-name">Um Uthaina</div>
+                            <div class="text-caption">Sales Employees: 24</div>
+                        </div>
+                        <div class="branch-total">
+                             <div class="branch-total-main">Total Sales MTD</div>                       
+                            <div class="branch-total-main">JOD 297,668.00</div>
+                            <div class="branch-total-extra">(+JOD 471,178.00 extra)</div>
+                            
+                        </div>
+                    </div>
+                    
+                    <!-- CHANGED: Updated branch stats to show new metrics -->
+                    <div class="branch-stats">
+                        <div class="branch-stat">
+                            <div class="stat-label">Gold Sales</div>
+                            <div class="stat-value">JOD 206,773.00</div>
+                        </div>
+                        <div class="branch-stat">
+                            <div class="stat-label">Diamond Sales</div>
+                            <div class="stat-value">JOD 90,895.00</div>
+                        </div>
+                        <div class="branch-stat">
+                            <div class="stat-label">Gold MTD %</div>
+                            <div class="stat-value">37.8%</div>
+                        </div>
+                        <div class="branch-stat">
+                            <div class="stat-label">Diamond MTD %</div>
+                            <div class="stat-value">42.6%</div>
+                        </div>
+                        <div class="branch-stat">
+                            <div class="stat-label">Gold Month %</div>
+                            <div class="stat-value">19.6%</div>
+                        </div>
+                        <div class="branch-stat">
+                            <div class="stat-label">Diamond Month %</div>
+                            <div class="stat-value">22.1%</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Gold Summary -->
+                    <div class="product-summary gold">
+                        <div class="product-summary-header" style="color: var(--color-gold);">
+                            <i class="fas fa-weight-hanging"></i> GOLD TARGET (Weight-Based)
+                        </div>
+                        <div class="product-summary-grid">
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">MTD Target</div>
+                                <div class="product-summary-value">5,265.40g</div>
+                            </div>
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">Monthly Target</div>
+                                <div class="product-summary-value">10,154.70g</div>
+                            </div>
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">MTD %</div>
+                                <div class="product-summary-value">37.8%</div>
+                            </div>
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">Today Req for MTD</div>
+                                <div class="product-summary-value">3,274.72g</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Diamond Summary -->
+                    <div class="product-summary diamond">
+                        <div class="product-summary-header" style="color: var(--color-diamond);">
+                            <i class="fas fa-gem"></i> DIAMOND TARGET (Sales-Based)
+                        </div>
+                        <div class="product-summary-grid">
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">MTD Target</div>
+                                <div class="product-summary-value">JOD 213,276.00</div>
+                            </div>
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">Monthly Target</div>
+                                <div class="product-summary-value">JOD 411,318.00</div>
+                            </div>
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">MTD %</div>
+                                <div class="product-summary-value">42.6%</div>
+                            </div>
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">Today Req for MTD</div>
+                                <div class="product-summary-value">JOD 122,381.00</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Extra Sales -->
+                    <div class="product-summary silver">
+                        <div class="product-summary-header" style="color: var(--color-silver);">
+                            <i class="fas fa-plus-circle"></i> Ounces, Coins & Silver SALES
+                        </div>
+                        <div class="product-summary-grid">
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">Silver Sales</div>
+                                <div class="product-summary-value">JOD 10,892.00</div>
+                            </div>
+                            <div class="product-summary-item">
+                                <div class="product-summary-label">Extra Gold Sales</div>
+                                <div class="product-summary-value">JOD 460,286.00</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="branch-actions no-print">
+                        <a href="um-uthaina_report.html" class="btn btn-primary">
+                            <i class="fas fa-eye"></i> View Details
+                        </a>
+                        <button onclick="downloadBranchPDF('um-uthaina')" class="btn btn-success">
+                            <i class="fas fa-download"></i> Download PDF
+                        </button>
+                    </div>
+                </div>
+            
+            </div>
+        </div>
+        
+        <!-- Top & Bottom Performers -->
+        <div class="section">
+            <div class="section-header">
+                <h2><i class="fas fa-trophy"></i> Top & Bottom Performers</h2>
+            </div>
+            
+            <div class="performance-tabs no-print">
+                <button class="performance-tab active" onclick="showBestPerformers()">
+                    <i class="fas fa-trophy"></i> Top Performers
+                </button>
+                <button class="performance-tab" onclick="showWorstPerformers()">
+                    <i class="fas fa-exclamation-triangle"></i> Bottom Performers
+                </button>
+            </div>
+            
+            <!-- Best Performers -->
+            <div id="best-performers-container" class="performers-container">
+        
+                <div class="performer-card best-performer-card">
+                    <div class="performer-header">
+                        <div class="performer-name-container">
+                            <div class="performer-badge best-badge">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <div>
+                                <div class="performer-name">فايق فؤاد</div>
+                                <div class="performer-branch">Um Uthaina</div>
+                                <div class="text-caption" style="color: var(--color-overtarget); margin-top: var(--spacing-xs);">
+                                    🚀 OVERTARGET
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="performance-stats">
+                        <div class="performance-stat gold">
+                            <div class="h5" style="color: var(--color-gold); margin-bottom: var(--spacing-md);">GOLD</div>
+                            <div class="h3" style="color: var(--color-text-primary);">JOD 30,320.00</div>
+                            <div class="text-body-small" style="margin-top: var(--spacing-sm);">
+                                Weight: 312.66g<br>
+                                MTD: 212.7%
+                            </div>
+                        </div>
+                        <div class="performance-stat diamond">
+                            <div class="h5" style="color: var(--color-diamond); margin-bottom: var(--spacing-md);">DIAMOND</div>
+                            <div class="h3" style="color: var(--color-text-primary);">JOD 4,950.00</div>
+                            <div class="text-body-small" style="margin-top: var(--spacing-sm);">
+                                Weight: 14.39g<br>
+                                MTD: 31.7%
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-body-small" style="background: var(--color-bg-light); padding: var(--spacing-md); border-radius: var(--radius-md); margin-top: var(--spacing-md);">
+                        <div class="text-strong" style="color: var(--color-text-secondary); margin-bottom: var(--spacing-xs);">MTD Gaps:</div>
+                        Gold: Achieved ✓ | Diamond: Need JOD 10,660.00
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: var(--spacing-lg); padding: var(--spacing-md); background: var(--color-bg-light); border-radius: var(--radius-md);">
+                        <div class="text-body-small">
+                            Total: JOD 35,270.00 • Weight: 327.05g
+                        </div>
+                        <div class="text-caption" style="margin-top: var(--spacing-xs);">
+                            Invoices: 18 • Quantity: 34
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="performer-card best-performer-card">
+                    <div class="performer-header">
+                        <div class="performer-name-container">
+                            <div class="performer-badge best-badge">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <div>
+                                <div class="performer-name">باسم سماوي</div>
+                                <div class="performer-branch">DW 1</div>
+                                <div class="text-caption" style="color: var(--color-overtarget); margin-top: var(--spacing-xs);">
+                                    🚀 OVERTARGET
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="performance-stats">
+                        <div class="performance-stat gold">
+                            <div class="h5" style="color: var(--color-gold); margin-bottom: var(--spacing-md);">GOLD</div>
+                            <div class="h3" style="color: var(--color-text-primary);">JOD 8,462.00</div>
+                            <div class="text-body-small" style="margin-top: var(--spacing-sm);">
+                                Weight: 88.36g<br>
+                                MTD: 30.1%
+                            </div>
+                        </div>
+                        <div class="performance-stat diamond">
+                            <div class="h5" style="color: var(--color-diamond); margin-bottom: var(--spacing-md);">DIAMOND</div>
+                            <div class="h3" style="color: var(--color-text-primary);">JOD 1,750.00</div>
+                            <div class="text-body-small" style="margin-top: var(--spacing-sm);">
+                                Weight: 4.19g<br>
+                                MTD: 208.3%
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-body-small" style="background: var(--color-bg-light); padding: var(--spacing-md); border-radius: var(--radius-md); margin-top: var(--spacing-md);">
+                        <div class="text-strong" style="color: var(--color-text-secondary); margin-bottom: var(--spacing-xs);">MTD Gaps:</div>
+                        Gold: Need 205.64g | Diamond: Achieved ✓
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: var(--spacing-lg); padding: var(--spacing-md); background: var(--color-bg-light); border-radius: var(--radius-md);">
+                        <div class="text-body-small">
+                            Total: JOD 10,212.00 • Weight: 92.55g
+                        </div>
+                        <div class="text-caption" style="margin-top: var(--spacing-xs);">
+                            Invoices: 12 • Quantity: 13
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="performer-card best-performer-card">
+                    <div class="performer-header">
+                        <div class="performer-name-container">
+                            <div class="performer-badge best-badge">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <div>
+                                <div class="performer-name">نيازي عمر</div>
+                                <div class="performer-branch">City Mall</div>
+                                <div class="text-caption" style="color: var(--color-overtarget); margin-top: var(--spacing-xs);">
+                                    🚀 OVERTARGET
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="performance-stats">
+                        <div class="performance-stat gold">
+                            <div class="h5" style="color: var(--color-gold); margin-bottom: var(--spacing-md);">GOLD</div>
+                            <div class="h3" style="color: var(--color-text-primary);">JOD 14,001.00</div>
+                            <div class="text-body-small" style="margin-top: var(--spacing-sm);">
+                                Weight: 130.28g<br>
+                                MTD: 155.1%
+                            </div>
+                        </div>
+                        <div class="performance-stat diamond">
+                            <div class="h5" style="color: var(--color-diamond); margin-bottom: var(--spacing-md);">DIAMOND</div>
+                            <div class="h3" style="color: var(--color-text-primary);">JOD 4,420.00</div>
+                            <div class="text-body-small" style="margin-top: var(--spacing-sm);">
+                                Weight: 11.67g<br>
+                                MTD: 300.7%
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-body-small" style="background: var(--color-bg-light); padding: var(--spacing-md); border-radius: var(--radius-md); margin-top: var(--spacing-md);">
+                        <div class="text-strong" style="color: var(--color-text-secondary); margin-bottom: var(--spacing-xs);">MTD Gaps:</div>
+                        Gold: Achieved ✓ | Diamond: Achieved ✓
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: var(--spacing-lg); padding: var(--spacing-md); background: var(--color-bg-light); border-radius: var(--radius-md);">
+                        <div class="text-body-small">
+                            Total: JOD 18,421.00 • Weight: 141.95g
+                        </div>
+                        <div class="text-caption" style="margin-top: var(--spacing-xs);">
+                            Invoices: 19 • Quantity: 22
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="performer-card best-performer-card">
+                    <div class="performer-header">
+                        <div class="performer-name-container">
+                            <div class="performer-badge best-badge">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <div>
+                                <div class="performer-name">شادي ايميل</div>
+                                <div class="performer-branch">Macca Mall</div>
+                                <div class="text-caption" style="color: var(--color-overtarget); margin-top: var(--spacing-xs);">
+                                    🚀 OVERTARGET
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="performance-stats">
+                        <div class="performance-stat gold">
+                            <div class="h5" style="color: var(--color-gold); margin-bottom: var(--spacing-md);">GOLD</div>
+                            <div class="h3" style="color: var(--color-text-primary);">JOD 335.00</div>
+                            <div class="text-body-small" style="margin-top: var(--spacing-sm);">
+                                Weight: 2.80g<br>
+                                MTD: 3.6%
+                            </div>
+                        </div>
+                        <div class="performance-stat diamond">
+                            <div class="h5" style="color: var(--color-diamond); margin-bottom: var(--spacing-md);">DIAMOND</div>
+                            <div class="h3" style="color: var(--color-text-primary);">JOD 3,100.00</div>
+                            <div class="text-body-small" style="margin-top: var(--spacing-sm);">
+                                Weight: 10.38g<br>
+                                MTD: 219.2%
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-body-small" style="background: var(--color-bg-light); padding: var(--spacing-md); border-radius: var(--radius-md); margin-top: var(--spacing-md);">
+                        <div class="text-strong" style="color: var(--color-text-secondary); margin-bottom: var(--spacing-xs);">MTD Gaps:</div>
+                        Gold: Need 74.20g | Diamond: Achieved ✓
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: var(--spacing-lg); padding: var(--spacing-md); background: var(--color-bg-light); border-radius: var(--radius-md);">
+                        <div class="text-body-small">
+                            Total: JOD 3,435.00 • Weight: 13.18g
+                        </div>
+                        <div class="text-caption" style="margin-top: var(--spacing-xs);">
+                            Invoices: 4 • Quantity: 4
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="performer-card best-performer-card">
+                    <div class="performer-header">
+                        <div class="performer-name-container">
+                            <div class="performer-badge best-badge">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <div>
+                                <div class="performer-name">الياس الدح</div>
+                                <div class="performer-branch">DW 2</div>
+                                <div class="text-caption" style="color: var(--color-overtarget); margin-top: var(--spacing-xs);">
+                                    🚀 OVERTARGET
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="performance-stats">
+                        <div class="performance-stat gold">
+                            <div class="h5" style="color: var(--color-gold); margin-bottom: var(--spacing-md);">GOLD</div>
+                            <div class="h3" style="color: var(--color-text-primary);">JOD 26,465.00</div>
+                            <div class="text-body-small" style="margin-top: var(--spacing-sm);">
+                                Weight: 263.82g<br>
+                                MTD: 110.8%
+                            </div>
+                        </div>
+                        <div class="performance-stat diamond">
+                            <div class="h5" style="color: var(--color-diamond); margin-bottom: var(--spacing-md);">DIAMOND</div>
+                            <div class="h3" style="color: var(--color-text-primary);">JOD 5,425.00</div>
+                            <div class="text-body-small" style="margin-top: var(--spacing-sm);">
+                                Weight: 10.48g<br>
+                                MTD: 596.2%
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-body-small" style="background: var(--color-bg-light); padding: var(--spacing-md); border-radius: var(--radius-md); margin-top: var(--spacing-md);">
+                        <div class="text-strong" style="color: var(--color-text-secondary); margin-bottom: var(--spacing-xs);">MTD Gaps:</div>
+                        Gold: Achieved ✓ | Diamond: Achieved ✓
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: var(--spacing-lg); padding: var(--spacing-md); background: var(--color-bg-light); border-radius: var(--radius-md);">
+                        <div class="text-body-small">
+                            Total: JOD 31,890.00 • Weight: 274.30g
+                        </div>
+                        <div class="text-caption" style="margin-top: var(--spacing-xs);">
+                            Invoices: 18 • Quantity: 27
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="performer-card best-performer-card">
+                    <div class="performer-header">
+                        <div class="performer-name-container">
+                            <div class="performer-badge best-badge">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <div>
+                                <div class="performer-name">الياس زايد</div>
+                                <div class="performer-branch">Taj Mall</div>
+                                <div class="text-caption" style="color: var(--color-overtarget); margin-top: var(--spacing-xs);">
+                                    🚀 OVERTARGET
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="performance-stats">
+                        <div class="performance-stat gold">
+                            <div class="h5" style="color: var(--color-gold); margin-bottom: var(--spacing-md);">GOLD</div>
+                            <div class="h3" style="color: var(--color-text-primary);">JOD 1,045.00</div>
+                            <div class="text-body-small" style="margin-top: var(--spacing-sm);">
+                                Weight: 9.08g<br>
+                                MTD: 14.4%
+                            </div>
+                        </div>
+                        <div class="performance-stat diamond">
+                            <div class="h5" style="color: var(--color-diamond); margin-bottom: var(--spacing-md);">DIAMOND</div>
+                            <div class="h3" style="color: var(--color-text-primary);">JOD 7,320.00</div>
+                            <div class="text-body-small" style="margin-top: var(--spacing-sm);">
+                                Weight: 25.57g<br>
+                                MTD: 292.1%
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-body-small" style="background: var(--color-bg-light); padding: var(--spacing-md); border-radius: var(--radius-md); margin-top: var(--spacing-md);">
+                        <div class="text-strong" style="color: var(--color-text-secondary); margin-bottom: var(--spacing-xs);">MTD Gaps:</div>
+                        Gold: Need 53.92g | Diamond: Achieved ✓
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: var(--spacing-lg); padding: var(--spacing-md); background: var(--color-bg-light); border-radius: var(--radius-md);">
+                        <div class="text-body-small">
+                            Total: JOD 8,365.00 • Weight: 34.65g
+                        </div>
+                        <div class="text-caption" style="margin-top: var(--spacing-xs);">
+                            Invoices: 5 • Quantity: 5
+                        </div>
+                    </div>
+                </div>
+            
+            </div>
+            
+            <!-- Worst Performers -->
+            <div id="worst-performers-container" class="performers-container" style="display: none;">
+        
+                <div class="performer-card worst-performer-card">
+                    <div class="performer-header">
+                        <div class="performer-name-container">
+                            <div class="performer-badge worst-badge">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div>
+                                <div class="performer-name">اياد دعيس</div>
+                                <div class="performer-branch">Um Uthaina</div>
+                                <div class="text-caption" style="color: var(--color-danger); margin-top: var(--spacing-xs);">
+                                    ❌ MTD NOT ACHIEVED
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="performance-stats">
+                        <div class="performance-stat gold">
+                            <div class="h5" style="color: var(--color-gold); margin-bottom: var(--spacing-md);">GOLD</div>
+                            <div class="h3" style="color: var(--color-text-primary);">JOD 0</div>
+                            <div class="text-body-small" style="margin-top: var(--spacing-sm);">
+                                Weight: 0.00g<br>
+                                MTD: 0.0%
+                            </div>
+                        </div>
+                        <div class="performance-stat diamond">
+                            <div class="h5" style="color: var(--color-diamond); margin-bottom: var(--spacing-md);">DIAMOND</div>
+                            <div class="h3" style="color: var(--color-text-primary);">JOD 0</div>
+                            <div class="text-body-small" style="margin-top: var(--spacing-sm);">
+                                Weight: 0.00g<br>
+                                MTD: 0.0%
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-body-small" style="background: var(--color-bg-light); padding: var(--spacing-md); border-radius: var(--radius-md); margin-top: var(--spacing-md);">
+                        <div class="text-strong" style="color: var(--color-text-secondary); margin-bottom: var(--spacing-xs);">MTD Gaps:</div>
+                        Gold: Need 249.20g | Diamond: Need JOD 6,118.00
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: var(--spacing-lg); padding: var(--spacing-md); background: var(--color-bg-light); border-radius: var(--radius-md);">
+                        <div class="text-body-small">
+                            Total: JOD 0 • Weight: 0.00g
+                        </div>
+                        <div class="text-caption" style="margin-top: var(--spacing-xs);">
+                            Invoices: 0 • Quantity: 0
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="performer-card worst-performer-card">
+                    <div class="performer-header">
+                        <div class="performer-name-container">
+                            <div class="performer-badge worst-badge">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div>
+                                <div class="performer-name">انس الخوال</div>
+                                <div class="performer-branch">DW 1</div>
+                                <div class="text-caption" style="color: var(--color-danger); margin-top: var(--spacing-xs);">
+                                    ❌ MTD NOT ACHIEVED
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="performance-stats">
+                        <div class="performance-stat gold">
+                            <div class="h5" style="color: var(--color-gold); margin-bottom: var(--spacing-md);">GOLD</div>
+                            <div class="h3" style="color: var(--color-text-primary);">JOD 4,570.00</div>
+                            <div class="text-body-small" style="margin-top: var(--spacing-sm);">
+                                Weight: 45.35g<br>
+                                MTD: 15.4%
+                            </div>
+                        </div>
+                        <div class="performance-stat diamond">
+                            <div class="h5" style="color: var(--color-diamond); margin-bottom: var(--spacing-md);">DIAMOND</div>
+                            <div class="h3" style="color: var(--color-text-primary);">JOD 0</div>
+                            <div class="text-body-small" style="margin-top: var(--spacing-sm);">
+                                Weight: 0.00g<br>
+                                MTD: 0.0%
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-body-small" style="background: var(--color-bg-light); padding: var(--spacing-md); border-radius: var(--radius-md); margin-top: var(--spacing-md);">
+                        <div class="text-strong" style="color: var(--color-text-secondary); margin-bottom: var(--spacing-xs);">MTD Gaps:</div>
+                        Gold: Need 248.65g | Diamond: Need JOD 840.00
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: var(--spacing-lg); padding: var(--spacing-md); background: var(--color-bg-light); border-radius: var(--radius-md);">
+                        <div class="text-body-small">
+                            Total: JOD 4,570.00 • Weight: 45.35g
+                        </div>
+                        <div class="text-caption" style="margin-top: var(--spacing-xs);">
+                            Invoices: 4 • Quantity: 9
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="performer-card worst-performer-card">
+                    <div class="performer-header">
+                        <div class="performer-name-container">
+                            <div class="performer-badge worst-badge">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div>
+                                <div class="performer-name">احمد ابوال</div>
+                                <div class="performer-branch">City Mall</div>
+                                <div class="text-caption" style="color: var(--color-danger); margin-top: var(--spacing-xs);">
+                                    ❌ MTD NOT ACHIEVED
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="performance-stats">
+                        <div class="performance-stat gold">
+                            <div class="h5" style="color: var(--color-gold); margin-bottom: var(--spacing-md);">GOLD</div>
+                            <div class="h3" style="color: var(--color-text-primary);">JOD 1,625.00</div>
+                            <div class="text-body-small" style="margin-top: var(--spacing-sm);">
+                                Weight: 13.48g<br>
+                                MTD: 16.0%
+                            </div>
+                        </div>
+                        <div class="performance-stat diamond">
+                            <div class="h5" style="color: var(--color-diamond); margin-bottom: var(--spacing-md);">DIAMOND</div>
+                            <div class="h3" style="color: var(--color-text-primary);">JOD 2,530.00</div>
+                            <div class="text-body-small" style="margin-top: var(--spacing-sm);">
+                                Weight: 4.80g<br>
+                                MTD: 172.1%
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-body-small" style="background: var(--color-bg-light); padding: var(--spacing-md); border-radius: var(--radius-md); margin-top: var(--spacing-md);">
+                        <div class="text-strong" style="color: var(--color-text-secondary); margin-bottom: var(--spacing-xs);">MTD Gaps:</div>
+                        Gold: Need 70.52g | Diamond: Achieved ✓
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: var(--spacing-lg); padding: var(--spacing-md); background: var(--color-bg-light); border-radius: var(--radius-md);">
+                        <div class="text-body-small">
+                            Total: JOD 4,155.00 • Weight: 18.28g
+                        </div>
+                        <div class="text-caption" style="margin-top: var(--spacing-xs);">
+                            Invoices: 7 • Quantity: 7
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="performer-card worst-performer-card">
+                    <div class="performer-header">
+                        <div class="performer-name-container">
+                            <div class="performer-badge worst-badge">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div>
+                                <div class="performer-name">قمر معين ف</div>
+                                <div class="performer-branch">Macca Mall</div>
+                                <div class="text-caption" style="color: var(--color-danger); margin-top: var(--spacing-xs);">
+                                    ❌ MTD NOT ACHIEVED
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="performance-stats">
+                        <div class="performance-stat gold">
+                            <div class="h5" style="color: var(--color-gold); margin-bottom: var(--spacing-md);">GOLD</div>
+                            <div class="h3" style="color: var(--color-text-primary);">JOD 3,213.00</div>
+                            <div class="text-body-small" style="margin-top: var(--spacing-sm);">
+                                Weight: 30.38g<br>
+                                MTD: 39.5%
+                            </div>
+                        </div>
+                        <div class="performance-stat diamond">
+                            <div class="h5" style="color: var(--color-diamond); margin-bottom: var(--spacing-md);">DIAMOND</div>
+                            <div class="h3" style="color: var(--color-text-primary);">JOD 0</div>
+                            <div class="text-body-small" style="margin-top: var(--spacing-sm);">
+                                Weight: 0.00g<br>
+                                MTD: 0.0%
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-body-small" style="background: var(--color-bg-light); padding: var(--spacing-md); border-radius: var(--radius-md); margin-top: var(--spacing-md);">
+                        <div class="text-strong" style="color: var(--color-text-secondary); margin-bottom: var(--spacing-xs);">MTD Gaps:</div>
+                        Gold: Need 46.62g | Diamond: Need JOD 1,414.00
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: var(--spacing-lg); padding: var(--spacing-md); background: var(--color-bg-light); border-radius: var(--radius-md);">
+                        <div class="text-body-small">
+                            Total: JOD 3,213.00 • Weight: 30.38g
+                        </div>
+                        <div class="text-caption" style="margin-top: var(--spacing-xs);">
+                            Invoices: 4 • Quantity: 4
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="performer-card worst-performer-card">
+                    <div class="performer-header">
+                        <div class="performer-name-container">
+                            <div class="performer-badge worst-badge">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div>
+                                <div class="performer-name">خليل مشربش</div>
+                                <div class="performer-branch">DW 2</div>
+                                <div class="text-caption" style="color: var(--color-danger); margin-top: var(--spacing-xs);">
+                                    ❌ MTD NOT ACHIEVED
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="performance-stats">
+                        <div class="performance-stat gold">
+                            <div class="h5" style="color: var(--color-gold); margin-bottom: var(--spacing-md);">GOLD</div>
+                            <div class="h3" style="color: var(--color-text-primary);">JOD 8,809.00</div>
+                            <div class="text-body-small" style="margin-top: var(--spacing-sm);">
+                                Weight: 87.48g<br>
+                                MTD: 36.8%
+                            </div>
+                        </div>
+                        <div class="performance-stat diamond">
+                            <div class="h5" style="color: var(--color-diamond); margin-bottom: var(--spacing-md);">DIAMOND</div>
+                            <div class="h3" style="color: var(--color-text-primary);">JOD 0</div>
+                            <div class="text-body-small" style="margin-top: var(--spacing-sm);">
+                                Weight: 0.00g<br>
+                                MTD: 0.0%
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-body-small" style="background: var(--color-bg-light); padding: var(--spacing-md); border-radius: var(--radius-md); margin-top: var(--spacing-md);">
+                        <div class="text-strong" style="color: var(--color-text-secondary); margin-bottom: var(--spacing-xs);">MTD Gaps:</div>
+                        Gold: Need 150.52g | Diamond: Need JOD 910.00
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: var(--spacing-lg); padding: var(--spacing-md); background: var(--color-bg-light); border-radius: var(--radius-md);">
+                        <div class="text-body-small">
+                            Total: JOD 8,809.00 • Weight: 87.48g
+                        </div>
+                        <div class="text-caption" style="margin-top: var(--spacing-xs);">
+                            Invoices: 8 • Quantity: 11
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="performer-card worst-performer-card">
+                    <div class="performer-header">
+                        <div class="performer-name-container">
+                            <div class="performer-badge worst-badge">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div>
+                                <div class="performer-name">مراد سرور</div>
+                                <div class="performer-branch">Taj Mall</div>
+                                <div class="text-caption" style="color: var(--color-danger); margin-top: var(--spacing-xs);">
+                                    ❌ MTD NOT ACHIEVED
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="performance-stats">
+                        <div class="performance-stat gold">
+                            <div class="h5" style="color: var(--color-gold); margin-bottom: var(--spacing-md);">GOLD</div>
+                            <div class="h3" style="color: var(--color-text-primary);">JOD 0</div>
+                            <div class="text-body-small" style="margin-top: var(--spacing-sm);">
+                                Weight: 0.00g<br>
+                                MTD: 0.0%
+                            </div>
+                        </div>
+                        <div class="performance-stat diamond">
+                            <div class="h5" style="color: var(--color-diamond); margin-bottom: var(--spacing-md);">DIAMOND</div>
+                            <div class="h3" style="color: var(--color-text-primary);">JOD 0</div>
+                            <div class="text-body-small" style="margin-top: var(--spacing-sm);">
+                                Weight: 0.00g<br>
+                                MTD: 0.0%
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-body-small" style="background: var(--color-bg-light); padding: var(--spacing-md); border-radius: var(--radius-md); margin-top: var(--spacing-md);">
+                        <div class="text-strong" style="color: var(--color-text-secondary); margin-bottom: var(--spacing-xs);">MTD Gaps:</div>
+                        Gold: Need 63.00g | Diamond: Need JOD 2,506.00
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: var(--spacing-lg); padding: var(--spacing-md); background: var(--color-bg-light); border-radius: var(--radius-md);">
+                        <div class="text-body-small">
+                            Total: JOD 0 • Weight: 0.00g
+                        </div>
+                        <div class="text-caption" style="margin-top: var(--spacing-xs);">
+                            Invoices: 0 • Quantity: 0
+                        </div>
+                    </div>
+                </div>
+            
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <h4>Report Summary</h4>
+            <p><strong>Report Generated:</strong> 2026-01-14 16:46:39</p>
+            <p><strong>Created By:</strong> Eng. Ashraf Harayri</p>
+            <p><strong>Note:</strong> Gold ounces, coins, and silver sales are tracked separately and not included in target calculations.</p>
+        </div>
+    </div>
+    
+    <script>
+        function showBestPerformers() {
+            document.getElementById('best-performers-container').style.display = 'grid';
+            document.getElementById('worst-performers-container').style.display = 'none';
+            document.querySelectorAll('.performance-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.performance-tab')[0].classList.add('active');
+        }
+        
+        function showWorstPerformers() {
+            document.getElementById('best-performers-container').style.display = 'none';
+            document.getElementById('worst-performers-container').style.display = 'grid';
+            document.querySelectorAll('.performance-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.performance-tab')[1].classList.add('active');
+        }
+        
+        function downloadBranchPDF(branchSlug) {
+            window.open(branchSlug + '_report.html');
+        }
+    </script>
+</body>
+</html>

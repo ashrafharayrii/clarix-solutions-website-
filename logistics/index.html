@@ -1,0 +1,2183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clarix Solutions – Logistics & Supply Chain</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+    /* ═══════════════════════════════════════
+       RESET & BASE
+    ═══════════════════════════════════════ */
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+    :root {
+        --navy:      #1e3c72;
+        --blue:      #2a5298;
+        --blue-mid:  #3b6fd4;
+        --blue-lt:   #5b8dee;
+        --accent:    #f59e0b;
+        --accent-dk: #d97706;
+        --green:     #10b981;
+        --bg:        #f4f7fc;
+        --bg2:       #eef2fa;
+        --white:     #ffffff;
+        --text:      #1e293b;
+        --text-mid:  #475569;
+        --text-lt:   #94a3b8;
+        --border:    #e2e8f0;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+        font-family: 'Inter', sans-serif;
+        color: var(--text);
+        background: var(--white);
+        line-height: 1.6;
+        overflow-x: hidden;
+    }
+
+    a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; }
+
+    /* ═══════════════════════════════════════
+       UTILITIES
+    ═══════════════════════════════════════ */
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 24px;
+    }
+
+    .section-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #dbeafe;
+        color: var(--blue);
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        padding: 5px 14px;
+        border-radius: 20px;
+        margin-bottom: 14px;
+    }
+
+    .section-heading {
+        font-size: clamp(26px, 4vw, 38px);
+        font-weight: 800;
+        color: var(--navy);
+        line-height: 1.2;
+        margin-bottom: 14px;
+    }
+
+    .section-sub {
+        font-size: 16px;
+        color: var(--text-mid);
+        max-width: 580px;
+        line-height: 1.7;
+    }
+
+    .highlight { color: var(--blue-mid); }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 13px 28px;
+        border-radius: 50px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        transition: all 0.25s;
+        font-family: 'Inter', sans-serif;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--navy), var(--blue));
+        color: white;
+        box-shadow: 0 8px 24px rgba(30,60,114,0.3);
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 30px rgba(30,60,114,0.4);
+    }
+
+    .btn-outline {
+        background: transparent;
+        color: white;
+        border: 2px solid rgba(255,255,255,0.5);
+    }
+
+    .btn-outline:hover {
+        background: rgba(255,255,255,0.12);
+        border-color: white;
+    }
+
+    .btn-accent {
+        background: linear-gradient(135deg, var(--accent-dk), var(--accent));
+        color: white;
+        box-shadow: 0 8px 24px rgba(245,158,11,0.35);
+    }
+
+    .btn-accent:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 30px rgba(245,158,11,0.45);
+    }
+
+    /* ═══════════════════════════════════════
+       NAVBAR
+    ═══════════════════════════════════════ */
+    .navbar {
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        z-index: 1000;
+        padding: 16px 0;
+        transition: all 0.3s;
+    }
+
+    .navbar.scrolled {
+        background: rgba(255,255,255,0.96);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        padding: 10px 0;
+    }
+
+    .navbar-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .navbar-brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .brand-logo {
+        width: 40px; height: 40px;
+        background: linear-gradient(135deg, var(--navy), var(--blue));
+        border-radius: 10px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 20px; color: white;
+    }
+
+    .brand-name {
+        font-size: 20px;
+        font-weight: 800;
+        color: white;
+        transition: color 0.3s;
+    }
+
+    .brand-name span { color: var(--accent); }
+
+    .navbar.scrolled .brand-name { color: var(--navy); }
+
+    .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        list-style: none;
+    }
+
+    .nav-links a {
+        padding: 8px 14px;
+        font-size: 14px;
+        font-weight: 500;
+        color: rgba(255,255,255,0.85);
+        border-radius: 8px;
+        transition: all 0.2s;
+    }
+
+    .navbar.scrolled .nav-links a { color: var(--text-mid); }
+
+    .nav-links a:hover {
+        background: rgba(255,255,255,0.12);
+        color: white;
+    }
+
+    .navbar.scrolled .nav-links a:hover {
+        background: var(--bg);
+        color: var(--navy);
+    }
+
+    .nav-cta {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .nav-cta .btn { padding: 9px 20px; font-size: 13px; }
+
+    .btn-nav-ghost {
+        background: rgba(255,255,255,0.12);
+        color: white;
+        border: 1px solid rgba(255,255,255,0.3);
+        border-radius: 50px;
+    }
+
+    .navbar.scrolled .btn-nav-ghost {
+        background: transparent;
+        color: var(--navy);
+        border-color: var(--navy);
+    }
+
+    .hamburger {
+        display: none;
+        flex-direction: column;
+        gap: 5px;
+        cursor: pointer;
+        padding: 6px;
+    }
+
+    .hamburger span {
+        display: block;
+        width: 24px; height: 2px;
+        background: white;
+        border-radius: 2px;
+        transition: all 0.3s;
+    }
+
+    .navbar.scrolled .hamburger span { background: var(--navy); }
+
+    /* ═══════════════════════════════════════
+       HERO
+    ═══════════════════════════════════════ */
+    .hero {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #0f2044 0%, #1e3c72 45%, #2a5298 100%);
+        position: relative;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+        padding: 120px 0 80px;
+    }
+
+    /* animated grid */
+    .hero::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image:
+            linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+        background-size: 60px 60px;
+    }
+
+    /* glowing orbs */
+    .hero-orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.2;
+    }
+
+    .hero-orb-1 {
+        width: 500px; height: 500px;
+        background: #5b8dee;
+        top: -100px; right: -100px;
+    }
+
+    .hero-orb-2 {
+        width: 350px; height: 350px;
+        background: var(--accent);
+        bottom: -50px; left: 10%;
+    }
+
+    .hero-inner {
+        position: relative;
+        z-index: 2;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+        align-items: center;
+    }
+
+    .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(255,255,255,0.1);
+        border: 1px solid rgba(255,255,255,0.2);
+        color: rgba(255,255,255,0.9);
+        font-size: 12px;
+        font-weight: 600;
+        padding: 6px 14px;
+        border-radius: 20px;
+        margin-bottom: 20px;
+        backdrop-filter: blur(8px);
+    }
+
+    .hero-badge .dot {
+        width: 7px; height: 7px;
+        background: var(--green);
+        border-radius: 50%;
+        animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+        0%,100% { opacity:1; transform:scale(1); }
+        50%      { opacity:0.5; transform:scale(1.4); }
+    }
+
+    .hero h1 {
+        font-size: clamp(32px, 5vw, 56px);
+        font-weight: 900;
+        color: white;
+        line-height: 1.1;
+        margin-bottom: 20px;
+    }
+
+    .hero h1 .accent-word {
+        color: var(--accent);
+        position: relative;
+    }
+
+    .hero-desc {
+        font-size: 17px;
+        color: rgba(255,255,255,0.75);
+        line-height: 1.75;
+        margin-bottom: 32px;
+        max-width: 480px;
+    }
+
+    .hero-actions {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+        margin-bottom: 48px;
+    }
+
+    .hero-stats {
+        display: flex;
+        gap: 32px;
+        padding-top: 32px;
+        border-top: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .hero-stat-num {
+        font-size: 26px;
+        font-weight: 800;
+        color: white;
+    }
+
+    .hero-stat-lbl {
+        font-size: 12px;
+        color: rgba(255,255,255,0.6);
+        margin-top: 2px;
+    }
+
+    /* hero right: floating cards */
+    .hero-visual {
+        position: relative;
+        height: 480px;
+    }
+
+    .float-card {
+        position: absolute;
+        background: rgba(255,255,255,0.07);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 16px;
+        padding: 16px 20px;
+        color: white;
+        animation: float 4s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%,100% { transform: translateY(0); }
+        50%      { transform: translateY(-10px); }
+    }
+
+    .float-card:nth-child(2) { animation-delay: 0.8s; }
+    .float-card:nth-child(3) { animation-delay: 1.6s; }
+    .float-card:nth-child(4) { animation-delay: 2.4s; }
+
+    .card-main {
+        top: 30px; left: 0;
+        width: 220px;
+    }
+
+    .card-shipment {
+        top: 180px; right: 0;
+        width: 200px;
+    }
+
+    .card-kpi {
+        bottom: 60px; left: 40px;
+        width: 240px;
+    }
+
+    .card-alert {
+        top: 60px; right: 40px;
+        width: 180px;
+    }
+
+    .fc-icon {
+        width: 36px; height: 36px;
+        border-radius: 10px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 17px; margin-bottom: 10px;
+    }
+
+    .fc-icon.blue   { background: rgba(91,141,238,0.3); }
+    .fc-icon.green  { background: rgba(16,185,129,0.3); }
+    .fc-icon.amber  { background: rgba(245,158,11,0.3); }
+    .fc-icon.purple { background: rgba(124,58,237,0.3); }
+
+    .fc-title { font-size: 11px; color: rgba(255,255,255,0.6); margin-bottom: 4px; }
+    .fc-val   { font-size: 20px; font-weight: 800; }
+    .fc-sub   { font-size: 10px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+
+    .fc-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 11px;
+        padding: 4px 0;
+        border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .fc-row:last-child { border-bottom: none; }
+    .fc-dot { width: 6px; height: 6px; border-radius: 50%; margin-right: 5px; display: inline-block; }
+
+    .mini-bar {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 6px;
+    }
+
+    .mini-bar-bg {
+        flex: 1; height: 4px;
+        background: rgba(255,255,255,0.15);
+        border-radius: 2px; overflow: hidden;
+    }
+
+    .mini-bar-fill {
+        height: 100%;
+        border-radius: 2px;
+        background: var(--green);
+    }
+
+    /* ═══════════════════════════════════════
+       TRUST BAR
+    ═══════════════════════════════════════ */
+    .trust-bar {
+        background: var(--navy);
+        padding: 20px 0;
+    }
+
+    .trust-inner {
+        display: flex;
+        align-items: center;
+        gap: 40px;
+        overflow: hidden;
+    }
+
+    .trust-label {
+        font-size: 12px;
+        color: rgba(255,255,255,0.4);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    .trust-logos {
+        display: flex;
+        align-items: center;
+        gap: 40px;
+        flex-wrap: wrap;
+    }
+
+    .trust-logo {
+        font-size: 14px;
+        font-weight: 700;
+        color: rgba(255,255,255,0.35);
+        letter-spacing: 1px;
+        transition: color 0.2s;
+        white-space: nowrap;
+    }
+
+    .trust-logo:hover { color: rgba(255,255,255,0.7); }
+
+    /* ═══════════════════════════════════════
+       SERVICES
+    ═══════════════════════════════════════ */
+    .services {
+        padding: 100px 0;
+        background: var(--bg);
+    }
+
+    .services-header {
+        text-align: center;
+        margin-bottom: 60px;
+    }
+
+    .services-header .section-sub { margin: 0 auto; }
+
+    .services-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+    }
+
+    .service-card {
+        background: white;
+        border-radius: 20px;
+        padding: 32px 28px;
+        border: 1px solid var(--border);
+        transition: all 0.3s;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .service-card::after {
+        content: '';
+        position: absolute;
+        bottom: 0; left: 0; right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--navy), var(--blue-mid));
+        transform: scaleX(0);
+        transition: transform 0.3s;
+        transform-origin: left;
+    }
+
+    .service-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 20px 50px rgba(30,60,114,0.12);
+        border-color: transparent;
+    }
+
+    .service-card:hover::after { transform: scaleX(1); }
+
+    .svc-icon {
+        width: 56px; height: 56px;
+        border-radius: 14px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    .svc-icon.navy   { background: #dbeafe; color: var(--navy); }
+    .svc-icon.green  { background: #d1fae5; color: #059669; }
+    .svc-icon.amber  { background: #fef3c7; color: var(--accent-dk); }
+    .svc-icon.purple { background: #ede9fe; color: #7c3aed; }
+    .svc-icon.teal   { background: #ccfbf1; color: #0d9488; }
+    .svc-icon.red    { background: #fee2e2; color: #dc2626; }
+
+    .svc-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--navy);
+        margin-bottom: 10px;
+    }
+
+    .svc-desc {
+        font-size: 14px;
+        color: var(--text-mid);
+        line-height: 1.7;
+        margin-bottom: 20px;
+    }
+
+    .svc-link {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--blue);
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        transition: gap 0.2s;
+    }
+
+    .svc-link:hover { gap: 8px; }
+
+    /* ═══════════════════════════════════════
+       STATS
+    ═══════════════════════════════════════ */
+    .stats {
+        padding: 80px 0;
+        background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stats::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image:
+            linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+        background-size: 40px 40px;
+    }
+
+    .stats-grid {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0;
+    }
+
+    .stat-item {
+        text-align: center;
+        padding: 20px;
+        border-right: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .stat-item:last-child { border-right: none; }
+
+    .stat-icon {
+        font-size: 32px;
+        color: var(--accent);
+        margin-bottom: 12px;
+    }
+
+    .stat-num {
+        font-size: 46px;
+        font-weight: 900;
+        color: white;
+        line-height: 1;
+        margin-bottom: 8px;
+    }
+
+    .stat-num span { color: var(--accent); }
+
+    .stat-lbl {
+        font-size: 14px;
+        color: rgba(255,255,255,0.65);
+        font-weight: 500;
+    }
+
+    /* ═══════════════════════════════════════
+       WHY CHOOSE US
+    ═══════════════════════════════════════ */
+    .why {
+        padding: 100px 0;
+        background: white;
+    }
+
+    .why-inner {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 80px;
+        align-items: center;
+    }
+
+    .why-visual {
+        position: relative;
+    }
+
+    .why-img-bg {
+        width: 100%;
+        aspect-ratio: 4/3;
+        background: linear-gradient(135deg, #dbeafe 0%, #e0f2fe 100%);
+        border-radius: 24px;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .why-img-bg i {
+        font-size: 120px;
+        color: rgba(30,60,114,0.08);
+    }
+
+    .why-img-icon {
+        position: absolute;
+        font-size: 80px;
+        color: rgba(30,60,114,0.15);
+    }
+
+    .why-bubble {
+        position: absolute;
+        background: white;
+        border-radius: 16px;
+        padding: 14px 18px;
+        box-shadow: 0 16px 40px rgba(0,0,0,0.1);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .why-bubble-1 { bottom: -20px; left: -20px; }
+    .why-bubble-2 { top: -20px;    right: -20px; }
+
+    .wb-icon {
+        width: 40px; height: 40px;
+        border-radius: 10px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 18px;
+        flex-shrink: 0;
+    }
+
+    .wb-val  { font-size: 18px; font-weight: 800; color: var(--navy); }
+    .wb-txt  { font-size: 11px; color: var(--text-mid); }
+
+    .why-features {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        margin-top: 36px;
+    }
+
+    .why-feature {
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+    }
+
+    .wf-icon {
+        width: 44px; height: 44px;
+        border-radius: 12px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 20px;
+        flex-shrink: 0;
+        margin-top: 2px;
+    }
+
+    .wf-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--navy);
+        margin-bottom: 4px;
+    }
+
+    .wf-desc {
+        font-size: 13px;
+        color: var(--text-mid);
+        line-height: 1.65;
+    }
+
+    /* ═══════════════════════════════════════
+       HOW IT WORKS
+    ═══════════════════════════════════════ */
+    .how {
+        padding: 100px 0;
+        background: var(--bg);
+    }
+
+    .how-header { text-align: center; margin-bottom: 60px; }
+    .how-header .section-sub { margin: 0 auto; }
+
+    .how-steps {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0;
+        position: relative;
+    }
+
+    .how-steps::before {
+        content: '';
+        position: absolute;
+        top: 36px;
+        left: calc(12.5% + 28px);
+        right: calc(12.5% + 28px);
+        height: 2px;
+        background: linear-gradient(90deg, var(--navy), var(--blue-mid));
+        z-index: 0;
+    }
+
+    .how-step {
+        text-align: center;
+        padding: 0 20px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .step-num {
+        width: 72px; height: 72px;
+        background: linear-gradient(135deg, var(--navy), var(--blue));
+        color: white;
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 22px;
+        font-weight: 800;
+        margin: 0 auto 20px;
+        box-shadow: 0 8px 24px rgba(30,60,114,0.3);
+        position: relative;
+    }
+
+    .step-num::after {
+        content: '';
+        position: absolute;
+        inset: -5px;
+        border-radius: 50%;
+        border: 2px dashed rgba(30,60,114,0.2);
+    }
+
+    .step-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--navy);
+        margin-bottom: 10px;
+    }
+
+    .step-desc {
+        font-size: 13px;
+        color: var(--text-mid);
+        line-height: 1.65;
+    }
+
+    /* ═══════════════════════════════════════
+       SOLUTIONS / TABS
+    ═══════════════════════════════════════ */
+    .solutions {
+        padding: 100px 0;
+        background: white;
+    }
+
+    .sol-header { margin-bottom: 48px; }
+
+    .sol-tabs {
+        display: flex;
+        gap: 6px;
+        background: var(--bg);
+        padding: 5px;
+        border-radius: 50px;
+        margin-bottom: 40px;
+        width: fit-content;
+    }
+
+    .sol-tab {
+        padding: 9px 20px;
+        border-radius: 40px;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-mid);
+        cursor: pointer;
+        border: none;
+        background: transparent;
+        font-family: 'Inter', sans-serif;
+        transition: all 0.25s;
+        display: flex; align-items: center; gap: 6px;
+    }
+
+    .sol-tab:hover { color: var(--navy); }
+
+    .sol-tab.active {
+        background: linear-gradient(135deg, var(--navy), var(--blue));
+        color: white;
+        box-shadow: 0 4px 14px rgba(30,60,114,0.3);
+    }
+
+    .sol-panel { display: none; }
+    .sol-panel.active { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+
+    .sol-list {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .sol-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        padding: 16px;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .sol-item:hover { background: var(--bg); }
+
+    .si-icon {
+        width: 42px; height: 42px;
+        border-radius: 10px;
+        background: #dbeafe;
+        color: var(--navy);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 18px;
+        flex-shrink: 0;
+    }
+
+    .si-title { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 3px; }
+    .si-desc  { font-size: 12px; color: var(--text-mid); line-height: 1.5; }
+
+    .sol-img-box {
+        background: linear-gradient(135deg, #dbeafe 0%, var(--bg2) 100%);
+        border-radius: 20px;
+        aspect-ratio: 4/3;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 100px;
+        color: rgba(30,60,114,0.12);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .sol-img-box i { position: relative; z-index: 1; }
+
+    /* ═══════════════════════════════════════
+       TESTIMONIALS
+    ═══════════════════════════════════════ */
+    .testi {
+        padding: 100px 0;
+        background: var(--bg);
+    }
+
+    .testi-header { text-align: center; margin-bottom: 60px; }
+    .testi-header .section-sub { margin: 0 auto; }
+
+    .testi-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+    }
+
+    .testi-card {
+        background: white;
+        border-radius: 20px;
+        padding: 28px;
+        border: 1px solid var(--border);
+        transition: all 0.3s;
+        position: relative;
+    }
+
+    .testi-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 16px 40px rgba(30,60,114,0.1);
+    }
+
+    .testi-quote {
+        font-size: 42px;
+        color: var(--blue-mid);
+        opacity: 0.15;
+        font-family: Georgia, serif;
+        line-height: 1;
+        margin-bottom: 6px;
+    }
+
+    .testi-text {
+        font-size: 14px;
+        color: var(--text-mid);
+        line-height: 1.75;
+        margin-bottom: 24px;
+        font-style: italic;
+    }
+
+    .testi-author {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .ta-avatar {
+        width: 44px; height: 44px;
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 18px;
+        font-weight: 700;
+        color: white;
+        flex-shrink: 0;
+    }
+
+    .ta-name    { font-size: 14px; font-weight: 700; color: var(--navy); }
+    .ta-role    { font-size: 12px; color: var(--text-lt); }
+
+    .testi-stars {
+        display: flex;
+        gap: 2px;
+        margin-bottom: 16px;
+        color: var(--accent);
+        font-size: 14px;
+    }
+
+    /* ═══════════════════════════════════════
+       CTA BANNER
+    ═══════════════════════════════════════ */
+    .cta-banner {
+        padding: 80px 0;
+        background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .cta-banner::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image:
+            linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+        background-size: 50px 50px;
+    }
+
+    .cta-inner {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 40px;
+        align-items: center;
+    }
+
+    .cta-title {
+        font-size: clamp(24px, 3.5vw, 36px);
+        font-weight: 800;
+        color: white;
+        margin-bottom: 10px;
+    }
+
+    .cta-sub {
+        font-size: 15px;
+        color: rgba(255,255,255,0.7);
+    }
+
+    .cta-actions { display: flex; gap: 14px; align-items: center; white-space: nowrap; }
+
+    /* ═══════════════════════════════════════
+       CONTACT
+    ═══════════════════════════════════════ */
+    .contact {
+        padding: 100px 0;
+        background: white;
+    }
+
+    .contact-inner {
+        display: grid;
+        grid-template-columns: 1fr 1.4fr;
+        gap: 80px;
+        align-items: start;
+    }
+
+    .contact-info {}
+
+    .contact-items {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        margin-top: 32px;
+    }
+
+    .contact-item {
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+    }
+
+    .ci-icon {
+        width: 44px; height: 44px;
+        border-radius: 12px;
+        background: #dbeafe;
+        color: var(--navy);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 20px;
+        flex-shrink: 0;
+    }
+
+    .ci-label { font-size: 11px; color: var(--text-lt); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    .ci-val   { font-size: 14px; font-weight: 600; color: var(--text); margin-top: 2px; }
+
+    .contact-form-box {
+        background: var(--bg);
+        border-radius: 24px;
+        padding: 40px;
+        border: 1px solid var(--border);
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+    .form-group label {
+        display: block;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-mid);
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        margin-bottom: 6px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        font-size: 14px;
+        font-family: 'Inter', sans-serif;
+        color: var(--text);
+        background: white;
+        transition: border-color 0.2s;
+        outline: none;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        border-color: var(--blue);
+        box-shadow: 0 0 0 3px rgba(42,82,152,0.08);
+    }
+
+    .form-group textarea { resize: vertical; min-height: 110px; }
+
+    /* ═══════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════ */
+    .footer {
+        background: #0d1f3c;
+        color: rgba(255,255,255,0.7);
+        padding: 70px 0 0;
+    }
+
+    .footer-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr 1fr;
+        gap: 48px;
+        padding-bottom: 60px;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .footer-brand p {
+        font-size: 14px;
+        line-height: 1.75;
+        color: rgba(255,255,255,0.5);
+        margin: 16px 0 24px;
+        max-width: 280px;
+    }
+
+    .footer-socials {
+        display: flex;
+        gap: 10px;
+    }
+
+    .social-btn {
+        width: 36px; height: 36px;
+        background: rgba(255,255,255,0.07);
+        border-radius: 8px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 16px;
+        color: rgba(255,255,255,0.5);
+        transition: all 0.2s;
+    }
+
+    .social-btn:hover {
+        background: var(--blue);
+        color: white;
+    }
+
+    .footer-col h4 {
+        font-size: 13px;
+        font-weight: 700;
+        color: white;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        margin-bottom: 20px;
+    }
+
+    .footer-links {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .footer-links a {
+        font-size: 13px;
+        color: rgba(255,255,255,0.5);
+        transition: color 0.2s;
+        display: flex; align-items: center; gap: 6px;
+    }
+
+    .footer-links a:hover { color: white; }
+    .footer-links a i { font-size: 10px; }
+
+    .footer-bottom {
+        padding: 20px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 12px;
+        color: rgba(255,255,255,0.3);
+    }
+
+    .footer-bottom a { color: rgba(255,255,255,0.5); }
+    .footer-bottom a:hover { color: white; }
+
+    /* ═══════════════════════════════════════
+       SCROLL-TO-TOP
+    ═══════════════════════════════════════ */
+    .scroll-top {
+        position: fixed;
+        bottom: 28px; right: 28px;
+        width: 44px; height: 44px;
+        background: linear-gradient(135deg, var(--navy), var(--blue));
+        color: white;
+        border: none;
+        border-radius: 50%;
+        font-size: 18px;
+        cursor: pointer;
+        box-shadow: 0 8px 20px rgba(30,60,114,0.35);
+        display: flex; align-items: center; justify-content: center;
+        opacity: 0; transform: translateY(16px);
+        transition: all 0.3s;
+        z-index: 900;
+    }
+
+    .scroll-top.visible { opacity: 1; transform: translateY(0); }
+    .scroll-top:hover   { transform: translateY(-3px); }
+
+    /* ═══════════════════════════════════════
+       MOBILE NAV OVERLAY
+    ═══════════════════════════════════════ */
+    .mobile-nav {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: var(--navy);
+        z-index: 999;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .mobile-nav.open { display: flex; }
+
+    .mobile-nav a {
+        font-size: 22px;
+        font-weight: 700;
+        color: rgba(255,255,255,0.85);
+        padding: 10px 0;
+        transition: color 0.2s;
+    }
+
+    .mobile-nav a:hover { color: white; }
+
+    .mobile-close {
+        position: absolute;
+        top: 20px; right: 24px;
+        font-size: 28px;
+        color: white;
+        cursor: pointer;
+        background: none; border: none;
+    }
+
+    /* ═══════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════ */
+    @media (max-width: 1100px) {
+        .services-grid { grid-template-columns: repeat(2, 1fr); }
+        .why-inner     { gap: 40px; }
+        .footer-grid   { grid-template-columns: 1fr 1fr; gap: 32px; }
+    }
+
+    @media (max-width: 900px) {
+        .hero-inner    { grid-template-columns: 1fr; }
+        .hero-visual   { display: none; }
+        .spotlight-grid { grid-template-columns: 1fr !important; }
+        .why-inner     { grid-template-columns: 1fr; }
+        .why-visual    { display: none; }
+        .how-steps     { grid-template-columns: repeat(2, 1fr); }
+        .how-steps::before { display: none; }
+        .sol-panel.active  { grid-template-columns: 1fr; }
+        .sol-img-box   { display: none; }
+        .testi-grid    { grid-template-columns: 1fr; }
+        .cta-inner     { grid-template-columns: 1fr; text-align: center; }
+        .cta-actions   { justify-content: center; }
+        .contact-inner { grid-template-columns: 1fr; }
+        .stats-grid    { grid-template-columns: repeat(2, 1fr); }
+        .stat-item     { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .nav-links, .nav-cta { display: none; }
+        .hamburger     { display: flex; }
+    }
+
+    @media (max-width: 600px) {
+        .services-grid { grid-template-columns: 1fr; }
+        .how-steps     { grid-template-columns: 1fr; }
+        .footer-grid   { grid-template-columns: 1fr; }
+        .form-row      { grid-template-columns: 1fr; }
+        .hero-stats    { gap: 20px; }
+        .sol-tabs      { flex-wrap: wrap; width: 100%; border-radius: 16px; }
+    }
+    </style>
+</head>
+<body>
+
+<!-- ══════════════ MOBILE NAV ══════════════ -->
+<div class="mobile-nav" id="mobileNav">
+    <button class="mobile-close" onclick="closeMobileNav()"><i class="bi bi-x-lg"></i></button>
+    <a href="#services"      onclick="closeMobileNav()">Services</a>
+    <a href="#why"           onclick="closeMobileNav()">Why Us</a>
+    <a href="#how"           onclick="closeMobileNav()">How It Works</a>
+    <a href="#solutions"     onclick="closeMobileNav()">Solutions</a>
+    <a href="#testimonials"  onclick="closeMobileNav()">Testimonials</a>
+    <a href="#contact"       onclick="closeMobileNav()">Contact</a>
+</div>
+
+<!-- ══════════════ NAVBAR ══════════════════ -->
+<nav class="navbar" id="navbar">
+    <div class="container">
+        <div class="navbar-inner">
+            <a href="#" class="navbar-brand">
+                <div class="brand-logo" style="overflow:hidden;padding:0">
+                    <img src="logo.jpg" alt="Al-Behar" style="width:100%;height:100%;object-fit:cover;border-radius:10px">
+                </div>
+                <span class="brand-name">Clarix<span>.</span></span>
+            </a>
+
+            <ul class="nav-links">
+                <li><a href="#services">Services</a></li>
+                <li><a href="#why">Why Us</a></li>
+                <li><a href="#how">How It Works</a></li>
+                <li><a href="#solutions">Solutions</a></li>
+                <li><a href="#testimonials">Testimonials</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+
+            <div class="nav-cta">
+                <a href="al_behar_dashboard_final.html" class="btn btn-nav-ghost" style="gap:6px">
+                    <i class="bi bi-bar-chart-line-fill"></i> Al-Behar Dashboard
+                </a>
+                <a href="#contact" class="btn btn-primary" style="padding:9px 20px;font-size:13px">
+                    Get a Quote
+                </a>
+                <a href="../index.html" class="btn btn-nav-ghost" style="gap:6px;font-size:12px">
+                    <i class="bi bi-arrow-left"></i> Back to Clarix
+                </a>
+            </div>
+
+            <div class="hamburger" onclick="openMobileNav()">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- ══════════════ HERO ═════════════════════ -->
+<section class="hero" id="home">
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
+
+    <div class="container">
+        <div class="hero-inner">
+            <!-- Left -->
+            <div>
+                <div class="hero-badge">
+                    <div class="dot"></div>
+                    Trusted by 500+ companies across the GCC
+                </div>
+
+                <h1>
+                    Smart Logistics &<br>
+                    <span class="accent-word">Supply Chain</span><br>
+                    Solutions
+                </h1>
+
+                <p class="hero-desc">
+                    End-to-end freight management, real-time tracking, and data-driven supply chain optimisation — all on one intelligent platform built for the modern enterprise.
+                </p>
+
+                <div class="hero-actions">
+                    <a href="#contact" class="btn btn-accent">
+                        <i class="bi bi-rocket-takeoff-fill"></i> Get Started Free
+                    </a>
+                    <a href="#how" class="btn btn-outline">
+                        <i class="bi bi-play-circle-fill"></i> See How It Works
+                    </a>
+                    <a href="al_behar_dashboard_final.html" class="btn" style="background:linear-gradient(135deg,#10b981,#059669);color:white;box-shadow:0 8px 24px rgba(16,185,129,0.35)">
+                        <i class="bi bi-speedometer2"></i> Al-Behar S&OP Dashboard
+                    </a>
+                </div>
+
+                <div class="hero-stats">
+                    <div>
+                        <div class="hero-stat-num">98%</div>
+                        <div class="hero-stat-lbl">On-Time Delivery</div>
+                    </div>
+                    <div>
+                        <div class="hero-stat-num">500+</div>
+                        <div class="hero-stat-lbl">Enterprise Clients</div>
+                    </div>
+                    <div>
+                        <div class="hero-stat-num">48</div>
+                        <div class="hero-stat-lbl">Active Vehicles</div>
+                    </div>
+                    <div>
+                        <div class="hero-stat-num">24/7</div>
+                        <div class="hero-stat-lbl">Live Support</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: floating cards -->
+            <div class="hero-visual">
+                <!-- Card 1 -->
+                <div class="float-card card-main">
+                    <div class="fc-icon blue"><i class="bi bi-boxes"></i></div>
+                    <div class="fc-title">Active Shipments</div>
+                    <div class="fc-val">1,284</div>
+                    <div class="fc-sub">+8.2% from last month</div>
+                    <div class="mini-bar">
+                        <div class="mini-bar-bg"><div class="mini-bar-fill" style="width:72%"></div></div>
+                        <span style="font-size:10px;color:rgba(255,255,255,0.5)">72%</span>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="float-card card-shipment">
+                    <div class="fc-icon green"><i class="bi bi-check-circle-fill"></i></div>
+                    <div class="fc-title">Deliveries Today</div>
+                    <div class="fc-val" style="color:#34d399">48</div>
+                    <div class="fc-row"><span><span class="fc-dot" style="background:#34d399"></span>On Time</span><span>45</span></div>
+                    <div class="fc-row"><span><span class="fc-dot" style="background:#fbbf24"></span>Late</span><span>3</span></div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="float-card card-kpi">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+                        <div style="font-size:11px;color:rgba(255,255,255,0.6)">KPI Overview</div>
+                        <div style="font-size:9px;color:#34d399;font-weight:700">● LIVE</div>
+                    </div>
+                    <div class="fc-row"><span>Fleet Util.</span><span style="color:#34d399;font-weight:700">87%</span></div>
+                    <div class="fc-row"><span>Cust. Sat.</span><span style="color:#34d399;font-weight:700">98.1%</span></div>
+                    <div class="fc-row"><span>Cost/km</span><span style="color:#fbbf24;font-weight:700">$0.42</span></div>
+                    <div class="fc-row"><span>OTD Rate</span><span style="color:#34d399;font-weight:700">94.7%</span></div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="float-card card-alert">
+                    <div class="fc-icon amber"><i class="bi bi-bell-fill"></i></div>
+                    <div class="fc-title">Live Alerts</div>
+                    <div class="fc-row"><span><span class="fc-dot" style="background:#ef4444"></span>Critical</span><span>3</span></div>
+                    <div class="fc-row"><span><span class="fc-dot" style="background:#fbbf24"></span>Warning</span><span>7</span></div>
+                    <div class="fc-row"><span><span class="fc-dot" style="background:#34d399"></span>Info</span><span>14</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════ TRUST BAR ════════════════ -->
+<div class="trust-bar">
+    <div class="container">
+        <div class="trust-inner">
+            <span class="trust-label">Trusted by</span>
+            <div class="trust-logos">
+                <span class="trust-logo">GULF TRADERS LLC</span>
+                <span class="trust-logo">AL FUTTAIM GROUP</span>
+                <span class="trust-logo">SAUDI FOODS CO.</span>
+                <span class="trust-logo">ETISALAT SUPPLY</span>
+                <span class="trust-logo">LULU HYPERMARKET</span>
+                <span class="trust-logo">AL JAZEERA GROUP</span>
+                <span class="trust-logo">OMAN DIST. CO.</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════ SERVICES ═════════════════ -->
+<section class="services" id="services">
+    <div class="container">
+        <div class="services-header">
+            <div class="section-tag"><i class="bi bi-grid-3x3-gap-fill"></i> Our Services</div>
+            <h2 class="section-heading">Everything Your Supply Chain Needs</h2>
+            <p class="section-sub">From first-mile pickup to last-mile delivery, we handle every link in your supply chain with precision, speed, and full transparency.</p>
+        </div>
+
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="svc-icon navy"><i class="bi bi-truck-front-fill"></i></div>
+                <div class="svc-title">Freight & Transportation</div>
+                <p class="svc-desc">Full-truckload, LTL, and intermodal freight solutions across the GCC. Real-time GPS tracking on every shipment, every kilometre.</p>
+                <a href="#contact" class="svc-link">Learn more <i class="bi bi-arrow-right"></i></a>
+            </div>
+
+            <div class="service-card">
+                <div class="svc-icon green"><i class="bi bi-building-check"></i></div>
+                <div class="svc-title">Warehousing & Distribution</div>
+                <p class="svc-desc">5 strategically located warehouses in Dubai, Sharjah, Abu Dhabi, Riyadh and Muscat, offering bonded and non-bonded storage.</p>
+                <a href="#contact" class="svc-link">Learn more <i class="bi bi-arrow-right"></i></a>
+            </div>
+
+            <div class="service-card">
+                <div class="svc-icon amber"><i class="bi bi-globe2"></i></div>
+                <div class="svc-title">Customs & Clearance</div>
+                <p class="svc-desc">Expert customs brokers handling all documentation, HS code classification, and duty optimisation for imports and exports.</p>
+                <a href="#contact" class="svc-link">Learn more <i class="bi bi-arrow-right"></i></a>
+            </div>
+
+            <div class="service-card">
+                <div class="svc-icon purple"><i class="bi bi-bar-chart-line-fill"></i></div>
+                <div class="svc-title">Supply Chain Analytics</div>
+                <p class="svc-desc">Demand forecasting, S&OP planning, and live dashboards that give you complete visibility over cost, performance and risk.</p>
+                <a href="logistics_dashboard.html" class="svc-link">View dashboard <i class="bi bi-arrow-right"></i></a>
+            </div>
+
+            <div class="service-card">
+                <div class="svc-icon teal"><i class="bi bi-snow2"></i></div>
+                <div class="svc-title">Cold Chain Logistics</div>
+                <p class="svc-desc">Temperature-controlled transport and storage for pharmaceuticals, food, and perishables — from -25°C to +15°C.</p>
+                <a href="#contact" class="svc-link">Learn more <i class="bi bi-arrow-right"></i></a>
+            </div>
+
+            <div class="service-card">
+                <div class="svc-icon red"><i class="bi bi-arrow-repeat"></i></div>
+                <div class="svc-title">Reverse Logistics</div>
+                <p class="svc-desc">Efficient returns management, product refurbishment tracking, and sustainable disposal — reducing waste and maximising recovery value.</p>
+                <a href="#contact" class="svc-link">Learn more <i class="bi bi-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════ STATS ══════════════════ -->
+<section class="stats">
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-icon"><i class="bi bi-boxes"></i></div>
+                <div class="stat-num"><span id="cnt1">0</span>K<span>+</span></div>
+                <div class="stat-lbl">Shipments Delivered</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon"><i class="bi bi-people-fill"></i></div>
+                <div class="stat-num"><span id="cnt2">0</span><span>+</span></div>
+                <div class="stat-lbl">Enterprise Clients</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon"><i class="bi bi-geo-alt-fill"></i></div>
+                <div class="stat-num"><span id="cnt3">0</span><span>+</span></div>
+                <div class="stat-lbl">Delivery Destinations</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon"><i class="bi bi-trophy-fill"></i></div>
+                <div class="stat-num"><span id="cnt4">0</span><span>+</span></div>
+                <div class="stat-lbl">Years of Excellence</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════ DASHBOARD SPOTLIGHT ══════════════ -->
+<section style="padding:90px 0;background:var(--bg2)">
+    <div class="container">
+        <div class="spotlight-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center">
+            <!-- Photo side -->
+            <div style="position:relative">
+                <div style="border-radius:24px;overflow:hidden;box-shadow:0 24px 60px rgba(30,60,114,0.18);aspect-ratio:4/3;background:#dbeafe">
+                    <img src="logo.jpg" alt="Al-Behar Group" style="width:100%;height:100%;object-fit:cover;display:block">
+                </div>
+                <!-- Floating badge -->
+                <div style="position:absolute;bottom:-18px;right:24px;background:white;border-radius:16px;padding:14px 20px;box-shadow:0 12px 32px rgba(0,0,0,0.12);display:flex;align-items:center;gap:12px">
+                    <div style="width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,#1e3c72,#2a5298);display:flex;align-items:center;justify-content:center;color:white;font-size:20px">
+                        <i class="bi bi-graph-up-arrow"></i>
+                    </div>
+                    <div>
+                        <div style="font-size:16px;font-weight:800;color:#1e3c72">Live S&OP Data</div>
+                        <div style="font-size:11px;color:#94a3b8">Updated in real-time</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Text side -->
+            <div>
+                <div class="section-tag"><i class="bi bi-bar-chart-line-fill"></i> Al-Behar Dashboard</div>
+                <h2 class="section-heading">Your S&OP Performance<br>at a Glance</h2>
+                <p class="section-sub" style="margin-bottom:28px">
+                    The Al-Behar S&OP Dashboard delivers a full picture of Sales, Gross Profit, COGS, and Commission — by product, supplier, country, and month. Cycle-accurate and always up-to-date.
+                </p>
+
+                <ul style="list-style:none;display:flex;flex-direction:column;gap:12px;margin-bottom:36px">
+                    <li style="display:flex;align-items:center;gap:10px;font-size:14px;color:#1e293b">
+                        <i class="bi bi-check-circle-fill" style="color:#10b981;font-size:18px;flex-shrink:0"></i>
+                        Monthly GP vs Target tracking across all S&OP cycles
+                    </li>
+                    <li style="display:flex;align-items:center;gap:10px;font-size:14px;color:#1e293b">
+                        <i class="bi bi-check-circle-fill" style="color:#10b981;font-size:18px;flex-shrink:0"></i>
+                        Invoiced, Booked & Forecast breakdown by customer
+                    </li>
+                    <li style="display:flex;align-items:center;gap:10px;font-size:14px;color:#1e293b">
+                        <i class="bi bi-check-circle-fill" style="color:#10b981;font-size:18px;flex-shrink:0"></i>
+                        Trade vs Broker commission analysis
+                    </li>
+                    <li style="display:flex;align-items:center;gap:10px;font-size:14px;color:#1e293b">
+                        <i class="bi bi-check-circle-fill" style="color:#10b981;font-size:18px;flex-shrink:0"></i>
+                        Demand analysis with supplier & product drill-down
+                    </li>
+                </ul>
+
+                <a href="al_behar_dashboard_final.html"
+                   class="btn btn-primary"
+                   style="font-size:15px;padding:15px 34px;box-shadow:0 10px 28px rgba(30,60,114,0.3)">
+                    <i class="bi bi-speedometer2"></i> Open Al-Behar Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════ WHY US ════════════════ -->
+<section class="why" id="why">
+    <div class="container">
+        <div class="why-inner">
+            <!-- Visual -->
+            <div class="why-visual">
+                <div class="why-img-bg" style="background:none;padding:0">
+                    <img src="img.jpg" alt="Al-Behar Operations" style="width:100%;height:100%;object-fit:cover;border-radius:24px;display:block">
+                </div>
+
+                <div class="why-bubble why-bubble-1">
+                    <div class="wb-icon" style="background:#d1fae5;color:#059669"><i class="bi bi-check-lg"></i></div>
+                    <div>
+                        <div class="wb-val">94.7%</div>
+                        <div class="wb-txt">On-Time Rate</div>
+                    </div>
+                </div>
+
+                <div class="why-bubble why-bubble-2">
+                    <div class="wb-icon" style="background:#dbeafe;color:#1e3c72"><i class="bi bi-lightning-charge-fill"></i></div>
+                    <div>
+                        <div class="wb-val">2.3 Days</div>
+                        <div class="wb-txt">Avg Lead Time</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div>
+                <div class="section-tag"><i class="bi bi-shield-check-fill"></i> Why Clarix</div>
+                <h2 class="section-heading">The Smarter Way to Move Goods</h2>
+                <p class="section-sub">We combine cutting-edge technology with deep regional expertise to deliver supply chain solutions that are faster, cheaper, and more reliable than the competition.</p>
+
+                <div class="why-features">
+                    <div class="why-feature">
+                        <div class="wf-icon" style="background:#dbeafe;color:#1e3c72"><i class="bi bi-radar"></i></div>
+                        <div>
+                            <div class="wf-title">Real-Time Visibility</div>
+                            <p class="wf-desc">Live GPS tracking on every vehicle. Know exactly where your shipment is, down to the minute, from pickup to delivery.</p>
+                        </div>
+                    </div>
+                    <div class="why-feature">
+                        <div class="wf-icon" style="background:#d1fae5;color:#059669"><i class="bi bi-graph-up-arrow"></i></div>
+                        <div>
+                            <div class="wf-title">AI-Powered Planning</div>
+                            <p class="wf-desc">Machine-learning demand forecasting and route optimisation reduce your logistics costs by up to 22% on average.</p>
+                        </div>
+                    </div>
+                    <div class="why-feature">
+                        <div class="wf-icon" style="background:#fef3c7;color:#d97706"><i class="bi bi-headset"></i></div>
+                        <div>
+                            <div class="wf-title">24/7 Dedicated Support</div>
+                            <p class="wf-desc">A named account manager plus a round-the-clock ops centre ensures issues are resolved before they impact your customers.</p>
+                        </div>
+                    </div>
+                    <div class="why-feature">
+                        <div class="wf-icon" style="background:#ede9fe;color:#7c3aed"><i class="bi bi-shield-lock-fill"></i></div>
+                        <div>
+                            <div class="wf-title">Compliance & Security</div>
+                            <p class="wf-desc">ISO 9001 certified operations, full customs compliance, and cargo insurance on every shipment — your goods are always protected.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════ HOW IT WORKS ══════════════ -->
+<section class="how" id="how">
+    <div class="container">
+        <div class="how-header">
+            <div class="section-tag"><i class="bi bi-arrow-right-circle-fill"></i> How It Works</div>
+            <h2 class="section-heading">Ship in 4 Simple Steps</h2>
+            <p class="section-sub">Getting started is effortless. Our streamlined onboarding and operations process means your first shipment can move within 24 hours.</p>
+        </div>
+
+        <div class="how-steps">
+            <div class="how-step">
+                <div class="step-num">1</div>
+                <div class="step-title">Get a Quote</div>
+                <p class="step-desc">Fill in your shipment details online or speak to our team. Receive a competitive, all-inclusive quote within minutes.</p>
+            </div>
+            <div class="how-step">
+                <div class="step-num">2</div>
+                <div class="step-title">Book & Schedule</div>
+                <p class="step-desc">Confirm your booking through our portal or API. Our system automatically assigns the optimal carrier and route.</p>
+            </div>
+            <div class="how-step">
+                <div class="step-num">3</div>
+                <div class="step-title">Track Live</div>
+                <p class="step-desc">Watch your shipment move in real time on our dashboard. Receive automated SMS/email alerts at every milestone.</p>
+            </div>
+            <div class="how-step">
+                <div class="step-num">4</div>
+                <div class="step-title">Delivered & Reported</div>
+                <p class="step-desc">Proof of delivery instantly uploaded. Full performance report sent to your inbox — cost, time, and KPI breakdown.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════ SOLUTIONS ═════════════════ -->
+<section class="solutions" id="solutions">
+    <div class="container">
+        <div class="sol-header">
+            <div class="section-tag"><i class="bi bi-layers-fill"></i> Solutions</div>
+            <h2 class="section-heading">Built for Every Industry</h2>
+            <p class="section-sub">Specialised logistics programmes designed around the unique needs of your sector.</p>
+        </div>
+
+        <div class="sol-tabs">
+            <button class="sol-tab active" onclick="showSol('retail',this)"><i class="bi bi-shop"></i> Retail</button>
+            <button class="sol-tab" onclick="showSol('pharma',this)"><i class="bi bi-capsule"></i> Pharma</button>
+            <button class="sol-tab" onclick="showSol('energy',this)"><i class="bi bi-fuel-pump"></i> Energy</button>
+            <button class="sol-tab" onclick="showSol('fmcg',this)"><i class="bi bi-cart3"></i> FMCG</button>
+            <button class="sol-tab" onclick="showSol('auto',this)"><i class="bi bi-car-front"></i> Automotive</button>
+        </div>
+
+        <div class="sol-panel active" id="sol-retail">
+            <div class="sol-list">
+                <div class="sol-item">
+                    <div class="si-icon"><i class="bi bi-lightning-charge-fill"></i></div>
+                    <div><div class="si-title">Same-Day & Next-Day Delivery</div><p class="si-desc">Express urban delivery networks across all GCC cities. Perfect for e-commerce and high-street retail.</p></div>
+                </div>
+                <div class="sol-item">
+                    <div class="si-icon"><i class="bi bi-arrow-repeat"></i></div>
+                    <div><div class="si-title">Returns Management</div><p class="si-desc">Seamless reverse logistics to reduce customer friction and maximise recovery value.</p></div>
+                </div>
+                <div class="sol-item">
+                    <div class="si-icon"><i class="bi bi-archive-fill"></i></div>
+                    <div><div class="si-title">Fulfilment Centres</div><p class="si-desc">Pick, pack, and ship from our strategically located hubs for faster, cheaper deliveries.</p></div>
+                </div>
+                <div class="sol-item">
+                    <div class="si-icon"><i class="bi bi-bar-chart-fill"></i></div>
+                    <div><div class="si-title">Omni-Channel Analytics</div><p class="si-desc">Unified demand planning across online, in-store, and marketplace channels.</p></div>
+                </div>
+            </div>
+            <div class="sol-img-box"><i class="bi bi-shop-window"></i></div>
+        </div>
+
+        <div class="sol-panel" id="sol-pharma">
+            <div class="sol-list">
+                <div class="sol-item">
+                    <div class="si-icon" style="background:#d1fae5;color:#059669"><i class="bi bi-thermometer-half"></i></div>
+                    <div><div class="si-title">Cold Chain Transport</div><p class="si-desc">GDP-compliant temperature-controlled logistics from -25°C to +25°C with real-time monitoring.</p></div>
+                </div>
+                <div class="sol-item">
+                    <div class="si-icon" style="background:#d1fae5;color:#059669"><i class="bi bi-clipboard2-check-fill"></i></div>
+                    <div><div class="si-title">Regulatory Compliance</div><p class="si-desc">Full SFDA/MOH/DHA compliance documentation and audit trails for every shipment.</p></div>
+                </div>
+                <div class="sol-item">
+                    <div class="si-icon" style="background:#d1fae5;color:#059669"><i class="bi bi-shield-check"></i></div>
+                    <div><div class="si-title">Serialisation & Track-Trace</div><p class="si-desc">End-to-end product traceability meeting all GS1 and regulatory serialisation requirements.</p></div>
+                </div>
+            </div>
+            <div class="sol-img-box" style="background:linear-gradient(135deg,#d1fae5,#a7f3d0)"><i class="bi bi-hospital-fill" style="color:rgba(5,150,105,0.2)"></i></div>
+        </div>
+
+        <div class="sol-panel" id="sol-energy">
+            <div class="sol-list">
+                <div class="sol-item">
+                    <div class="si-icon" style="background:#fef3c7;color:#d97706"><i class="bi bi-droplet-fill"></i></div>
+                    <div><div class="si-title">Hazardous Materials Transport</div><p class="si-desc">ADR/IATA certified drivers and equipment for petroleum products, chemicals, and LNG.</p></div>
+                </div>
+                <div class="sol-item">
+                    <div class="si-icon" style="background:#fef3c7;color:#d97706"><i class="bi bi-gear-wide-connected"></i></div>
+                    <div><div class="si-title">Project Cargo</div><p class="si-desc">Heavy-lift and over-dimensional cargo management for oilfield equipment and plant machinery.</p></div>
+                </div>
+                <div class="sol-item">
+                    <div class="si-icon" style="background:#fef3c7;color:#d97706"><i class="bi bi-wrench-adjustable-circle"></i></div>
+                    <div><div class="si-title">MRO Logistics</div><p class="si-desc">Just-in-time parts delivery to minimise downtime at remote energy installations.</p></div>
+                </div>
+            </div>
+            <div class="sol-img-box" style="background:linear-gradient(135deg,#fef3c7,#fde68a)"><i class="bi bi-fuel-pump-fill" style="color:rgba(217,119,6,0.2)"></i></div>
+        </div>
+
+        <div class="sol-panel" id="sol-fmcg">
+            <div class="sol-list">
+                <div class="sol-item">
+                    <div class="si-icon" style="background:#ede9fe;color:#7c3aed"><i class="bi bi-speedometer2"></i></div>
+                    <div><div class="si-title">High-Velocity Distribution</div><p class="si-desc">Daily replenishment runs to hypermarkets, supermarkets, and convenience chains across the region.</p></div>
+                </div>
+                <div class="sol-item">
+                    <div class="si-icon" style="background:#ede9fe;color:#7c3aed"><i class="bi bi-upc-scan"></i></div>
+                    <div><div class="si-title">VMI & Category Management</div><p class="si-desc">Vendor-managed inventory programmes that cut stockouts and reduce holding costs by up to 30%.</p></div>
+                </div>
+                <div class="sol-item">
+                    <div class="si-icon" style="background:#ede9fe;color:#7c3aed"><i class="bi bi-box-seam-fill"></i></div>
+                    <div><div class="si-title">Co-Packing & Kitting</div><p class="si-desc">In-warehouse value-added services including labelling, bundling, and promotional kitting.</p></div>
+                </div>
+            </div>
+            <div class="sol-img-box" style="background:linear-gradient(135deg,#ede9fe,#ddd6fe)"><i class="bi bi-cart4" style="color:rgba(124,58,237,0.2)"></i></div>
+        </div>
+
+        <div class="sol-panel" id="sol-auto">
+            <div class="sol-list">
+                <div class="sol-item">
+                    <div class="si-icon" style="background:#ccfbf1;color:#0d9488"><i class="bi bi-car-front-fill"></i></div>
+                    <div><div class="si-title">Vehicle Transport</div><p class="si-desc">Enclosed and open car carriers for finished vehicles, moving 200+ units per month across the Gulf.</p></div>
+                </div>
+                <div class="sol-item">
+                    <div class="si-icon" style="background:#ccfbf1;color:#0d9488"><i class="bi bi-tools"></i></div>
+                    <div><div class="si-title">Spare Parts Logistics</div><p class="si-desc">Emergency and routine spare parts networks ensuring 24-hour availability at all dealer locations.</p></div>
+                </div>
+                <div class="sol-item">
+                    <div class="si-icon" style="background:#ccfbf1;color:#0d9488"><i class="bi bi-clipboard-data-fill"></i></div>
+                    <div><div class="si-title">Inbound Supply Management</div><p class="si-desc">Sequenced parts delivery and JIT supply to assembly lines minimising line-side inventory.</p></div>
+                </div>
+            </div>
+            <div class="sol-img-box" style="background:linear-gradient(135deg,#ccfbf1,#99f6e4)"><i class="bi bi-car-front" style="color:rgba(13,148,136,0.2)"></i></div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════ TESTIMONIALS ══════════════ -->
+<section class="testi" id="testimonials">
+    <div class="container">
+        <div class="testi-header">
+            <div class="section-tag"><i class="bi bi-chat-quote-fill"></i> Testimonials</div>
+            <h2 class="section-heading">What Our Clients Say</h2>
+            <p class="section-sub">Over 500 businesses trust Clarix to keep their supply chains moving. Here's what some of them have to say.</p>
+        </div>
+
+        <div class="testi-grid">
+            <div class="testi-card">
+                <div class="testi-stars">
+                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                </div>
+                <div class="testi-quote">"</div>
+                <p class="testi-text">Clarix transformed our regional distribution. We cut transport costs by 18% in the first year and our stockout rate dropped to near zero. The live dashboard gives our team instant confidence.</p>
+                <div class="testi-author">
+                    <div class="ta-avatar" style="background:linear-gradient(135deg,#1e3c72,#2a5298)">KA</div>
+                    <div>
+                        <div class="ta-name">Khalid Al Ansari</div>
+                        <div class="ta-role">VP Supply Chain — Gulf Traders LLC</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testi-card">
+                <div class="testi-stars">
+                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i>
+                </div>
+                <div class="testi-quote">"</div>
+                <p class="testi-text">The cold chain team managed our pharmaceutical rollout flawlessly across 6 countries. Every shipment was compliant, on time, and at the exact required temperature. Exceptional service.</p>
+                <div class="testi-author">
+                    <div class="ta-avatar" style="background:linear-gradient(135deg,#059669,#10b981)">SR</div>
+                    <div>
+                        <div class="ta-name">Sara Rahman</div>
+                        <div class="ta-role">Logistics Director — MedGulf Pharma</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testi-card">
+                <div class="testi-stars">
+                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                </div>
+                <div class="testi-quote">"</div>
+                <p class="testi-text">We switched from three different freight forwarders to Clarix for our FMCG distribution and the difference is night and day. One platform, one account manager, zero headaches.</p>
+                <div class="testi-author">
+                    <div class="ta-avatar" style="background:linear-gradient(135deg,#7c3aed,#a855f7)">MA</div>
+                    <div>
+                        <div class="ta-name">Mohammed Al Hashmi</div>
+                        <div class="ta-role">Operations Manager — AlNoor Foods</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════ CTA BANNER ════════════════ -->
+<section class="cta-banner">
+    <div class="container">
+        <div class="cta-inner">
+            <div>
+                <h2 class="cta-title">Ready to Optimise Your Supply Chain?</h2>
+                <p class="cta-sub">Join 500+ companies that rely on Clarix for smarter, faster, and more cost-effective logistics.</p>
+            </div>
+            <div class="cta-actions">
+                <a href="#contact" class="btn btn-accent"><i class="bi bi-rocket-takeoff-fill"></i> Get a Free Quote</a>
+                <a href="al_behar_dashboard_final.html" class="btn btn-outline"><i class="bi bi-speedometer2"></i> Al-Behar Dashboard</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════ CONTACT ════════════════ -->
+<section class="contact" id="contact">
+    <div class="container">
+        <div class="contact-inner">
+            <!-- Info -->
+            <div>
+                <div class="section-tag"><i class="bi bi-envelope-fill"></i> Contact Us</div>
+                <h2 class="section-heading">Let's Talk About Your Needs</h2>
+                <p class="section-sub">Whether you need a quick quote or a full supply chain review, our team is ready to help you move faster.</p>
+
+                <div class="contact-items">
+                    <div class="contact-item">
+                        <div class="ci-icon"><i class="bi bi-geo-alt-fill"></i></div>
+                        <div>
+                            <div class="ci-label">Head Office</div>
+                            <div class="ci-val">Jebel Ali Free Zone, Dubai, UAE</div>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="ci-icon"><i class="bi bi-telephone-fill"></i></div>
+                        <div>
+                            <div class="ci-label">Phone</div>
+                            <div class="ci-val">+971 4 800 CLARIX</div>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="ci-icon"><i class="bi bi-envelope-fill"></i></div>
+                        <div>
+                            <div class="ci-label">Email</div>
+                            <div class="ci-val">info@clarixsolutions.com</div>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="ci-icon"><i class="bi bi-clock-fill"></i></div>
+                        <div>
+                            <div class="ci-label">Operations</div>
+                            <div class="ci-val">24 / 7 — 365 Days a Year</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form -->
+            <div class="contact-form-box">
+                <h3 style="font-size:20px;font-weight:700;color:var(--navy);margin-bottom:24px">Send Us a Message</h3>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>First Name</label>
+                        <input type="text" placeholder="Ahmed">
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        <input type="text" placeholder="Al Rashid">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" placeholder="ahmed@company.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" placeholder="+971 50 000 0000">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Company Name</label>
+                    <input type="text" placeholder="Your Company LLC">
+                </div>
+
+                <div class="form-group">
+                    <label>Service Required</label>
+                    <select>
+                        <option value="">Select a service...</option>
+                        <option>Freight & Transportation</option>
+                        <option>Warehousing & Distribution</option>
+                        <option>Customs & Clearance</option>
+                        <option>Cold Chain Logistics</option>
+                        <option>Supply Chain Analytics</option>
+                        <option>Reverse Logistics</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Message</label>
+                    <textarea placeholder="Tell us about your logistics requirements, origin/destination, volumes, and any special requirements..."></textarea>
+                </div>
+
+                <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="submitForm(this)">
+                    <i class="bi bi-send-fill"></i> Send Message
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════ FOOTER ════════════════ -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <!-- Brand -->
+            <div class="footer-brand">
+                <div class="navbar-brand" style="margin-bottom:4px">
+                    <div class="brand-logo"><i class="bi bi-truck-front-fill"></i></div>
+                    <span style="font-size:20px;font-weight:800;color:white">Clarix<span style="color:var(--accent)">.</span></span>
+                </div>
+                <p>Smart logistics and supply chain solutions powering the growth of businesses across the GCC and beyond. Moving goods. Delivering trust.</p>
+                <div class="footer-socials">
+                    <a href="#" class="social-btn"><i class="bi bi-linkedin"></i></a>
+                    <a href="#" class="social-btn"><i class="bi bi-twitter-x"></i></a>
+                    <a href="#" class="social-btn"><i class="bi bi-instagram"></i></a>
+                    <a href="#" class="social-btn"><i class="bi bi-youtube"></i></a>
+                </div>
+            </div>
+
+            <!-- Services -->
+            <div class="footer-col">
+                <h4>Services</h4>
+                <ul class="footer-links">
+                    <li><a href="#services"><i class="bi bi-chevron-right"></i> Freight & Transportation</a></li>
+                    <li><a href="#services"><i class="bi bi-chevron-right"></i> Warehousing</a></li>
+                    <li><a href="#services"><i class="bi bi-chevron-right"></i> Customs Clearance</a></li>
+                    <li><a href="#services"><i class="bi bi-chevron-right"></i> Cold Chain</a></li>
+                    <li><a href="#services"><i class="bi bi-chevron-right"></i> Analytics</a></li>
+                    <li><a href="#services"><i class="bi bi-chevron-right"></i> Reverse Logistics</a></li>
+                </ul>
+            </div>
+
+            <!-- Company -->
+            <div class="footer-col">
+                <h4>Company</h4>
+                <ul class="footer-links">
+                    <li><a href="#why"><i class="bi bi-chevron-right"></i> About Us</a></li>
+                    <li><a href="#testimonials"><i class="bi bi-chevron-right"></i> Testimonials</a></li>
+                    <li><a href="#"><i class="bi bi-chevron-right"></i> Careers</a></li>
+                    <li><a href="#"><i class="bi bi-chevron-right"></i> News & Insights</a></li>
+                    <li><a href="#"><i class="bi bi-chevron-right"></i> Certifications</a></li>
+                    <li><a href="al_behar_dashboard_final.html"><i class="bi bi-chevron-right"></i> Al-Behar Dashboard</a></li>
+                </ul>
+            </div>
+
+            <!-- Locations -->
+            <div class="footer-col">
+                <h4>Locations</h4>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="bi bi-geo-alt"></i> Dubai, UAE (HQ)</a></li>
+                    <li><a href="#"><i class="bi bi-geo-alt"></i> Abu Dhabi, UAE</a></li>
+                    <li><a href="#"><i class="bi bi-geo-alt"></i> Riyadh, KSA</a></li>
+                    <li><a href="#"><i class="bi bi-geo-alt"></i> Muscat, Oman</a></li>
+                    <li><a href="#"><i class="bi bi-geo-alt"></i> Kuwait City, Kuwait</a></li>
+                    <li><a href="#"><i class="bi bi-geo-alt"></i> Doha, Qatar</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <span>&copy; 2026 Clarix Solutions. All rights reserved.</span>
+            <div style="display:flex;gap:16px">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Cookie Policy</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Scroll to top -->
+<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <i class="bi bi-arrow-up"></i>
+</button>
+
+<!-- ══════════════ JAVASCRIPT ══════════════ -->
+<script>
+/* ── Navbar scroll ── */
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 60) navbar.classList.add('scrolled');
+    else navbar.classList.remove('scrolled');
+
+    const st = document.getElementById('scrollTop');
+    if (window.scrollY > 400) st.classList.add('visible');
+    else st.classList.remove('visible');
+});
+
+/* ── Mobile nav ── */
+function openMobileNav()  { document.getElementById('mobileNav').classList.add('open');  document.body.style.overflow='hidden'; }
+function closeMobileNav() { document.getElementById('mobileNav').classList.remove('open'); document.body.style.overflow=''; }
+
+/* ── Solutions tabs ── */
+function showSol(id, btn) {
+    document.querySelectorAll('.sol-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.sol-tab').forEach(b => b.classList.remove('active'));
+    document.getElementById('sol-'+id).classList.add('active');
+    btn.classList.add('active');
+}
+
+/* ── Counter animation ── */
+function animateCount(el, target, suffix) {
+    let current = 0;
+    const step  = Math.ceil(target / 60);
+    const timer = setInterval(() => {
+        current = Math.min(current + step, target);
+        el.textContent = current + (suffix || '');
+        if (current >= target) clearInterval(timer);
+    }, 25);
+}
+
+const countersTriggered = { done: false };
+const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+        if (e.isIntersecting && !countersTriggered.done) {
+            countersTriggered.done = true;
+            animateCount(document.getElementById('cnt1'), 250);
+            animateCount(document.getElementById('cnt2'), 500);
+            animateCount(document.getElementById('cnt3'), 120);
+            animateCount(document.getElementById('cnt4'), 12);
+        }
+    });
+}, { threshold: 0.3 });
+
+observer.observe(document.querySelector('.stats'));
+
+/* ── Contact form ── */
+function submitForm(btn) {
+    const orig = btn.innerHTML;
+    btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Sending...';
+    btn.disabled = true;
+    setTimeout(() => {
+        btn.innerHTML = '<i class="bi bi-check-circle-fill"></i> Message Sent!';
+        btn.style.background = 'linear-gradient(135deg,#059669,#10b981)';
+        setTimeout(() => {
+            btn.innerHTML = orig;
+            btn.style.background = '';
+            btn.disabled = false;
+        }, 3000);
+    }, 1500);
+}
+
+/* ── Scroll-reveal ── */
+const revealEl = document.querySelectorAll('.service-card, .how-step, .testi-card, .why-feature, .sol-item');
+const revealObs = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+            e.target.style.opacity = '1';
+            e.target.style.transform = 'translateY(0)';
+        }
+    });
+}, { threshold: 0.1 });
+
+revealEl.forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(24px)';
+    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    revealObs.observe(el);
+});
+</script>
+</body>
+</html>

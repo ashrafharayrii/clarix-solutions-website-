@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Clarix — Jewellery Inventory</title>
+<style>
+:root{
+  --gold:#c9a84c;--gold-light:#e8c96d;--gold-dark:#a07830;
+  --bg:#0f0f0f;--bg2:#181818;--bg3:#222;--border:#2e2e2e;
+  --text:#e8e0d0;--muted:#888;--red:#e05555;--green:#4caf7d;
+  --blue:#5b8dee;--amber:#e0a030;--purple:#b07de0;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;}
+
+/* ── SIDEBAR ── */
+.sidebar{width:240px;min-height:100vh;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;z-index:100;}
+.logo{padding:26px 24px 18px;border-bottom:1px solid var(--border);}
+.logo h1{font-size:22px;font-weight:800;color:var(--gold);letter-spacing:2px;}
+.logo span{font-size:12px;color:var(--muted);letter-spacing:2.5px;text-transform:uppercase;}
+nav{flex:1;padding:14px 0;}
+nav a{display:flex;align-items:center;gap:10px;padding:11px 24px;color:var(--muted);text-decoration:none;font-size:15px;transition:all .15s;cursor:pointer;border-left:3px solid transparent;}
+nav a:hover{color:var(--gold);background:rgba(201,168,76,.07);}
+nav a.active{color:var(--gold);background:rgba(201,168,76,.09);border-left-color:var(--gold);}
+nav a svg{width:15px;height:15px;flex-shrink:0;}
+.sidebar-footer{padding:14px 24px;border-top:1px solid var(--border);font-size:13px;color:var(--muted);}
+
+/* ── MAIN ── */
+.main{margin-left:240px;flex:1;display:flex;flex-direction:column;min-height:100vh;}
+.topbar{height:64px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 32px;position:sticky;top:0;z-index:50;}
+.topbar-title{font-size:17px;font-weight:600;}
+.topbar-right{display:flex;align-items:center;gap:16px;}
+.notif-btn{position:relative;cursor:pointer;}
+.notif-btn svg{width:20px;height:20px;color:var(--muted);}
+.notif-dot{position:absolute;top:-2px;right:-2px;width:8px;height:8px;border-radius:50%;background:var(--red);border:1.5px solid var(--bg2);}
+.avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--gold-dark),var(--gold));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#000;cursor:pointer;}
+.content{padding:28px 32px;flex:1;}
+
+/* ── PAGES ── */
+.page{display:none;}.page.active{display:block;}
+
+/* ── KPI GRID ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:26px;}
+.kpi-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:20px 22px;position:relative;overflow:hidden;}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.kpi-card.gold::before{background:linear-gradient(90deg,var(--gold-dark),var(--gold-light));}
+.kpi-card.red::before{background:var(--red);}
+.kpi-card.green::before{background:var(--green);}
+.kpi-card.blue::before{background:var(--blue);}
+.kpi-card.purple::before{background:var(--purple);}
+.kpi-card.amber::before{background:var(--amber);}
+.kpi-label{font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px;}
+.kpi-value{font-size:30px;font-weight:700;}
+.kpi-card.gold .kpi-value{color:var(--gold);}
+.kpi-card.red .kpi-value{color:var(--red);}
+.kpi-card.green .kpi-value{color:var(--green);}
+.kpi-card.blue .kpi-value{color:var(--blue);}
+.kpi-card.purple .kpi-value{color:var(--purple);}
+.kpi-card.amber .kpi-value{color:var(--amber);}
+.kpi-sub{font-size:13px;color:var(--muted);margin-top:4px;}
+.kpi-icon{position:absolute;right:18px;top:14px;opacity:.1;font-size:34px;}
+
+/* ── SECTION CARD ── */
+.section-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:22px;}
+.section-head{display:flex;align-items:center;justify-content:space-between;padding:15px 22px;border-bottom:1px solid var(--border);}
+.section-head h2{font-size:16px;font-weight:600;}
+.section-head span{font-size:14px;color:var(--muted);}
+
+/* ── TABLE ── */
+table{width:100%;border-collapse:collapse;}
+thead th{text-align:left;font-size:13px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);padding:13px 22px;background:var(--bg3);border-bottom:1px solid var(--border);white-space:nowrap;}
+tbody tr{border-bottom:1px solid var(--border);transition:background .12s;cursor:pointer;}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover{background:rgba(255,255,255,.023);}
+tbody td{padding:15px 22px;font-size:15px;vertical-align:middle;}
+.item-name{font-weight:600;font-size:15px;}
+.item-sku{font-size:13px;color:var(--muted);margin-top:2px;}
+
+/* ── PILLS ── */
+.pill{display:inline-block;padding:4px 12px;border-radius:20px;font-size:13px;font-weight:600;}
+.pill-green{background:rgba(76,175,125,.15);color:var(--green);}
+.pill-red{background:rgba(224,85,85,.15);color:var(--red);}
+.pill-amber{background:rgba(224,160,48,.15);color:var(--amber);}
+.pill-blue{background:rgba(91,141,238,.15);color:var(--blue);}
+.pill-purple{background:rgba(176,125,224,.15);color:var(--purple);}
+
+/* ── CAT BADGES ── */
+.cat{font-size:13px;padding:3px 10px;border-radius:4px;font-weight:500;}
+.cat-ring{background:rgba(201,168,76,.1);color:var(--gold);}
+.cat-neck{background:rgba(91,141,238,.12);color:var(--blue);}
+.cat-ear{background:rgba(224,160,48,.12);color:var(--amber);}
+.cat-brace{background:rgba(76,175,125,.12);color:var(--green);}
+.cat-watch{background:rgba(224,85,85,.12);color:var(--red);}
+.cat-loose{background:rgba(176,125,224,.12);color:var(--purple);}
+
+/* ── SPARKLINE ── */
+.spark{display:flex;align-items:flex-end;gap:2px;height:22px;}
+.spark-bar{width:5px;border-radius:2px 2px 0 0;background:var(--gold);opacity:.5;}
+tbody tr:hover .spark-bar{opacity:.9;}
+
+/* ── TOOLBAR ── */
+.toolbar{display:flex;align-items:center;gap:12px;margin-bottom:18px;flex-wrap:wrap;}
+.search-wrap{position:relative;flex:1;min-width:200px;}
+.search-wrap svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:14px;height:14px;color:var(--muted);}
+.search-wrap input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:15px;padding:10px 14px 10px 36px;outline:none;transition:border .15s;}
+.search-wrap input:focus{border-color:var(--gold);}
+select,input[type=text],input[type=number]{background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:15px;padding:10px 14px;outline:none;cursor:pointer;}
+select:focus{border-color:var(--gold);}
+.btn{padding:10px 20px;border-radius:8px;font-size:15px;font-weight:600;border:none;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:6px;}
+.btn-gold{background:linear-gradient(135deg,var(--gold-dark),var(--gold));color:#000;}
+.btn-gold:hover{opacity:.88;}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--muted);}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold);}
+.btn-sm{padding:7px 14px;font-size:14px;}
+.action-btn{background:none;border:none;cursor:pointer;color:var(--muted);font-size:17px;padding:2px 8px;border-radius:4px;transition:color .15s;line-height:1;}
+.action-btn:hover{color:var(--gold);background:rgba(201,168,76,.08);}
+
+/* ── ALERT BAR ── */
+.alert-bar{background:rgba(224,160,48,.08);border:1px solid rgba(224,160,48,.25);border-radius:8px;padding:12px 18px;margin-bottom:18px;display:flex;align-items:center;gap:10px;font-size:15px;}
+.alert-bar svg{width:15px;height:15px;color:var(--amber);flex-shrink:0;}
+.alert-bar strong{color:var(--amber);}
+
+/* ── PAGINATION ── */
+.pagination{display:flex;align-items:center;justify-content:space-between;padding:14px 22px;border-top:1px solid var(--border);font-size:14px;color:var(--muted);}
+.page-btns{display:flex;gap:5px;}
+.page-btn{width:34px;height:34px;border-radius:6px;border:1px solid var(--border);background:var(--bg3);color:var(--muted);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.page-btn:hover,.page-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.08);}
+
+/* ── MODAL ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:200;align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:30px;width:540px;max-width:96vw;max-height:90vh;overflow-y:auto;}
+.modal h2{font-size:20px;margin-bottom:4px;}
+.modal .sub{font-size:14px;color:var(--muted);margin-bottom:22px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.form-row.triple{grid-template-columns:1fr 1fr 1fr;}
+.form-group{display:flex;flex-direction:column;gap:5px;}
+.form-group label{font-size:13px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);}
+.form-group input,.form-group select{width:100%;}
+.modal-footer{display:flex;gap:10px;justify-content:flex-end;margin-top:22px;}
+
+/* ── DASHBOARD CHARTS ── */
+.charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:22px;}
+.chart-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px 22px;}
+.chart-title{font-size:15px;font-weight:600;margin-bottom:16px;}
+.bar-chart{display:flex;align-items:flex-end;gap:8px;height:100px;}
+.bc-col{display:flex;flex-direction:column;align-items:center;gap:5px;flex:1;}
+.bc-bar{width:100%;border-radius:4px 4px 0 0;background:linear-gradient(180deg,var(--gold-light),var(--gold-dark));min-height:4px;transition:opacity .2s;}
+.bc-bar:hover{opacity:.75;}
+.bc-label{font-size:12px;color:var(--muted);}
+.bc-val{font-size:12px;color:var(--gold);font-weight:600;}
+.donut-wrap{display:flex;align-items:center;gap:20px;}
+.donut{position:relative;width:100px;height:100px;flex-shrink:0;}
+.donut svg{width:100%;height:100%;}
+.donut-legend{flex:1;}
+.legend-item{display:flex;align-items:center;gap:8px;font-size:14px;margin-bottom:7px;}
+.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+
+/* ── SUPPLIER CARDS ── */
+.supplier-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.supplier-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:18px 20px;}
+.sup-name{font-size:16px;font-weight:700;margin-bottom:4px;}
+.sup-tag{font-size:13px;color:var(--muted);margin-bottom:12px;}
+.sup-row{display:flex;justify-content:space-between;font-size:14px;color:var(--muted);margin-bottom:5px;}
+.sup-row span:last-child{color:var(--text);}
+.sup-rating{display:flex;gap:2px;margin-top:10px;}
+.star{color:var(--gold);font-size:13px;}
+.star.empty{color:var(--border);}
+
+/* ── PRICING TABLE EXTRA ── */
+.margin-bar{height:6px;border-radius:3px;background:var(--border);margin-top:4px;}
+.margin-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--gold-dark),var(--gold-light));}
+
+/* ── SETTINGS ── */
+.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.settings-group{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:20px 22px;}
+.settings-group h3{font-size:15px;font-weight:600;margin-bottom:16px;color:var(--gold);}
+.setting-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.setting-row:last-child{margin-bottom:0;}
+.setting-label{font-size:15px;}
+.setting-desc{font-size:13px;color:var(--muted);margin-top:2px;}
+.toggle{width:38px;height:20px;border-radius:10px;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0;}
+.toggle.on{background:var(--gold);}
+.toggle.off{background:var(--border);}
+.toggle::after{content:'';position:absolute;top:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .2s;}
+.toggle.on::after{left:19px;}
+.toggle.off::after{left:2px;}
+
+/* ── REPORTS ── */
+.reports-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:22px;}
+.report-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:18px 20px;cursor:pointer;transition:border-color .15s;}
+.report-card:hover{border-color:var(--gold);}
+.report-icon{font-size:28px;margin-bottom:10px;}
+.report-name{font-size:15px;font-weight:600;margin-bottom:4px;}
+.report-desc{font-size:14px;color:var(--muted);}
+
+/* ── ITEM THUMBNAIL ── */
+.item-thumb{width:46px;height:46px;border-radius:8px;border:1px solid var(--border);background:var(--bg3);display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;}
+.item-thumb svg{width:26px;height:26px;}
+.item-cell{display:flex;align-items:center;gap:12px;}
+
+/* ── PURCHASE ORDERS ── */
+.po-status-open{background:rgba(91,141,238,.15);color:var(--blue);}
+.po-status-received{background:rgba(76,175,125,.15);color:var(--green);}
+.po-status-pending{background:rgba(224,160,48,.15);color:var(--amber);}
+.po-status-cancelled{background:rgba(224,85,85,.15);color:var(--red);}
+
+@media(max-width:900px){.kpi-grid{grid-template-columns:repeat(2,1fr);}.charts-grid,.supplier-grid,.settings-grid,.reports-grid{grid-template-columns:1fr;}.sidebar{width:200px;}.main{margin-left:200px;}}
+</style>
+</head>
+<body>
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="sidebar">
+  <div class="logo">
+    <h1>CLARIX</h1>
+    <span>Jewellery &bull; Dubai</span>
+  </div>
+  <nav>
+    <a data-page="dashboard" onclick="nav(this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Dashboard
+    </a>
+    <a data-page="inventory" class="active" onclick="nav(this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7H4a2 2 0 00-2 2v6a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+      Inventory
+    </a>
+    <a data-page="purchase" onclick="nav(this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 001.98 1.61h9.72a2 2 0 001.98-1.61L23 6H6"/></svg>
+      Purchase Orders
+    </a>
+    <a data-page="pricing" onclick="nav(this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6"/></svg>
+      Pricing
+    </a>
+    <a data-page="suppliers" onclick="nav(this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+      Suppliers
+    </a>
+    <a data-page="reports" onclick="nav(this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      Reports
+    </a>
+    <a data-page="settings" onclick="nav(this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>
+      Settings
+    </a>
+  </nav>
+  <div class="sidebar-footer">v3.1.0 &bull; Clarix POS</div>
+</aside>
+
+<!-- ══ MAIN ══ -->
+<main class="main">
+  <div class="topbar">
+    <div class="topbar-title" id="pageTitle">Inventory Management</div>
+    <div class="topbar-right">
+      <div class="notif-btn" title="3 alerts">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        <div class="notif-dot"></div>
+      </div>
+      <div class="avatar" title="Sara Al-Rashidi — Manager">SR</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ══════════════ DASHBOARD ══════════════ -->
+    <div class="page" id="page-dashboard">
+      <div class="kpi-grid" style="grid-template-columns:repeat(5,1fr);">
+        <div class="kpi-card gold"><div class="kpi-icon">&#9670;</div><div class="kpi-label">Total SKUs</div><div class="kpi-value">248</div><div class="kpi-sub">6 categories</div></div>
+        <div class="kpi-card green"><div class="kpi-icon">&#10003;</div><div class="kpi-label">Sales This Month</div><div class="kpi-value">AED 184K</div><div class="kpi-sub">+12% vs last month</div></div>
+        <div class="kpi-card blue"><div class="kpi-icon">&#9670;</div><div class="kpi-label">Inventory Value</div><div class="kpi-value">AED 2.4M</div><div class="kpi-sub">At cost price</div></div>
+        <div class="kpi-card red"><div class="kpi-icon">&#9888;</div><div class="kpi-label">Low Stock Items</div><div class="kpi-value">12</div><div class="kpi-sub">Need reordering</div></div>
+        <div class="kpi-card amber"><div class="kpi-icon">&#9671;</div><div class="kpi-label">Open POs</div><div class="kpi-value">7</div><div class="kpi-sub">AED 320K pending</div></div>
+      </div>
+
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-title">Monthly Revenue — AED (2025–2026)</div>
+          <div class="bar-chart" id="revenueChart"></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Stock by Category</div>
+          <div class="donut-wrap">
+            <div class="donut">
+              <svg viewBox="0 0 36 36">
+                <circle cx="18" cy="18" r="15.9" fill="none" stroke="#222" stroke-width="4"/>
+                <circle cx="18" cy="18" r="15.9" fill="none" stroke="#c9a84c" stroke-width="4" stroke-dasharray="32 68" stroke-dashoffset="25"/>
+                <circle cx="18" cy="18" r="15.9" fill="none" stroke="#5b8dee" stroke-width="4" stroke-dasharray="22 78" stroke-dashoffset="-7"/>
+                <circle cx="18" cy="18" r="15.9" fill="none" stroke="#e0a030" stroke-width="4" stroke-dasharray="18 82" stroke-dashoffset="-29"/>
+                <circle cx="18" cy="18" r="15.9" fill="none" stroke="#4caf7d" stroke-width="4" stroke-dasharray="15 85" stroke-dashoffset="-47"/>
+                <circle cx="18" cy="18" r="15.9" fill="none" stroke="#e05555" stroke-width="4" stroke-dasharray="8 92" stroke-dashoffset="-62"/>
+                <circle cx="18" cy="18" r="15.9" fill="none" stroke="#b07de0" stroke-width="4" stroke-dasharray="5 95" stroke-dashoffset="-70"/>
+              </svg>
+            </div>
+            <div class="donut-legend">
+              <div class="legend-item"><div class="legend-dot" style="background:var(--gold)"></div>Rings 32%</div>
+              <div class="legend-item"><div class="legend-dot" style="background:var(--blue)"></div>Necklaces 22%</div>
+              <div class="legend-item"><div class="legend-dot" style="background:var(--amber)"></div>Earrings 18%</div>
+              <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Bracelets 15%</div>
+              <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div>Watches 8%</div>
+              <div class="legend-item"><div class="legend-dot" style="background:var(--purple)"></div>Loose Stones 5%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <div class="section-head"><h2>Recent Transactions</h2><span>Last 7 days</span></div>
+        <table>
+          <thead><tr><th>Date</th><th>Item</th><th>Type</th><th>Qty</th><th>Amount (AED)</th><th>Staff</th></tr></thead>
+          <tbody id="txBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══════════════ INVENTORY ══════════════ -->
+    <div class="page active" id="page-inventory">
+      <div class="kpi-grid">
+        <div class="kpi-card gold"><div class="kpi-icon">&#9670;</div><div class="kpi-label">Total SKUs</div><div class="kpi-value" id="kpiTotal">20</div><div class="kpi-sub">6 categories</div></div>
+        <div class="kpi-card red"><div class="kpi-icon">&#9888;</div><div class="kpi-label">Low Stock</div><div class="kpi-value" id="kpiLow">0</div><div class="kpi-sub">Below reorder pt.</div></div>
+        <div class="kpi-card green"><div class="kpi-icon">&#10003;</div><div class="kpi-label">In Stock</div><div class="kpi-value" id="kpiIn">0</div><div class="kpi-sub">Ready to sell</div></div>
+        <div class="kpi-card blue"><div class="kpi-icon">&#9670;</div><div class="kpi-label">Inventory Value</div><div class="kpi-value" id="kpiVal">—</div><div class="kpi-sub">At cost price</div></div>
+      </div>
+
+      <div class="alert-bar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span><strong>3 items</strong> critically low: Pavé Diamond Solitaire Ring, Pearl Drop Earrings, 18K Gold Rope Bracelet.</span>
+      </div>
+
+      <div class="toolbar">
+        <div class="search-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="searchInput" placeholder="Search name, SKU, karat…" oninput="filterTable()"/>
+        </div>
+        <select id="catFilter" onchange="filterTable()">
+          <option value="">All Categories</option>
+          <option>Ring</option><option>Necklace</option><option>Earrings</option>
+          <option>Bracelet</option><option>Watch</option><option>Loose</option>
+        </select>
+        <select id="karatFilter" onchange="filterTable()">
+          <option value="">All Karats</option>
+          <option>9K</option><option>14K</option><option>18K</option><option>21K</option><option>22K</option><option>24K</option><option>Platinum</option><option>Silver</option>
+        </select>
+        <select id="statusFilter" onchange="filterTable()">
+          <option value="">All Statuses</option>
+          <option>In Stock</option><option>Low Stock</option><option>Out of Stock</option>
+        </select>
+        <button class="btn btn-outline" onclick="exportCSV()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export
+        </button>
+        <button class="btn btn-gold" onclick="openModal()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Item
+        </button>
+      </div>
+
+      <div class="section-card">
+        <div class="section-head"><h2>All Inventory Items</h2><span id="rowCount">—</span></div>
+        <table>
+          <thead>
+            <tr>
+              <th></th><th>Item</th><th>Category</th><th>Karat</th><th>Material</th>
+              <th>Cost (AED)</th><th>Retail (AED)</th><th>Qty</th><th>Reorder</th>
+              <th>30d Sales</th><th>Status</th><th></th>
+            </tr>
+          </thead>
+          <tbody id="inventoryBody"></tbody>
+        </table>
+        <div class="pagination">
+          <span id="pageInfo">Page 1 of 1</span>
+          <div class="page-btns">
+            <div class="page-btn active">1</div>
+            <div class="page-btn">2</div>
+            <div class="page-btn">›</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════ PURCHASE ORDERS ══════════════ -->
+    <div class="page" id="page-purchase">
+      <div class="kpi-grid">
+        <div class="kpi-card blue"><div class="kpi-label">Open Orders</div><div class="kpi-value">7</div><div class="kpi-sub">AED 320,000 total</div></div>
+        <div class="kpi-card amber"><div class="kpi-label">Pending Approval</div><div class="kpi-value">3</div><div class="kpi-sub">Awaiting manager</div></div>
+        <div class="kpi-card green"><div class="kpi-label">Received This Month</div><div class="kpi-value">14</div><div class="kpi-sub">AED 580,000</div></div>
+        <div class="kpi-card red"><div class="kpi-label">Overdue</div><div class="kpi-value">2</div><div class="kpi-sub">Past delivery date</div></div>
+      </div>
+      <div class="toolbar">
+        <div class="search-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" placeholder="Search PO number or supplier…"/></div>
+        <select><option>All Statuses</option><option>Open</option><option>Pending</option><option>Received</option><option>Cancelled</option></select>
+        <button class="btn btn-gold">+ New PO</button>
+      </div>
+      <div class="section-card">
+        <div class="section-head"><h2>Purchase Orders</h2><span>26 total</span></div>
+        <table>
+          <thead><tr><th>PO Number</th><th>Supplier</th><th>Items</th><th>Order Date</th><th>Expected</th><th>Value (AED)</th><th>Status</th><th></th></tr></thead>
+          <tbody id="poBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══════════════ PRICING ══════════════ -->
+    <div class="page" id="page-pricing">
+      <div class="kpi-grid">
+        <div class="kpi-card gold"><div class="kpi-label">Avg. Margin</div><div class="kpi-value">54%</div><div class="kpi-sub">Across all categories</div></div>
+        <div class="kpi-card green"><div class="kpi-label">Highest Margin</div><div class="kpi-value">78%</div><div class="kpi-sub">Loose Stones</div></div>
+        <div class="kpi-card blue"><div class="kpi-label">Gold Spot (24K)</div><div class="kpi-value">AED 347</div><div class="kpi-sub">Per gram · Live</div></div>
+        <div class="kpi-card amber"><div class="kpi-label">Markup Rule</div><div class="kpi-value">×2.2</div><div class="kpi-sub">Default multiplier</div></div>
+      </div>
+
+      <div class="alert-bar" style="background:rgba(91,141,238,.07);border-color:rgba(91,141,238,.25);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--blue)"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span style="color:var(--blue)">Gold spot price updated <strong>2 hours ago</strong>. 6 items may need repricing.</span>
+      </div>
+
+      <div class="section-card">
+        <div class="section-head"><h2>Price &amp; Margin Overview</h2><span>All items</span></div>
+        <table>
+          <thead><tr><th></th><th>Item</th><th>Karat</th><th>Wt (g)</th><th>Cost (AED)</th><th>Retail (AED)</th><th>Margin %</th><th>Margin Bar</th><th>Last Updated</th><th></th></tr></thead>
+          <tbody id="pricingBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══════════════ SUPPLIERS ══════════════ -->
+    <div class="page" id="page-suppliers">
+      <div class="kpi-grid">
+        <div class="kpi-card gold"><div class="kpi-label">Active Suppliers</div><div class="kpi-value">11</div><div class="kpi-sub">8 countries</div></div>
+        <div class="kpi-card green"><div class="kpi-label">On-Time Delivery</div><div class="kpi-value">87%</div><div class="kpi-sub">Last 6 months</div></div>
+        <div class="kpi-card blue"><div class="kpi-label">Total Spend YTD</div><div class="kpi-value">AED 1.8M</div><div class="kpi-sub">Jan–Apr 2026</div></div>
+        <div class="kpi-card amber"><div class="kpi-label">Pending Invoices</div><div class="kpi-value">9</div><div class="kpi-sub">AED 240K</div></div>
+      </div>
+      <div class="toolbar">
+        <div class="search-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" placeholder="Search supplier name or country…"/></div>
+        <select><option>All Types</option><option>Gold &amp; Diamond</option><option>Silver</option><option>Loose Stones</option><option>Watches</option></select>
+        <button class="btn btn-gold">+ Add Supplier</button>
+      </div>
+      <div class="supplier-grid" id="supplierGrid"></div>
+    </div>
+
+    <!-- ══════════════ REPORTS ══════════════ -->
+    <div class="page" id="page-reports">
+      <div class="kpi-grid">
+        <div class="kpi-card green"><div class="kpi-label">YTD Revenue</div><div class="kpi-value">AED 642K</div><div class="kpi-sub">+18% vs 2025</div></div>
+        <div class="kpi-card gold"><div class="kpi-label">Best Category</div><div class="kpi-value">Rings</div><div class="kpi-sub">AED 228K this year</div></div>
+        <div class="kpi-card blue"><div class="kpi-label">Units Sold YTD</div><div class="kpi-value">1,247</div><div class="kpi-sub">Avg AED 515/unit</div></div>
+        <div class="kpi-card red"><div class="kpi-label">Dead Stock</div><div class="kpi-value">23</div><div class="kpi-sub">No sale in 90d</div></div>
+      </div>
+      <div class="reports-grid" id="reportsGrid"></div>
+      <div class="section-card">
+        <div class="section-head"><h2>Top Selling Items — April 2026</h2><span>By revenue</span></div>
+        <table>
+          <thead><tr><th>Rank</th><th>Item</th><th>Karat</th><th>Category</th><th>Units Sold</th><th>Revenue (AED)</th><th>Margin %</th></tr></thead>
+          <tbody id="topSalesBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══════════════ SETTINGS ══════════════ -->
+    <div class="page" id="page-settings">
+      <div class="settings-grid" id="settingsGrid"></div>
+    </div>
+
+  </div><!-- /content -->
+</main>
+
+<!-- ══ ADD ITEM MODAL ══ -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOverlay(event)">
+  <div class="modal">
+    <h2>Add New Inventory Item</h2>
+    <p class="sub">Fill in the details. SKU auto-generated.</p>
+    <div class="form-row">
+      <div class="form-group"><label>Item Name</label><input type="text" id="fName" placeholder="e.g. Diamond Pavé Ring"/></div>
+      <div class="form-group"><label>Category</label>
+        <select id="fCat"><option>Ring</option><option>Necklace</option><option>Earrings</option><option>Bracelet</option><option>Watch</option><option>Loose</option></select>
+      </div>
+    </div>
+    <div class="form-row triple">
+      <div class="form-group"><label>Karat</label>
+        <select id="fKarat"><option>9K</option><option>14K</option><option selected>18K</option><option>21K</option><option>22K</option><option>24K</option><option>Platinum</option><option>Silver</option><option>N/A</option></select>
+      </div>
+      <div class="form-group"><label>Weight (g)</label><input type="number" id="fWeight" placeholder="0.0" step="0.1"/></div>
+      <div class="form-group"><label>Material</label><input type="text" id="fMaterial" placeholder="e.g. White Gold + Diamond"/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Supplier</label><input type="text" id="fSupplier" placeholder="e.g. Al Mas Gems"/></div>
+      <div class="form-group"><label>Location / Showcase</label><input type="text" id="fLocation" placeholder="e.g. Showcase B-3"/></div>
+    </div>
+    <div class="form-row triple">
+      <div class="form-group"><label>Cost Price (AED)</label><input type="number" id="fCost" placeholder="0"/></div>
+      <div class="form-group"><label>Retail Price (AED)</label><input type="number" id="fRetail" placeholder="0"/></div>
+      <div class="form-group"><label>Quantity</label><input type="number" id="fQty" placeholder="0"/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Reorder Point</label><input type="number" id="fReorder" placeholder="5"/></div>
+      <div class="form-group"><label>Certification</label><input type="text" id="fCert" placeholder="e.g. GIA, IGI, None"/></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-gold" onclick="addItem()">Add to Inventory</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+//  DATA
+// ══════════════════════════════════════════════
+const ITEMS = [
+  {name:"Pavé Diamond Solitaire Ring",    sku:"RNG-0041",cat:"Ring",    karat:"18K",mat:"White Gold + Diamond", wt:3.2, cost:4200, retail:8900, qty:2,  reorder:5, sales:[1,2,3,4,5,6,7]},
+  {name:"Emerald Halo Engagement Ring",   sku:"RNG-0058",cat:"Ring",    karat:"Platinum",mat:"Platinum + Emerald",wt:5.8,cost:11500,retail:24000,qty:8,  reorder:3, sales:[2,3,2,4,3,5,4]},
+  {name:"Rose Gold Stackable Ring Set",   sku:"RNG-0072",cat:"Ring",    karat:"14K",mat:"Rose Gold",            wt:2.1, cost:980,  retail:2100, qty:34, reorder:10,sales:[5,6,8,7,9,8,10]},
+  {name:"22K Plain Band Ring",            sku:"RNG-0091",cat:"Ring",    karat:"22K",mat:"Yellow Gold",           wt:4.5, cost:2800, retail:5600, qty:12, reorder:5, sales:[3,4,3,5,4,5,4]},
+  {name:"Pearl Drop Earrings",            sku:"EAR-0019",cat:"Earrings",karat:"Silver",mat:"Sterling Silver + Pearl",wt:1.4,cost:320,retail:750,qty:3,  reorder:8, sales:[4,3,5,4,6,5,7]},
+  {name:"Diamond Stud Earrings 0.5ct",    sku:"EAR-0033",cat:"Earrings",karat:"18K",mat:"White Gold + Diamond", wt:1.8, cost:3600, retail:7200, qty:11, reorder:5, sales:[3,2,3,4,3,4,5]},
+  {name:"Sapphire Cluster Earrings",      sku:"EAR-0047",cat:"Earrings",karat:"14K",mat:"Yellow Gold + Sapphire",wt:2.4,cost:2100, retail:4500, qty:6,  reorder:4, sales:[2,3,2,3,2,3,2]},
+  {name:"Diamond Tennis Necklace 2ct",    sku:"NCK-0011",cat:"Necklace",karat:"18K",mat:"White Gold + Diamond", wt:11.2,cost:18000,retail:38000,qty:4,  reorder:2, sales:[1,1,2,1,2,1,2]},
+  {name:"Pearl Strand Necklace 18\"",     sku:"NCK-0028",cat:"Necklace",karat:"Silver",mat:"Silver + Pearl",    wt:8.5, cost:1200, retail:2600, qty:15, reorder:6, sales:[3,4,5,4,6,5,6]},
+  {name:"Gold Layered Chain Necklace",    sku:"NCK-0035",cat:"Necklace",karat:"21K",mat:"Yellow Gold",          wt:6.8, cost:2400, retail:5100, qty:22, reorder:8, sales:[6,7,8,9,8,10,9]},
+  {name:"18K Gold Rope Bracelet",         sku:"BRC-0009",cat:"Bracelet",karat:"18K",mat:"Yellow Gold",          wt:7.4, cost:3100, retail:6500, qty:2,  reorder:5, sales:[3,4,5,4,5,4,5]},
+  {name:"Diamond Tennis Bracelet 3ct",    sku:"BRC-0022",cat:"Bracelet",karat:"18K",mat:"White Gold + Diamond", wt:9.1, cost:22000,retail:46000,qty:3,  reorder:2, sales:[1,1,1,2,1,1,2]},
+  {name:"Charm Bracelet — 14K Gold",      sku:"BRC-0038",cat:"Bracelet",karat:"14K",mat:"Yellow Gold",          wt:5.2, cost:870,  retail:1850, qty:19, reorder:8, sales:[5,6,7,8,7,9,8]},
+  {name:"24K Gold Bangle",                sku:"BRC-0051",cat:"Bracelet",karat:"24K",mat:"Pure Gold",            wt:14.6,cost:5800, retail:11200,qty:7,  reorder:3, sales:[2,2,3,2,3,2,3]},
+  {name:"Rolex Datejust 41 Ref.126334",   sku:"WCH-0003",cat:"Watch",  karat:"18K",mat:"Oystersteel + Gold",   wt:145, cost:62000,retail:98000,qty:1,  reorder:1, sales:[0,1,0,1,0,0,1]},
+  {name:"Cartier Love Bracelet Watch",    sku:"WCH-0007",cat:"Watch",  karat:"18K",mat:"Rose Gold",            wt:90,  cost:48000,retail:82000,qty:2,  reorder:1, sales:[0,0,1,0,1,0,0]},
+  {name:"Round Diamond 1.0ct F/VS1",      sku:"LST-0002",cat:"Loose",  karat:"N/A",mat:"Diamond",              wt:0.2, cost:15000,retail:28000,qty:7,  reorder:3, sales:[2,2,3,2,3,2,3]},
+  {name:"Oval Sapphire 3.5ct Ceylon",     sku:"LST-0011",cat:"Loose",  karat:"N/A",mat:"Sapphire",             wt:0.7, cost:9200, retail:19500,qty:5,  reorder:2, sales:[1,1,2,1,2,1,1]},
+  {name:"Emerald Cut Ruby 2ct Mozambique",sku:"LST-0019",cat:"Loose",  karat:"N/A",mat:"Ruby",                 wt:0.4, cost:11800,retail:24000,qty:3,  reorder:2, sales:[1,1,1,2,1,1,2]},
+  {name:"Aquamarine Cushion 5ct",         sku:"LST-0026",cat:"Loose",  karat:"N/A",mat:"Aquamarine",           wt:1.0, cost:4400, retail:9200, qty:9,  reorder:3, sales:[2,2,3,2,3,2,3]},
+];
+
+const POS = [
+  {po:"PO-2026-0041",supplier:"Al Mas Gems LLC",items:12,ordered:"2026-03-18",expected:"2026-04-10",value:84000,status:"Open"},
+  {po:"PO-2026-0038",supplier:"Malbar Gold Trading",items:5,ordered:"2026-03-10",expected:"2026-04-05",value:52000,status:"Overdue"},
+  {po:"PO-2026-0035",supplier:"GIA Certified Stones",items:8,ordered:"2026-03-01",expected:"2026-03-28",value:138000,status:"Received"},
+  {po:"PO-2026-0032",supplier:"Swiss Watch Hub",items:2,ordered:"2026-02-20",expected:"2026-03-20",value:160000,status:"Received"},
+  {po:"PO-2026-0029",supplier:"Rajesh Jewels Mumbai",items:20,ordered:"2026-02-14",expected:"2026-03-14",value:47000,status:"Received"},
+  {po:"PO-2026-0026",supplier:"Al Futtaim Pearls",items:15,ordered:"2026-02-05",expected:"2026-03-05",value:22000,status:"Received"},
+  {po:"PO-2026-0044",supplier:"Dubai Gold Souk Wholesaler",items:30,ordered:"2026-03-25",expected:"2026-04-22",value:95000,status:"Pending"},
+  {po:"PO-2026-0045",supplier:"Antwerp Diamond Centre",items:6,ordered:"2026-03-28",expected:"2026-04-28",value:210000,status:"Pending"},
+  {po:"PO-2026-0046",supplier:"Al Mas Gems LLC",items:9,ordered:"2026-04-01",expected:"2026-05-01",value:61000,status:"Open"},
+];
+
+const SUPPLIERS = [
+  {name:"Al Mas Gems LLC",country:"UAE",type:"Gold & Diamond",contact:"Omar Al Rashidi",email:"omar@almas.ae",phone:"+971 4 321 4400",orders:24,spend:"AED 480K",rating:5,status:"Active"},
+  {name:"Malbar Gold Trading",country:"India",type:"Gold & Silver",contact:"Priya Nair",email:"priya@malbar.in",phone:"+91 484 234 5500",orders:18,spend:"AED 320K",rating:4,status:"Active"},
+  {name:"GIA Certified Stones",country:"USA",type:"Loose Stones",contact:"James Carter",email:"james@giastones.com",phone:"+1 212 555 0180",orders:11,spend:"AED 290K",rating:5,status:"Active"},
+  {name:"Swiss Watch Hub",country:"Switzerland",type:"Watches",contact:"Hans Müller",email:"hans@swisshub.ch",phone:"+41 22 700 1100",orders:6,spend:"AED 560K",rating:4,status:"Active"},
+  {name:"Rajesh Jewels Mumbai",country:"India",type:"Gold & Diamond",contact:"Rajesh Shah",email:"rajesh@rajewels.in",phone:"+91 22 6654 3300",orders:22,spend:"AED 210K",rating:3,status:"Active"},
+  {name:"Antwerp Diamond Centre",country:"Belgium",type:"Loose Stones",contact:"Sophie De Smedt",email:"sophie@antwerp-dc.be",phone:"+32 3 220 8800",orders:9,spend:"AED 410K",rating:5,status:"Active"},
+  {name:"Al Futtaim Pearls",country:"UAE",type:"Pearls & Silver",contact:"Fatima Al Nouri",email:"fatima@alfuttaim.ae",phone:"+971 4 885 6600",orders:15,spend:"AED 95K",rating:4,status:"Active"},
+  {name:"Dubai Gold Souk Wholesaler",country:"UAE",type:"Gold",contact:"Khalid Mansoor",email:"khalid@dgs.ae",phone:"+971 4 226 5500",orders:30,spend:"AED 620K",rating:4,status:"Active"},
+];
+
+const TRANSACTIONS = [
+  {date:"2026-04-05",item:"Rose Gold Stackable Ring Set",type:"Sale",qty:2,amount:4200,staff:"Sara A."},
+  {date:"2026-04-05",item:"Diamond Stud Earrings 0.5ct",type:"Sale",qty:1,amount:7200,staff:"Nour K."},
+  {date:"2026-04-04",item:"Gold Layered Chain Necklace",type:"Sale",qty:3,amount:15300,staff:"Sara A."},
+  {date:"2026-04-04",item:"Round Diamond 1.0ct F/VS1",type:"Sale",qty:1,amount:28000,staff:"Amir H."},
+  {date:"2026-04-04",item:"Charm Bracelet — 14K Gold",type:"Return",qty:1,amount:-1850,staff:"Nour K."},
+  {date:"2026-04-03",item:"Pearl Drop Earrings",type:"Sale",qty:2,amount:1500,staff:"Sara A."},
+  {date:"2026-04-03",item:"24K Gold Bangle",type:"Restock",qty:5,amount:29000,staff:"Amir H."},
+  {date:"2026-04-02",item:"Rolex Datejust 41",type:"Sale",qty:1,amount:98000,staff:"Sara A."},
+];
+
+const TOP_SALES = [
+  {rank:1,name:"Rolex Datejust 41 Ref.126334",karat:"18K",cat:"Watch",units:2,rev:196000,margin:37},
+  {rank:2,name:"Diamond Tennis Necklace 2ct",karat:"18K",cat:"Necklace",units:3,rev:114000,margin:53},
+  {rank:3,name:"Round Diamond 1.0ct F/VS1",karat:"N/A",cat:"Loose",units:4,rev:112000,margin:47},
+  {rank:4,name:"Cartier Love Bracelet Watch",karat:"18K",cat:"Watch",units:1,rev:82000,margin:42},
+  {rank:5,name:"Diamond Tennis Bracelet 3ct",karat:"18K",cat:"Bracelet",units:2,rev:92000,margin:52},
+  {rank:6,name:"Emerald Halo Engagement Ring",karat:"Platinum",cat:"Ring",units:3,rev:72000,margin:52},
+  {rank:7,name:"Gold Layered Chain Necklace",karat:"21K",cat:"Necklace",units:14,rev:71400,margin:53},
+  {rank:8,name:"Rose Gold Stackable Ring Set",karat:"14K",cat:"Ring",units:32,rev:67200,margin:53},
+];
+
+const CAT_CLS={Ring:"cat-ring",Necklace:"cat-neck",Earrings:"cat-ear",Bracelet:"cat-brace",Watch:"cat-watch",Loose:"cat-loose"};
+
+// ══ NAV ══
+const TITLES={dashboard:"Dashboard",inventory:"Inventory Management",purchase:"Purchase Orders",pricing:"Pricing",suppliers:"Suppliers",reports:"Reports",settings:"Settings"};
+function nav(el){
+  document.querySelectorAll('nav a').forEach(a=>a.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const pg=el.getAttribute('data-page');
+  document.getElementById('page-'+pg).classList.add('active');
+  document.getElementById('pageTitle').textContent=TITLES[pg];
+}
+
+// ══ HELPERS ══
+function fmt(n){return Number(n).toLocaleString();}
+function statusOf(qty,ro){if(qty===0)return"Out of Stock";if(qty<=ro)return"Low Stock";return"In Stock";}
+function statusPill(qty,ro){
+  const s=statusOf(qty,ro);
+  const c={InStock:"pill-green","Low Stock":"pill-amber","Out of Stock":"pill-red"}[s.replace(' ','')]||"pill-amber";
+  return `<span class="pill ${s==="In Stock"?"pill-green":s==="Low Stock"?"pill-amber":"pill-red"}">${s}</span>`;
+}
+function spark(sales){
+  const mx=Math.max(...sales,1);
+  return'<div class="spark">'+sales.map(v=>`<div class="spark-bar" style="height:${Math.round(v/mx*22)}px"></div>`).join('')+'</div>';
+}
+const THUMB_SVGS={
+  Ring:`<svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="3"/><path d="M9 12h-.5M15 12h.5M12 9v-.5M12 15v.5"/><path d="M8.5 8.5l-.35-.35M15.5 15.5l.35.35M15.5 8.5l.35-.35M8.5 15.5l-.35.35" stroke-linecap="round"/></svg>`,
+  Necklace:`<svg viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="1.5"><path d="M5 5c0 0 1 8 7 8s7-8 7-8" stroke-linecap="round"/><circle cx="12" cy="16" r="3"/><path d="M5 5 Q4 3 6 3" stroke-linecap="round"/><path d="M19 5 Q20 3 18 3" stroke-linecap="round"/></svg>`,
+  Earrings:`<svg viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="1.5"><circle cx="8" cy="5" r="2"/><line x1="8" y1="7" x2="8" y2="13" stroke-linecap="round"/><polygon points="5,13 11,13 8,19" fill="rgba(224,160,48,.25)" stroke="var(--amber)"/><circle cx="16" cy="5" r="2"/><line x1="16" y1="7" x2="16" y2="13" stroke-linecap="round"/><polygon points="13,13 19,13 16,19" fill="rgba(224,160,48,.25)" stroke="var(--amber)"/></svg>`,
+  Bracelet:`<svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.5"><ellipse cx="12" cy="12" rx="9" ry="5"/><circle cx="12" cy="7" r="1.5" fill="var(--green)"/><circle cx="3" cy="12" r="1.5" fill="var(--green)"/><circle cx="21" cy="12" r="1.5" fill="var(--green)"/><circle cx="12" cy="17" r="1.5" fill="var(--green)"/></svg>`,
+  Watch:`<svg viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="1.5"><rect x="7" y="6" width="10" height="12" rx="3"/><line x1="9" y1="4" x2="15" y2="4" stroke-linecap="round" stroke-width="2.5"/><line x1="9" y1="20" x2="15" y2="20" stroke-linecap="round" stroke-width="2.5"/><polyline points="12,9 12,12 14,12" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  Loose:`<svg viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="1.5"><polygon points="12,3 20,9 17,19 7,19 4,9" fill="rgba(176,125,224,.18)" stroke="var(--purple)"/><polygon points="12,3 16,9 12,8 8,9" fill="rgba(176,125,224,.35)"/><line x1="8" y1="9" x2="12" y2="19"/><line x1="16" y1="9" x2="12" y2="19"/><line x1="8" y1="9" x2="16" y2="9"/></svg>`,
+};
+function thumb(cat){return`<div class="item-thumb">${THUMB_SVGS[cat]||THUMB_SVGS.Loose}</div>`;}
+
+// ══ INVENTORY ══
+function filterTable(){
+  const q=document.getElementById('searchInput').value.toLowerCase();
+  const cat=document.getElementById('catFilter').value;
+  const kar=document.getElementById('karatFilter').value;
+  const st=document.getElementById('statusFilter').value;
+  const f=ITEMS.filter(i=>{
+    const mq=!q||i.name.toLowerCase().includes(q)||i.sku.toLowerCase().includes(q)||i.karat.toLowerCase().includes(q)||i.mat.toLowerCase().includes(q);
+    const mc=!cat||i.cat===cat;
+    const mk=!kar||i.karat===kar;
+    const ms=!st||statusOf(i.qty,i.reorder)===st;
+    return mq&&mc&&mk&&ms;
+  });
+  renderInv(f);
+}
+function renderInv(data){
+  const body=document.getElementById('inventoryBody');
+  if(!data.length){body.innerHTML=`<tr><td colspan="12" style="text-align:center;padding:36px;color:var(--muted)">No items match.</td></tr>`;document.getElementById('rowCount').textContent='No items';return;}
+  body.innerHTML=data.map(i=>`<tr>
+    <td style="padding:10px 10px 10px 22px">${thumb(i.cat)}</td>
+    <td><div class="item-name">${i.name}</div><div class="item-sku">${i.sku}</div></td>
+    <td><span class="cat ${CAT_CLS[i.cat]||''}">${i.cat}</span></td>
+    <td><span style="font-size:15px;font-weight:600;color:var(--gold)">${i.karat}</span></td>
+    <td style="font-size:14px;color:var(--muted)">${i.mat}</td>
+    <td>${fmt(i.cost)}</td>
+    <td>${fmt(i.retail)}</td>
+    <td style="font-weight:700;${i.qty<=i.reorder?'color:var(--red)':''}">${i.qty}</td>
+    <td style="color:var(--muted)">${i.reorder}</td>
+    <td>${spark(i.sales)}</td>
+    <td>${statusPill(i.qty,i.reorder)}</td>
+    <td><button class="action-btn" onclick="event.stopPropagation()">⋯</button></td>
+  </tr>`).join('');
+  document.getElementById('rowCount').textContent=`Showing ${data.length} of ${ITEMS.length} items`;
+  updateKPIs();
+}
+function updateKPIs(){
+  document.getElementById('kpiTotal').textContent=ITEMS.length;
+  document.getElementById('kpiLow').textContent=ITEMS.filter(i=>i.qty>0&&i.qty<=i.reorder).length;
+  document.getElementById('kpiIn').textContent=ITEMS.filter(i=>i.qty>i.reorder).length;
+  const val=ITEMS.reduce((s,i)=>s+i.cost*i.qty,0);
+  document.getElementById('kpiVal').textContent='AED '+fmt(val);
+}
+
+// ══ ADD ITEM MODAL ══
+function openModal(){document.getElementById('modalOverlay').classList.add('open');}
+function closeModal(){document.getElementById('modalOverlay').classList.remove('open');}
+function closeModalOverlay(e){if(e.target===document.getElementById('modalOverlay'))closeModal();}
+function addItem(){
+  const name=document.getElementById('fName').value.trim();
+  if(!name){alert('Please enter item name.');return;}
+  const cat=document.getElementById('fCat').value;
+  const pfx={Ring:'RNG',Necklace:'NCK',Earrings:'EAR',Bracelet:'BRC',Watch:'WCH',Loose:'LST'}[cat]||'ITM';
+  ITEMS.unshift({
+    name,sku:`${pfx}-${String(ITEMS.length+1).padStart(4,'0')}`,cat,
+    karat:document.getElementById('fKarat').value,
+    mat:document.getElementById('fMaterial').value||'—',
+    wt:parseFloat(document.getElementById('fWeight').value)||0,
+    cost:parseInt(document.getElementById('fCost').value)||0,
+    retail:parseInt(document.getElementById('fRetail').value)||0,
+    qty:parseInt(document.getElementById('fQty').value)||0,
+    reorder:parseInt(document.getElementById('fReorder').value)||5,
+    sales:[0,0,0,0,0,0,0]
+  });
+  closeModal();
+  ['fName','fMaterial','fSupplier','fLocation','fCert'].forEach(id=>document.getElementById(id).value='');
+  ['fCost','fRetail','fQty','fReorder','fWeight'].forEach(id=>document.getElementById(id).value='');
+  filterTable();
+}
+
+// ══ EXPORT ══
+function exportCSV(){
+  const cols=['Name','SKU','Category','Karat','Material','Weight(g)','Cost(AED)','Retail(AED)','Qty','Reorder','Status'];
+  const rows=ITEMS.map(i=>[`"${i.name}"`,i.sku,i.cat,i.karat,`"${i.mat}"`,i.wt,i.cost,i.retail,i.qty,i.reorder,statusOf(i.qty,i.reorder)].join(','));
+  const blob=new Blob([[cols.join(','),...rows].join('\n')],{type:'text/csv'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='clarix_inventory.csv';a.click();
+}
+
+// ══ PURCHASE ORDERS ══
+function renderPOs(){
+  const statusCls={Open:'pill-blue',Pending:'pill-amber',Received:'pill-green',Overdue:'pill-red',Cancelled:'pill-red'};
+  document.getElementById('poBody').innerHTML=POS.map(p=>`<tr>
+    <td style="font-weight:600;color:var(--gold)">${p.po}</td>
+    <td>${p.supplier}</td>
+    <td>${p.items}</td>
+    <td style="color:var(--muted)">${p.ordered}</td>
+    <td>${p.expected}</td>
+    <td style="font-weight:600">${fmt(p.value)}</td>
+    <td><span class="pill ${statusCls[p.status]||'pill-amber'}">${p.status}</span></td>
+    <td><button class="action-btn">⋯</button></td>
+  </tr>`).join('');
+}
+
+// ══ PRICING ══
+function renderPricing(){
+  document.getElementById('pricingBody').innerHTML=ITEMS.slice(0,14).map(i=>{
+    const m=Math.round((i.retail-i.cost)/i.retail*100);
+    const dates=['2026-04-01','2026-03-28','2026-03-22','2026-03-15','2026-03-10','2026-03-05'];
+    return`<tr>
+      <td style="padding:10px 10px 10px 22px">${thumb(i.cat)}</td>
+      <td><div class="item-name">${i.name}</div><div class="item-sku">${i.sku}</div></td>
+      <td><span style="font-size:15px;font-weight:600;color:var(--gold)">${i.karat}</span></td>
+      <td style="color:var(--muted)">${i.wt}g</td>
+      <td>${fmt(i.cost)}</td>
+      <td>${fmt(i.retail)}</td>
+      <td style="font-weight:700;color:${m>60?'var(--green)':m>40?'var(--amber)':'var(--red)'}">${m}%</td>
+      <td style="width:100px"><div class="margin-bar"><div class="margin-fill" style="width:${m}%"></div></div></td>
+      <td style="color:var(--muted);font-size:14px">${dates[Math.floor(Math.random()*dates.length)]}</td>
+      <td><button class="action-btn">⋯</button></td>
+    </tr>`;
+  }).join('');
+}
+
+// ══ SUPPLIERS ══
+function renderSuppliers(){
+  document.getElementById('supplierGrid').innerHTML=SUPPLIERS.map(s=>{
+    const stars=Array(5).fill(0).map((_,i)=>`<span class="star ${i<s.rating?'':'empty'}">★</span>`).join('');
+    return`<div class="supplier-card">
+      <div class="sup-name">${s.name}</div>
+      <div class="sup-tag">${s.type} · ${s.country}</div>
+      <div class="sup-row"><span>Contact</span><span>${s.contact}</span></div>
+      <div class="sup-row"><span>Email</span><span style="color:var(--blue)">${s.email}</span></div>
+      <div class="sup-row"><span>Phone</span><span>${s.phone}</span></div>
+      <div class="sup-row"><span>Total Orders</span><span>${s.orders}</span></div>
+      <div class="sup-row"><span>YTD Spend</span><span style="color:var(--gold)">${s.spend}</span></div>
+      <div class="sup-rating">${stars}</div>
+    </div>`;
+  }).join('');
+}
+
+// ══ REPORTS ══
+function renderReports(){
+  const cards=[
+    {icon:'📊',name:'Monthly Sales Report',desc:'Revenue, units, margin by month'},
+    {icon:'📦',name:'Stock Movement Report',desc:'Ins, outs, adjustments by SKU'},
+    {icon:'💰',name:'Margin Analysis',desc:'Cost vs. retail across all items'},
+    {icon:'🪙',name:'Gold Karat Summary',desc:'Stock & value by karat grade'},
+    {icon:'⚠️',name:'Low Stock Alert Report',desc:'Items below reorder point'},
+    {icon:'🏆',name:'Top Sellers Report',desc:'Best performing SKUs by revenue'},
+  ];
+  document.getElementById('reportsGrid').innerHTML=cards.map(c=>`<div class="report-card">
+    <div class="report-icon">${c.icon}</div>
+    <div class="report-name">${c.name}</div>
+    <div class="report-desc">${c.desc}</div>
+  </div>`).join('');
+  document.getElementById('topSalesBody').innerHTML=TOP_SALES.map(s=>`<tr>
+    <td style="font-weight:700;color:var(--gold)">#${s.rank}</td>
+    <td><div class="item-name">${s.name}</div></td>
+    <td><span style="font-size:15px;font-weight:600;color:var(--gold)">${s.karat}</span></td>
+    <td><span class="cat ${CAT_CLS[s.cat]||''}">${s.cat}</span></td>
+    <td style="font-weight:600">${s.units}</td>
+    <td style="font-weight:700;color:var(--green)">${fmt(s.rev)}</td>
+    <td style="color:${s.margin>50?'var(--green)':'var(--amber)'}">${s.margin}%</td>
+  </tr>`).join('');
+}
+
+// ══ DASHBOARD ══
+function renderDashboard(){
+  const months=['Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar','Apr'];
+  const vals=[88,104,96,142,188,220,132,118,156,184];
+  const mx=Math.max(...vals);
+  document.getElementById('revenueChart').innerHTML=months.map((m,i)=>`
+    <div class="bc-col">
+      <div class="bc-val">${vals[i]>100?Math.round(vals[i]/1)+'K':vals[i]+'K'}</div>
+      <div class="bc-bar" style="height:${Math.round(vals[i]/mx*90)}px" title="${m}: AED ${vals[i]}K"></div>
+      <div class="bc-label">${m}</div>
+    </div>`).join('');
+  document.getElementById('txBody').innerHTML=TRANSACTIONS.map(t=>`<tr>
+    <td style="color:var(--muted);font-size:14px">${t.date}</td>
+    <td><div class="item-name">${t.item}</div></td>
+    <td><span class="pill ${t.type==='Sale'?'pill-green':t.type==='Return'?'pill-red':'pill-blue'}">${t.type}</span></td>
+    <td style="font-weight:600">${t.qty}</td>
+    <td style="font-weight:700;color:${t.amount<0?'var(--red)':'var(--green)'}">${t.amount<0?'-':'+'}AED ${fmt(Math.abs(t.amount))}</td>
+    <td style="color:var(--muted)">${t.staff}</td>
+  </tr>`).join('');
+}
+
+// ══ SETTINGS ══
+function renderSettings(){
+  const groups=[
+    {title:'Store Settings',rows:[
+      {label:'Store Name',desc:'Displayed on receipts',toggle:false,value:'Clarix Jewellery Dubai'},
+      {label:'Currency',desc:'AED (UAE Dirham)',toggle:false},
+      {label:'VAT Rate',desc:'5% — UAE Standard',toggle:false},
+    ]},
+    {title:'Notifications',rows:[
+      {label:'Low Stock Alerts',desc:'Email when qty ≤ reorder point',on:true},
+      {label:'Daily Summary Email',desc:'End-of-day report',on:true},
+      {label:'PO Status Updates',desc:'When PO is received or delayed',on:false},
+    ]},
+    {title:'Pricing Rules',rows:[
+      {label:'Auto-update Gold Prices',desc:'Sync with live gold spot price',on:true},
+      {label:'Show Margin in Reports',desc:'Visible to managers only',on:true},
+      {label:'Round Retail Prices',desc:'Round to nearest AED 50',on:false},
+    ]},
+    {title:'User Accounts',rows:[
+      {label:'Sara Al-Rashidi',desc:'Manager · Last login today',toggle:false,badge:'Manager'},
+      {label:'Nour Khalil',desc:'Sales Associate',toggle:false,badge:'Staff'},
+      {label:'Amir Hassan',desc:'Sales Associate',toggle:false,badge:'Staff'},
+    ]},
+  ];
+  document.getElementById('settingsGrid').innerHTML=groups.map(g=>`
+    <div class="settings-group">
+      <h3>${g.title}</h3>
+      ${g.rows.map(r=>`<div class="setting-row">
+        <div><div class="setting-label">${r.label}${r.badge?` <span class="pill pill-blue" style="font-size:13px">${r.badge}</span>`:''}</div><div class="setting-desc">${r.desc}</div></div>
+        ${r.on!==undefined?`<div class="toggle ${r.on?'on':'off'}" onclick="this.classList.toggle('on');this.classList.toggle('off')"></div>`:'<button class="btn btn-outline btn-sm">Edit</button>'}
+      </div>`).join('')}
+    </div>`).join('');
+}
+
+// ══ INIT ══
+renderInv(ITEMS);
+renderDashboard();
+renderPOs();
+renderPricing();
+renderSuppliers();
+renderReports();
+renderSettings();
+updateKPIs();
+</script>
+</body>
+</html>

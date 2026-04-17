@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clarix Dashboard — Business Intelligence</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/dashboard.css" />
+</head>
+<body>
+
+<!-- ===== SIDEBAR ===== -->
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-icon">☕</div>
+      <div>
+        <div class="sidebar-logo-text">Clari<span>x</span></div>
+        <div class="sidebar-subtitle">Business Dashboard</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">Overview</div>
+    <a class="nav-item active" data-panel="panel-overview">
+      <div class="nav-icon"><i class="fas fa-chart-pie"></i></div>
+      <span>Overview</span>
+    </a>
+    <a class="nav-item" data-panel="panel-sales">
+      <div class="nav-icon"><i class="fas fa-chart-line"></i></div>
+      <span>Sales Performance</span>
+      <span class="nav-badge">Live</span>
+    </a>
+    <a class="nav-item" data-panel="panel-revenue">
+      <div class="nav-icon"><i class="fas fa-coins"></i></div>
+      <span>Revenue & Profit</span>
+    </a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">Operations</div>
+    <a class="nav-item" data-panel="panel-inventory">
+      <div class="nav-icon"><i class="fas fa-boxes"></i></div>
+      <span>Inventory</span>
+      <span class="nav-badge" style="background:#EF4444;color:#fff">3</span>
+    </a>
+    <a class="nav-item" data-panel="panel-employees">
+      <div class="nav-icon"><i class="fas fa-users"></i></div>
+      <span>Employees</span>
+    </a>
+    <a class="nav-item" data-panel="panel-suppliers">
+      <div class="nav-icon"><i class="fas fa-truck"></i></div>
+      <span>Suppliers</span>
+    </a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">Analytics</div>
+    <a class="nav-item" data-panel="panel-crosssell">
+      <div class="nav-icon"><i class="fas fa-arrows-rotate"></i></div>
+      <span>Cross & Upsell</span>
+    </a>
+    <a class="nav-item" data-panel="panel-targets">
+      <div class="nav-icon"><i class="fas fa-bullseye"></i></div>
+      <span>Targets & Goals</span>
+    </a>
+  </div>
+
+  <div class="sidebar-section">
+    <a class="nav-item" onclick="window.location.href='index.html'">
+      <div class="nav-icon"><i class="fas fa-store"></i></div>
+      <span>View Website</span>
+    </a>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="sidebar-user">
+      <div class="sidebar-avatar">AM</div>
+      <div class="sidebar-user-info">
+        <h4>Ahmad Mansour</h4>
+        <p>Owner & Manager</p>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- ===== MAIN CONTENT ===== -->
+<div class="main-content">
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <h2>Overview</h2>
+      <p>Sunday, 6 April 2025 &nbsp;·&nbsp; Amman, Jordan</p>
+    </div>
+    <div class="topbar-search">
+      <i class="fas fa-search search-icon"></i>
+      <input type="text" placeholder="Search products, employees..." />
+    </div>
+    <div class="topbar-actions">
+      <div class="date-range"><i class="fas fa-calendar-alt"></i> Apr 2025</div>
+      <button class="topbar-btn" title="Notifications">
+        <i class="fas fa-bell"></i>
+        <div class="notif-dot"></div>
+      </button>
+      <button class="topbar-btn" title="Settings"><i class="fas fa-cog"></i></button>
+      <button class="topbar-btn" title="Clock"><i class="fas fa-clock"></i> <span id="liveClock" style="font-size:0.75rem;font-family:Poppins,sans-serif;margin-left:4px;"></span></button>
+    </div>
+  </header>
+
+  <!-- ===== CONTENT ===== -->
+  <div class="content">
+
+    <!-- ==================== OVERVIEW PANEL ==================== -->
+    <div class="dashboard-panel active" id="panel-overview">
+
+      <!-- KPI CARDS -->
+      <div class="kpi-grid">
+        <div class="kpi-card revenue">
+          <div class="kpi-header">
+            <div class="kpi-icon">💰</div>
+            <div class="kpi-trend up">↑ 14.2%</div>
+          </div>
+          <div class="kpi-value">JD 42,300</div>
+          <div class="kpi-label">Monthly Revenue</div>
+          <div class="kpi-sub">vs last month: <span>JD 37,050</span></div>
+        </div>
+        <div class="kpi-card orders">
+          <div class="kpi-header">
+            <div class="kpi-icon">🛒</div>
+            <div class="kpi-trend up">↑ 8.5%</div>
+          </div>
+          <div class="kpi-value">3,842</div>
+          <div class="kpi-label">Total Orders This Month</div>
+          <div class="kpi-sub">Daily avg: <span>128 orders</span></div>
+        </div>
+        <div class="kpi-card customers">
+          <div class="kpi-header">
+            <div class="kpi-icon">👥</div>
+            <div class="kpi-trend up">↑ 11.8%</div>
+          </div>
+          <div class="kpi-value">2,156</div>
+          <div class="kpi-label">Unique Customers</div>
+          <div class="kpi-sub">New this month: <span>342</span></div>
+        </div>
+        <div class="kpi-card avg">
+          <div class="kpi-header">
+            <div class="kpi-icon">📊</div>
+            <div class="kpi-trend up">↑ 5.3%</div>
+          </div>
+          <div class="kpi-value">JD 11.01</div>
+          <div class="kpi-label">Avg Order Value</div>
+          <div class="kpi-sub">vs target: <span>JD 10.50</span></div>
+        </div>
+      </div>
+
+      <!-- MAIN CHARTS -->
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <h3>Revenue & Profit Trend</h3>
+              <p>Annual performance overview</p>
+            </div>
+            <div class="chart-controls">
+              <button class="chart-btn active">2025</button>
+              <button class="chart-btn">2024</button>
+              <button class="chart-btn">Compare</button>
+            </div>
+          </div>
+          <div class="chart-canvas-wrap">
+            <canvas id="revenueChart"></canvas>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <h3>Sales by Category</h3>
+              <p>This month's breakdown</p>
+            </div>
+          </div>
+          <div class="chart-canvas-wrap">
+            <canvas id="salesCategoryChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECOND ROW CHARTS -->
+      <div class="charts-row">
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <h3>Weekly Sales</h3>
+              <p>Orders & revenue by day</p>
+            </div>
+            <div class="chart-controls">
+              <button class="chart-btn active">This Week</button>
+              <button class="chart-btn">Last Week</button>
+            </div>
+          </div>
+          <div class="chart-canvas-wrap" style="height:220px;">
+            <canvas id="weeklySalesChart"></canvas>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <h3>Profit Margin</h3>
+              <p>Monthly % trend</p>
+            </div>
+          </div>
+          <div class="chart-canvas-wrap" style="height:220px;">
+            <canvas id="profitTrendChart"></canvas>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <h3>Peak Hours</h3>
+              <p>Orders by time of day</p>
+            </div>
+          </div>
+          <div class="chart-canvas-wrap" style="height:220px;">
+            <canvas id="hourlyChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- RECENT ORDERS TABLE -->
+      <div class="table-card">
+        <div class="table-header">
+          <div>
+            <h3>Recent Transactions</h3>
+          </div>
+          <div class="table-actions">
+            <span class="table-badge">Today: 128 orders</span>
+            <button class="btn-sm btn-outline-sm"><i class="fas fa-download"></i> Export</button>
+            <button class="btn-sm btn-primary-sm"><i class="fas fa-plus"></i> New Order</button>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Order</th>
+              <th>Customer</th>
+              <th>Items</th>
+              <th>Total</th>
+              <th>Table</th>
+              <th>Status</th>
+              <th>Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>#ORD-2241</strong></td>
+              <td>Layla Hassan</td>
+              <td>Caramel Latte, Waffles</td>
+              <td><strong>JD 9.80</strong></td>
+              <td>Table 5</td>
+              <td><span class="status-pill green">Completed</span></td>
+              <td>10:42 AM</td>
+            </tr>
+            <tr>
+              <td><strong>#ORD-2240</strong></td>
+              <td>Omar Khalil</td>
+              <td>Cold Brew ×2, Cheesecake</td>
+              <td><strong>JD 13.80</strong></td>
+              <td>Table 12</td>
+              <td><span class="status-pill orange">Preparing</span></td>
+              <td>10:38 AM</td>
+            </tr>
+            <tr>
+              <td><strong>#ORD-2239</strong></td>
+              <td>Sara Nasser</td>
+              <td>Mango Juice, Croissant</td>
+              <td><strong>JD 7.00</strong></td>
+              <td>Takeaway</td>
+              <td><span class="status-pill green">Completed</span></td>
+              <td>10:31 AM</td>
+            </tr>
+            <tr>
+              <td><strong>#ORD-2238</strong></td>
+              <td>Khaled Amin</td>
+              <td>Turkish Coffee, Tiramisu</td>
+              <td><strong>JD 8.30</strong></td>
+              <td>Table 3</td>
+              <td><span class="status-pill blue">Served</span></td>
+              <td>10:25 AM</td>
+            </tr>
+            <tr>
+              <td><strong>#ORD-2237</strong></td>
+              <td>Rania Farraj</td>
+              <td>Matcha Latte, Cinnamon Roll</td>
+              <td><strong>JD 8.00</strong></td>
+              <td>Table 8</td>
+              <td><span class="status-pill green">Completed</span></td>
+              <td>10:18 AM</td>
+            </tr>
+            <tr>
+              <td><strong>#ORD-2236</strong></td>
+              <td>Walk-in</td>
+              <td>Espresso ×3, Chocolate Cake</td>
+              <td><strong>JD 12.00</strong></td>
+              <td>Bar</td>
+              <td><span class="status-pill red">Pending</span></td>
+              <td>10:14 AM</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+    <!-- ==================== SALES PANEL ==================== -->
+    <div class="dashboard-panel" id="panel-sales">
+      <div class="kpi-grid">
+        <div class="kpi-card revenue">
+          <div class="kpi-header"><div class="kpi-icon">📈</div><div class="kpi-trend up">↑ 8.5%</div></div>
+          <div class="kpi-value">3,842</div>
+          <div class="kpi-label">Total Orders (April)</div>
+          <div class="kpi-sub">Target: <span>3,600 orders</span></div>
+        </div>
+        <div class="kpi-card orders">
+          <div class="kpi-header"><div class="kpi-icon">☕</div><div class="kpi-trend up">↑ 12.1%</div></div>
+          <div class="kpi-value">1,840</div>
+          <div class="kpi-label">Coffee Orders</div>
+          <div class="kpi-sub">Top: <span>Caramel Latte (312)</span></div>
+        </div>
+        <div class="kpi-card customers">
+          <div class="kpi-header"><div class="kpi-icon">🎂</div><div class="kpi-trend up">↑ 6.8%</div></div>
+          <div class="kpi-value">892</div>
+          <div class="kpi-label">Dessert Orders</div>
+          <div class="kpi-sub">Top: <span>Belgian Waffles (198)</span></div>
+        </div>
+        <div class="kpi-card avg">
+          <div class="kpi-header"><div class="kpi-icon">🍊</div><div class="kpi-trend up">↑ 4.2%</div></div>
+          <div class="kpi-value">692</div>
+          <div class="kpi-label">Juice Orders</div>
+          <div class="kpi-sub">Top: <span>Orange Juice (184)</span></div>
+        </div>
+      </div>
+
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-header">
+            <div><h3>Weekly Sales Comparison</h3><p>This week vs last week</p></div>
+            <div class="chart-controls">
+              <button class="chart-btn active">Daily</button>
+              <button class="chart-btn">Weekly</button>
+              <button class="chart-btn">Monthly</button>
+            </div>
+          </div>
+          <div class="chart-canvas-wrap">
+            <canvas id="weeklySalesChart2"></canvas>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header">
+            <div><h3>Sales by Category</h3><p>Distribution this month</p></div>
+          </div>
+          <div class="chart-canvas-wrap">
+            <canvas id="salesCategoryChart2"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- TOP SELLING ITEMS -->
+      <div class="table-card">
+        <div class="table-header">
+          <h3>Top Selling Items</h3>
+          <div class="table-actions">
+            <button class="btn-sm btn-outline-sm">Export CSV</button>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Item</th>
+              <th>Category</th>
+              <th>Units Sold</th>
+              <th>Revenue</th>
+              <th>Growth</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td><div class="td-flex"><div class="item-icon">☕</div><div><div class="item-name">Caramel Latte</div><div class="item-cat">Hot Coffee</div></div></div></td>
+              <td>Coffee</td>
+              <td><strong>312</strong></td>
+              <td><strong>JD 1,185</strong></td>
+              <td><span class="kpi-trend up" style="font-size:0.8rem">↑ 18%</span></td>
+              <td><span class="status-pill green">Top</span></td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td><div class="td-flex"><div class="item-icon">🧇</div><div><div class="item-name">Belgian Waffles</div><div class="item-cat">Desserts</div></div></div></td>
+              <td>Desserts</td>
+              <td><strong>198</strong></td>
+              <td><strong>JD 1,188</strong></td>
+              <td><span class="kpi-trend up" style="font-size:0.8rem">↑ 22%</span></td>
+              <td><span class="status-pill green">Top</span></td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td><div class="td-flex"><div class="item-icon">🧊</div><div><div class="item-name">24hr Cold Brew</div><div class="item-cat">Cold Drinks</div></div></div></td>
+              <td>Cold Drinks</td>
+              <td><strong>285</strong></td>
+              <td><strong>JD 1,282</strong></td>
+              <td><span class="kpi-trend up" style="font-size:0.8rem">↑ 31%</span></td>
+              <td><span class="status-pill green">Top</span></td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td><div class="td-flex"><div class="item-icon">🍊</div><div><div class="item-name">Fresh Orange Juice</div><div class="item-cat">Juices</div></div></div></td>
+              <td>Juices</td>
+              <td><strong>184</strong></td>
+              <td><strong>JD 552</strong></td>
+              <td><span class="kpi-trend up" style="font-size:0.8rem">↑ 9%</span></td>
+              <td><span class="status-pill blue">Growing</span></td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td><div class="td-flex"><div class="item-icon">🎂</div><div><div class="item-name">Dark Chocolate Cake</div><div class="item-cat">Desserts</div></div></div></td>
+              <td>Desserts</td>
+              <td><strong>156</strong></td>
+              <td><strong>JD 702</strong></td>
+              <td><span class="kpi-trend up" style="font-size:0.8rem">↑ 5%</span></td>
+              <td><span class="status-pill blue">Steady</span></td>
+            </tr>
+            <tr>
+              <td>6</td>
+              <td><div class="td-flex"><div class="item-icon">🫧</div><div><div class="item-name">Vanilla Frappé</div><div class="item-cat">Cold Drinks</div></div></div></td>
+              <td>Cold Drinks</td>
+              <td><strong>142</strong></td>
+              <td><strong>JD 710</strong></td>
+              <td><span class="kpi-trend down" style="font-size:0.8rem">↓ 3%</span></td>
+              <td><span class="status-pill orange">Watch</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ==================== REVENUE PANEL ==================== -->
+    <div class="dashboard-panel" id="panel-revenue">
+      <div class="kpi-grid">
+        <div class="kpi-card revenue">
+          <div class="kpi-header"><div class="kpi-icon">💵</div><div class="kpi-trend up">↑ 14.2%</div></div>
+          <div class="kpi-value">JD 42,300</div>
+          <div class="kpi-label">Total Revenue (April)</div>
+          <div class="kpi-sub">YTD Total: <span>JD 168,200</span></div>
+        </div>
+        <div class="kpi-card orders">
+          <div class="kpi-header"><div class="kpi-icon">📉</div><div class="kpi-trend down">↓ 2.1%</div></div>
+          <div class="kpi-value">JD 26,700</div>
+          <div class="kpi-label">Total Cost (COGS)</div>
+          <div class="kpi-sub">Cost ratio: <span>63.1%</span></div>
+        </div>
+        <div class="kpi-card customers">
+          <div class="kpi-header"><div class="kpi-icon">💎</div><div class="kpi-trend up">↑ 36.9%</div></div>
+          <div class="kpi-value">JD 15,600</div>
+          <div class="kpi-label">Gross Profit</div>
+          <div class="kpi-sub">Margin: <span>36.9%</span></div>
+        </div>
+        <div class="kpi-card avg">
+          <div class="kpi-header"><div class="kpi-icon">🎯</div><div class="kpi-trend up">↑ 114%</div></div>
+          <div class="kpi-value">114%</div>
+          <div class="kpi-label">Target Achievement</div>
+          <div class="kpi-sub">Target: <span>JD 37,000</span></div>
+        </div>
+      </div>
+
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-header">
+            <div><h3>Revenue vs Cost vs Profit</h3><p>Full year monthly breakdown</p></div>
+            <div class="chart-controls">
+              <button class="chart-btn active">Annual</button>
+              <button class="chart-btn">Quarterly</button>
+            </div>
+          </div>
+          <div class="chart-canvas-wrap">
+            <canvas id="revenueChart2"></canvas>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header">
+            <div><h3>Revenue by Category</h3><p>April breakdown</p></div>
+          </div>
+          <div class="chart-canvas-wrap">
+            <canvas id="revenueCatChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-card" style="margin-bottom:28px;">
+        <div class="chart-header">
+          <div><h3>Profit Margin % — Monthly Trend</h3><p>Tracking efficiency over time</p></div>
+        </div>
+        <div class="chart-canvas-wrap" style="height:220px;">
+          <canvas id="profitTrendChart2"></canvas>
+        </div>
+      </div>
+
+      <!-- Revenue Breakdown Table -->
+      <div class="table-card">
+        <div class="table-header">
+          <h3>Revenue Breakdown by Category</h3>
+          <div class="table-actions"><button class="btn-sm btn-outline-sm">Export</button></div>
+        </div>
+        <table>
+          <thead><tr><th>Category</th><th>Revenue</th><th>% of Total</th><th>Cost</th><th>Gross Profit</th><th>Margin</th><th>vs Last Month</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><div class="td-flex"><div class="item-icon">☕</div><div><div class="item-name">Hot Coffee</div></div></div></td>
+              <td><strong>JD 13,534</strong></td>
+              <td><div style="display:flex;align-items:center;gap:8px;"><div class="progress-bar" style="width:100px"><div class="progress-fill" style="width:32%"></div></div>32%</div></td>
+              <td>JD 8,520</td>
+              <td><strong>JD 5,014</strong></td>
+              <td><span class="kpi-trend up" style="font-size:0.8rem">37.0%</span></td>
+              <td><span class="kpi-trend up" style="font-size:0.8rem">↑ 12%</span></td>
+            </tr>
+            <tr>
+              <td><div class="td-flex"><div class="item-icon">🧊</div><div><div class="item-name">Cold Drinks</div></div></div></td>
+              <td><strong>JD 10,152</strong></td>
+              <td><div style="display:flex;align-items:center;gap:8px;"><div class="progress-bar" style="width:100px"><div class="progress-fill" style="width:24%"></div></div>24%</div></td>
+              <td>JD 6,400</td>
+              <td><strong>JD 3,752</strong></td>
+              <td><span class="kpi-trend up" style="font-size:0.8rem">37.0%</span></td>
+              <td><span class="kpi-trend up" style="font-size:0.8rem">↑ 28%</span></td>
+            </tr>
+            <tr>
+              <td><div class="td-flex"><div class="item-icon">🎂</div><div><div class="item-name">Desserts</div></div></div></td>
+              <td><strong>JD 7,614</strong></td>
+              <td><div style="display:flex;align-items:center;gap:8px;"><div class="progress-bar" style="width:100px"><div class="progress-fill" style="width:18%"></div></div>18%</div></td>
+              <td>JD 4,800</td>
+              <td><strong>JD 2,814</strong></td>
+              <td><span class="kpi-trend up" style="font-size:0.8rem">36.9%</span></td>
+              <td><span class="kpi-trend up" style="font-size:0.8rem">↑ 8%</span></td>
+            </tr>
+            <tr>
+              <td><div class="td-flex"><div class="item-icon">🍊</div><div><div class="item-name">Fresh Juices</div></div></div></td>
+              <td><strong>JD 5,922</strong></td>
+              <td><div style="display:flex;align-items:center;gap:8px;"><div class="progress-bar" style="width:100px"><div class="progress-fill" style="width:14%"></div></div>14%</div></td>
+              <td>JD 3,700</td>
+              <td><strong>JD 2,222</strong></td>
+              <td><span class="kpi-trend up" style="font-size:0.8rem">37.5%</span></td>
+              <td><span class="kpi-trend up" style="font-size:0.8rem">↑ 4%</span></td>
+            </tr>
+            <tr>
+              <td><div class="td-flex"><div class="item-icon">🍵</div><div><div class="item-name">Tea & Others</div></div></div></td>
+              <td><strong>JD 5,078</strong></td>
+              <td><div style="display:flex;align-items:center;gap:8px;"><div class="progress-bar" style="width:100px"><div class="progress-fill" style="width:12%"></div></div>12%</div></td>
+              <td>JD 3,280</td>
+              <td><strong>JD 1,798</strong></td>
+              <td><span class="kpi-trend up" style="font-size:0.8rem">35.4%</span></td>
+              <td><span class="kpi-trend down" style="font-size:0.8rem">↓ 2%</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ==================== INVENTORY PANEL ==================== -->
+    <div class="dashboard-panel" id="panel-inventory">
+
+      <div class="mini-stats">
+        <div class="mini-stat">
+          <div class="mini-stat-icon" style="background:rgba(34,197,94,0.1)">📦</div>
+          <div>
+            <div class="mini-stat-val">48</div>
+            <div class="mini-stat-label">Total SKUs</div>
+          </div>
+        </div>
+        <div class="mini-stat">
+          <div class="mini-stat-icon" style="background:rgba(239,68,68,0.1)">⚠️</div>
+          <div>
+            <div class="mini-stat-val" style="color:#EF4444">3</div>
+            <div class="mini-stat-label">Low Stock Items</div>
+          </div>
+        </div>
+        <div class="mini-stat">
+          <div class="mini-stat-icon" style="background:rgba(249,115,22,0.1)">🔄</div>
+          <div>
+            <div class="mini-stat-val">5</div>
+            <div class="mini-stat-label">Reorder Needed</div>
+          </div>
+        </div>
+        <div class="mini-stat">
+          <div class="mini-stat-icon" style="background:rgba(212,167,106,0.15)">💰</div>
+          <div>
+            <div class="mini-stat-val">JD 8,240</div>
+            <div class="mini-stat-label">Inventory Value</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="charts-grid" style="margin-bottom:28px;">
+        <div class="chart-card">
+          <div class="chart-header">
+            <div><h3>Stock Level by Ingredient</h3><p>Current % of maximum capacity</p></div>
+            <div class="chart-controls">
+              <button class="btn-sm btn-primary-sm"><i class="fas fa-plus"></i> Add Stock</button>
+            </div>
+          </div>
+          <div class="chart-canvas-wrap" style="height:320px;">
+            <canvas id="inventoryChart"></canvas>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header">
+            <div><h3>Consumption Rate</h3><p>Daily usage trends</p></div>
+          </div>
+          <div class="chart-canvas-wrap" style="height:320px;">
+            <canvas id="consumptionChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-card">
+        <div class="table-header">
+          <h3>Inventory Management</h3>
+          <div class="table-actions">
+            <span class="table-badge">48 items</span>
+            <button class="btn-sm btn-outline-sm">Export</button>
+            <button class="btn-sm btn-primary-sm">+ Add Item</button>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Category</th>
+              <th>Stock Level</th>
+              <th>Unit</th>
+              <th>Reorder At</th>
+              <th>Last Order</th>
+              <th>Supplier</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><div class="td-flex"><div class="item-icon">☕</div><div><div class="item-name">Arabica Coffee Beans</div></div></div></td>
+              <td>Beverages</td>
+              <td>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <div class="progress-bar"><div class="progress-fill" style="width:85%"></div></div>
+                  <span class="progress-label">85%</span>
+                </div>
+              </td>
+              <td>17 kg</td>
+              <td>5 kg</td>
+              <td>Apr 1</td>
+              <td>Al-Aman Coffee</td>
+              <td><span class="status-pill green">Good</span></td>
+            </tr>
+            <tr>
+              <td><div class="td-flex"><div class="item-icon">🥛</div><div><div class="item-name">Whole Milk</div></div></div></td>
+              <td>Dairy</td>
+              <td>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <div class="progress-bar"><div class="progress-fill" style="width:60%"></div></div>
+                  <span class="progress-label">60%</span>
+                </div>
+              </td>
+              <td>36 L</td>
+              <td>20 L</td>
+              <td>Apr 4</td>
+              <td>Jordan Fresh</td>
+              <td><span class="status-pill blue">Monitor</span></td>
+            </tr>
+            <tr>
+              <td><div class="td-flex"><div class="item-icon">🍓</div><div><div class="item-name">Fresh Berries</div></div></div></td>
+              <td>Produce</td>
+              <td>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <div class="progress-bar"><div class="progress-fill red" style="width:30%"></div></div>
+                  <span class="progress-label" style="color:#EF4444">30%</span>
+                </div>
+              </td>
+              <td>3 kg</td>
+              <td>4 kg</td>
+              <td>Apr 2</td>
+              <td>Jordan Fresh</td>
+              <td><span class="status-pill red">Low Stock</span></td>
+            </tr>
+            <tr>
+              <td><div class="td-flex"><div class="item-icon">🍫</div><div><div class="item-name">Belgian Chocolate</div></div></div></td>
+              <td>Ingredients</td>
+              <td>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <div class="progress-bar"><div class="progress-fill" style="width:70%"></div></div>
+                  <span class="progress-label">70%</span>
+                </div>
+              </td>
+              <td>14 kg</td>
+              <td>6 kg</td>
+              <td>Apr 3</td>
+              <td>Sweet World</td>
+              <td><span class="status-pill green">Good</span></td>
+            </tr>
+            <tr>
+              <td><div class="td-flex"><div class="item-icon">🌿</div><div><div class="item-name">Fresh Mint</div></div></div></td>
+              <td>Produce</td>
+              <td>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <div class="progress-bar"><div class="progress-fill red" style="width:25%"></div></div>
+                  <span class="progress-label" style="color:#EF4444">25%</span>
+                </div>
+              </td>
+              <td>0.5 kg</td>
+              <td>1 kg</td>
+              <td>Apr 3</td>
+              <td>Jordan Fresh</td>
+              <td><span class="status-pill red">Low Stock</span></td>
+            </tr>
+            <tr>
+              <td><div class="td-flex"><div class="item-icon">🥚</div><div><div class="item-name">Eggs (Free Range)</div></div></div></td>
+              <td>Dairy</td>
+              <td>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <div class="progress-bar"><div class="progress-fill" style="width:88%"></div></div>
+                  <span class="progress-label">88%</span>
+                </div>
+              </td>
+              <td>88 units</td>
+              <td>30 units</td>
+              <td>Apr 4</td>
+              <td>Jordan Fresh</td>
+              <td><span class="status-pill green">Good</span></td>
+            </tr>
+            <tr>
+              <td><div class="td-flex"><div class="item-icon">🍯</div><div><div class="item-name">Wildflower Honey</div></div></div></td>
+              <td>Sweeteners</td>
+              <td>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <div class="progress-bar"><div class="progress-fill red" style="width:20%"></div></div>
+                  <span class="progress-label" style="color:#EF4444">20%</span>
+                </div>
+              </td>
+              <td>2 kg</td>
+              <td>3 kg</td>
+              <td>Mar 28</td>
+              <td>Al-Aman Coffee</td>
+              <td><span class="status-pill red">Reorder Now</span></td>
+            </tr>
+            <tr>
+              <td><div class="td-flex"><div class="item-icon">🌾</div><div><div class="item-name">All-Purpose Flour</div></div></div></td>
+              <td>Dry Goods</td>
+              <td>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <div class="progress-bar"><div class="progress-fill" style="width:75%"></div></div>
+                  <span class="progress-label">75%</span>
+                </div>
+              </td>
+              <td>15 kg</td>
+              <td>8 kg</td>
+              <td>Apr 1</td>
+              <td>Sweet World</td>
+              <td><span class="status-pill green">Good</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ==================== EMPLOYEES PANEL ==================== -->
+    <div class="dashboard-panel" id="panel-employees">
+      <div class="kpi-grid">
+        <div class="kpi-card revenue"><div class="kpi-header"><div class="kpi-icon">👥</div><div class="kpi-trend up">Full</div></div><div class="kpi-value">12</div><div class="kpi-label">Total Employees</div></div>
+        <div class="kpi-card orders"><div class="kpi-header"><div class="kpi-icon">⭐</div><div class="kpi-trend up">↑ 92%</div></div><div class="kpi-value">92%</div><div class="kpi-label">Avg Performance Score</div></div>
+        <div class="kpi-card customers"><div class="kpi-header"><div class="kpi-icon">🎯</div><div class="kpi-trend up">↑ 108%</div></div><div class="kpi-value">108%</div><div class="kpi-label">Team Target Achievement</div></div>
+        <div class="kpi-card avg"><div class="kpi-header"><div class="kpi-icon">😊</div><div class="kpi-trend up">High</div></div><div class="kpi-value">96%</div><div class="kpi-label">Customer Satisfaction</div></div>
+      </div>
+
+      <!-- Employee Cards -->
+      <div class="employee-grid">
+        <div class="employee-card">
+          <div class="emp-avatar" style="background:linear-gradient(135deg,#D4A76A,#8B5E3C)">AK</div>
+          <div class="emp-name">Ahmed Khalil</div>
+          <div class="emp-role">Head Barista</div>
+          <div class="emp-stats">
+            <div><span class="emp-stat-val">312</span><span class="emp-stat-label">Orders</span></div>
+            <div><span class="emp-stat-val">98%</span><span class="emp-stat-label">Satisfaction</span></div>
+            <div><span class="emp-stat-val">4.9★</span><span class="emp-stat-label">Rating</span></div>
+          </div>
+          <div class="emp-progress">
+            <div class="emp-progress-header"><span style="font-size:0.75rem;font-weight:600">Monthly Target</span><span style="font-size:0.75rem;color:#22C55E;font-weight:700">118%</span></div>
+            <div class="progress-bar"><div class="progress-fill green" style="width:100%"></div></div>
+          </div>
+          <span class="status-pill green" style="font-size:0.72rem">Top Performer</span>
+        </div>
+        <div class="employee-card">
+          <div class="emp-avatar" style="background:linear-gradient(135deg,#3B82F6,#2563EB)">SM</div>
+          <div class="emp-name">Sarah Mansour</div>
+          <div class="emp-role">Senior Barista</div>
+          <div class="emp-stats">
+            <div><span class="emp-stat-val">285</span><span class="emp-stat-label">Orders</span></div>
+            <div><span class="emp-stat-val">97%</span><span class="emp-stat-label">Satisfaction</span></div>
+            <div><span class="emp-stat-val">4.8★</span><span class="emp-stat-label">Rating</span></div>
+          </div>
+          <div class="emp-progress">
+            <div class="emp-progress-header"><span style="font-size:0.75rem;font-weight:600">Monthly Target</span><span style="font-size:0.75rem;color:#22C55E;font-weight:700">112%</span></div>
+            <div class="progress-bar"><div class="progress-fill green" style="width:100%"></div></div>
+          </div>
+          <span class="status-pill green" style="font-size:0.72rem">Excellent</span>
+        </div>
+        <div class="employee-card">
+          <div class="emp-avatar" style="background:linear-gradient(135deg,#A855F7,#7C3AED)">RN</div>
+          <div class="emp-name">Rami Nasser</div>
+          <div class="emp-role">Pastry Chef</div>
+          <div class="emp-stats">
+            <div><span class="emp-stat-val">198</span><span class="emp-stat-label">Orders</span></div>
+            <div><span class="emp-stat-val">95%</span><span class="emp-stat-label">Satisfaction</span></div>
+            <div><span class="emp-stat-val">4.7★</span><span class="emp-stat-label">Rating</span></div>
+          </div>
+          <div class="emp-progress">
+            <div class="emp-progress-header"><span style="font-size:0.75rem;font-weight:600">Monthly Target</span><span style="font-size:0.75rem;color:#22C55E;font-weight:700">102%</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+          </div>
+          <span class="status-pill blue" style="font-size:0.72rem">On Track</span>
+        </div>
+        <div class="employee-card">
+          <div class="emp-avatar" style="background:linear-gradient(135deg,#F97316,#EA580C)">LA</div>
+          <div class="emp-name">Lina Amin</div>
+          <div class="emp-role">Cashier & Host</div>
+          <div class="emp-stats">
+            <div><span class="emp-stat-val">420</span><span class="emp-stat-label">Served</span></div>
+            <div><span class="emp-stat-val">94%</span><span class="emp-stat-label">Satisfaction</span></div>
+            <div><span class="emp-stat-val">4.6★</span><span class="emp-stat-label">Rating</span></div>
+          </div>
+          <div class="emp-progress">
+            <div class="emp-progress-header"><span style="font-size:0.75rem;font-weight:600">Monthly Target</span><span style="font-size:0.75rem;color:#D4A76A;font-weight:700">92%</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:92%"></div></div>
+          </div>
+          <span class="status-pill orange" style="font-size:0.72rem">Near Target</span>
+        </div>
+      </div>
+
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-header">
+            <div><h3>Employee Performance Radar</h3><p>Multi-dimension analysis</p></div>
+          </div>
+          <div class="chart-canvas-wrap">
+            <canvas id="employeeRadarChart"></canvas>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header">
+            <div><h3>Target Achievement</h3><p>All employees this month</p></div>
+          </div>
+          <div class="chart-canvas-wrap">
+            <canvas id="empTargetChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Employee Table -->
+      <div class="table-card">
+        <div class="table-header">
+          <h3>Staff Overview</h3>
+          <div class="table-actions"><button class="btn-sm btn-primary-sm">+ Add Employee</button></div>
+        </div>
+        <table>
+          <thead><tr><th>Employee</th><th>Role</th><th>Shift</th><th>Orders Handled</th><th>Target</th><th>Achievement</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td><div class="td-flex"><div class="emp-avatar" style="width:32px;height:32px;font-size:0.75rem;background:linear-gradient(135deg,#D4A76A,#8B5E3C)">AK</div><div class="item-name">Ahmed Khalil</div></div></td><td>Head Barista</td><td>Morning</td><td>312</td><td>280</td><td><span class="kpi-trend up" style="font-size:0.8rem">↑ 118%</span></td><td><span class="status-pill green">Active</span></td></tr>
+            <tr><td><div class="td-flex"><div class="emp-avatar" style="width:32px;height:32px;font-size:0.75rem;background:linear-gradient(135deg,#3B82F6,#2563EB)">SM</div><div class="item-name">Sarah Mansour</div></div></td><td>Sr. Barista</td><td>Morning</td><td>285</td><td>255</td><td><span class="kpi-trend up" style="font-size:0.8rem">↑ 112%</span></td><td><span class="status-pill green">Active</span></td></tr>
+            <tr><td><div class="td-flex"><div class="emp-avatar" style="width:32px;height:32px;font-size:0.75rem;background:linear-gradient(135deg,#A855F7,#7C3AED)">RN</div><div class="item-name">Rami Nasser</div></div></td><td>Pastry Chef</td><td>Full Day</td><td>198</td><td>194</td><td><span class="kpi-trend up" style="font-size:0.8rem">↑ 102%</span></td><td><span class="status-pill green">Active</span></td></tr>
+            <tr><td><div class="td-flex"><div class="emp-avatar" style="width:32px;height:32px;font-size:0.75rem;background:linear-gradient(135deg,#F97316,#EA580C)">LA</div><div class="item-name">Lina Amin</div></div></td><td>Cashier</td><td>Evening</td><td>420</td><td>455</td><td><span class="kpi-trend down" style="font-size:0.8rem">↓ 92%</span></td><td><span class="status-pill orange">Near Target</span></td></tr>
+            <tr><td><div class="td-flex"><div class="emp-avatar" style="width:32px;height:32px;font-size:0.75rem;background:linear-gradient(135deg,#22C55E,#16A34A)">KH</div><div class="item-name">Khaled Hassan</div></div></td><td>Barista</td><td>Evening</td><td>245</td><td>240</td><td><span class="kpi-trend up" style="font-size:0.8rem">↑ 102%</span></td><td><span class="status-pill green">Active</span></td></tr>
+            <tr><td><div class="td-flex"><div class="emp-avatar" style="width:32px;height:32px;font-size:0.75rem;background:linear-gradient(135deg,#EAB308,#CA8A04)">NF</div><div class="item-name">Nour Farraj</div></div></td><td>Barista</td><td>Part-time</td><td>178</td><td>200</td><td><span class="kpi-trend down" style="font-size:0.8rem">↓ 89%</span></td><td><span class="status-pill orange">Below Target</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ==================== SUPPLIERS PANEL ==================== -->
+    <div class="dashboard-panel" id="panel-suppliers">
+      <div class="kpi-grid">
+        <div class="kpi-card revenue"><div class="kpi-header"><div class="kpi-icon">🏭</div></div><div class="kpi-value">8</div><div class="kpi-label">Active Suppliers</div></div>
+        <div class="kpi-card orders"><div class="kpi-header"><div class="kpi-icon">💰</div><div class="kpi-trend down">↓ 3.2%</div></div><div class="kpi-value">JD 26,700</div><div class="kpi-label">Monthly Procurement</div></div>
+        <div class="kpi-card customers"><div class="kpi-header"><div class="kpi-icon">⏱️</div><div class="kpi-trend up">↑ 95%</div></div><div class="kpi-value">95%</div><div class="kpi-label">On-Time Delivery</div></div>
+        <div class="kpi-card avg"><div class="kpi-header"><div class="kpi-icon">⭐</div></div><div class="kpi-value">4.6/5</div><div class="kpi-label">Avg Supplier Rating</div></div>
+      </div>
+
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-header">
+            <div><h3>Supplier Performance Radar</h3><p>Multi-criteria analysis</p></div>
+          </div>
+          <div class="chart-canvas-wrap">
+            <canvas id="supplierChart"></canvas>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header">
+            <div><h3>Procurement by Supplier</h3><p>Monthly spend distribution</p></div>
+          </div>
+          <div class="chart-canvas-wrap">
+            <canvas id="procurementChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-card">
+        <div class="table-header">
+          <h3>Supplier Directory</h3>
+          <div class="table-actions">
+            <button class="btn-sm btn-primary-sm">+ Add Supplier</button>
+          </div>
+        </div>
+        <table>
+          <thead><tr><th>Supplier</th><th>Category</th><th>Monthly Spend</th><th>Rating</th><th>On-Time %</th><th>Last Delivery</th><th>Next Order</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><div class="td-flex"><div class="item-icon">☕</div><div><div class="item-name">Al-Aman Coffee</div><div class="item-cat">Amman, Jordan</div></div></div></td>
+              <td>Coffee & Tea</td><td><strong>JD 8,400</strong></td>
+              <td><div class="supplier-rating"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div></td>
+              <td>98%</td><td>Apr 4</td><td>Apr 11</td>
+              <td><span class="status-pill green">Active</span></td>
+            </tr>
+            <tr>
+              <td><div class="td-flex"><div class="item-icon">🥬</div><div><div class="item-name">Jordan Fresh Produce</div><div class="item-cat">Zarqa, Jordan</div></div></div></td>
+              <td>Dairy & Produce</td><td><strong>JD 9,200</strong></td>
+              <td><div class="supplier-rating"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div></td>
+              <td>96%</td><td>Apr 5</td><td>Apr 8</td>
+              <td><span class="status-pill green">Active</span></td>
+            </tr>
+            <tr>
+              <td><div class="td-flex"><div class="item-icon">🍫</div><div><div class="item-name">Sweet World Imports</div><div class="item-cat">Amman, Jordan</div></div></div></td>
+              <td>Chocolate & Sweets</td><td><strong>JD 5,600</strong></td>
+              <td><div class="supplier-rating"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star empty">★</span></div></td>
+              <td>88%</td><td>Apr 3</td><td>Apr 14</td>
+              <td><span class="status-pill green">Active</span></td>
+            </tr>
+            <tr>
+              <td><div class="td-flex"><div class="item-icon">🧴</div><div><div class="item-name">Barista Pro Supplies</div><div class="item-cat">Dubai, UAE</div></div></div></td>
+              <td>Equipment & Supplies</td><td><strong>JD 1,800</strong></td>
+              <td><div class="supplier-rating"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star empty">★</span></div></td>
+              <td>92%</td><td>Mar 28</td><td>Apr 28</td>
+              <td><span class="status-pill blue">Monthly</span></td>
+            </tr>
+            <tr>
+              <td><div class="td-flex"><div class="item-icon">🌾</div><div><div class="item-name">Grain Masters</div><div class="item-cat">Irbid, Jordan</div></div></div></td>
+              <td>Flour & Dry Goods</td><td><strong>JD 1,700</strong></td>
+              <td><div class="supplier-rating"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star empty">★</span><span class="star empty">★</span></div></td>
+              <td>82%</td><td>Apr 1</td><td>Apr 15</td>
+              <td><span class="status-pill orange">Review</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ==================== CROSS SELL / UPSELL PANEL ==================== -->
+    <div class="dashboard-panel" id="panel-crosssell">
+      <div class="kpi-grid">
+        <div class="kpi-card revenue"><div class="kpi-header"><div class="kpi-icon">🔄</div><div class="kpi-trend up">↑ 38%</div></div><div class="kpi-value">38%</div><div class="kpi-label">Avg Cross-sell Rate</div><div class="kpi-sub">Industry avg: <span>22%</span></div></div>
+        <div class="kpi-card orders"><div class="kpi-header"><div class="kpi-icon">⬆️</div><div class="kpi-trend up">↑ 31%</div></div><div class="kpi-value">31%</div><div class="kpi-label">Avg Upsell Rate</div><div class="kpi-sub">Industry avg: <span>18%</span></div></div>
+        <div class="kpi-card customers"><div class="kpi-header"><div class="kpi-icon">💎</div><div class="kpi-trend up">↑ 2.8x</div></div><div class="kpi-value">JD 3.20</div><div class="kpi-label">Extra Revenue Per Order</div></div>
+        <div class="kpi-card avg"><div class="kpi-header"><div class="kpi-icon">📦</div><div class="kpi-trend up">↑ 41%</div></div><div class="kpi-value">JD 12,290</div><div class="kpi-label">Monthly Bundle Revenue</div></div>
+      </div>
+
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-header">
+            <div><h3>Cross-sell & Upsell by Product Pair</h3><p>Top performing combinations</p></div>
+          </div>
+          <div class="chart-canvas-wrap">
+            <canvas id="crossSellChart"></canvas>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header">
+            <div><h3>Revenue Contribution</h3><p>Organic vs Bundle sales</p></div>
+          </div>
+          <div class="chart-canvas-wrap">
+            <canvas id="bundleChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Combos -->
+      <div class="table-card">
+        <div class="table-header"><h3>Top Performing Product Combinations</h3></div>
+        <table>
+          <thead><tr><th>Primary Item</th><th>Paired With</th><th>Combo Rate</th><th>Extra Revenue</th><th>Avg Add-on Value</th><th>Recommended By</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><div class="td-flex"><div class="item-icon">☕</div><div><div class="item-name">Espresso</div></div></div></td>
+              <td>🎂 Dark Chocolate Cake</td>
+              <td><div style="display:flex;align-items:center;gap:8px;"><div class="progress-bar" style="width:80px"><div class="progress-fill green" style="width:42%"></div></div>42%</div></td>
+              <td><strong>JD 2,106</strong></td>
+              <td>JD 4.50</td>
+              <td>Staff Suggest</td>
+              <td><span class="status-pill green">Promote</span></td>
+            </tr>
+            <tr>
+              <td><div class="td-flex"><div class="item-icon">☕</div><div><div class="item-name">Cappuccino</div></div></div></td>
+              <td>🥐 Butter Croissant</td>
+              <td><div style="display:flex;align-items:center;gap:8px;"><div class="progress-bar" style="width:80px"><div class="progress-fill green" style="width:45%"></div></div>45%</div></td>
+              <td><strong>JD 1,890</strong></td>
+              <td>JD 2.50</td>
+              <td>Menu Bundle</td>
+              <td><span class="status-pill green">Promote</span></td>
+            </tr>
+            <tr>
+              <td><div class="td-flex"><div class="item-icon">🧊</div><div><div class="item-name">Cold Brew</div></div></div></td>
+              <td>🍊 Orange Juice upgrade</td>
+              <td><div style="display:flex;align-items:center;gap:8px;"><div class="progress-bar" style="width:80px"><div class="progress-fill blue" style="width:31%"></div></div>31%</div></td>
+              <td><strong>JD 1,240</strong></td>
+              <td>JD 1.50</td>
+              <td>Size Upsell</td>
+              <td><span class="status-pill blue">Train Staff</span></td>
+            </tr>
+            <tr>
+              <td><div class="td-flex"><div class="item-icon">🎂</div><div><div class="item-name">Cheesecake</div></div></div></td>
+              <td>☕ Any Hot Coffee</td>
+              <td><div style="display:flex;align-items:center;gap:8px;"><div class="progress-bar" style="width:80px"><div class="progress-fill" style="width:38%"></div></div>38%</div></td>
+              <td><strong>JD 1,560</strong></td>
+              <td>JD 3.00</td>
+              <td>Staff Suggest</td>
+              <td><span class="status-pill green">Promote</span></td>
+            </tr>
+            <tr>
+              <td><div class="td-flex"><div class="item-icon">🥞</div><div><div class="item-name">Belgian Waffles</div></div></div></td>
+              <td>🍓 Berry Smoothie</td>
+              <td><div style="display:flex;align-items:center;gap:8px;"><div class="progress-bar" style="width:80px"><div class="progress-fill" style="width:28%"></div></div>28%</div></td>
+              <td><strong>JD 980</strong></td>
+              <td>JD 4.50</td>
+              <td>Bundle Deal</td>
+              <td><span class="status-pill orange">Improve</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ==================== TARGETS PANEL ==================== -->
+    <div class="dashboard-panel" id="panel-targets">
+      <div class="kpi-grid">
+        <div class="kpi-card revenue"><div class="kpi-header"><div class="kpi-icon">🎯</div><div class="kpi-trend up">↑ 114%</div></div><div class="kpi-value">114%</div><div class="kpi-label">Revenue Target Achievement</div><div class="kpi-sub">JD 42,300 of <span>JD 37,000</span></div></div>
+        <div class="kpi-card orders"><div class="kpi-header"><div class="kpi-icon">📦</div><div class="kpi-trend up">↑ 107%</div></div><div class="kpi-value">107%</div><div class="kpi-label">Orders Target Achievement</div><div class="kpi-sub">3,842 of <span>3,600</span></div></div>
+        <div class="kpi-card customers"><div class="kpi-header"><div class="kpi-icon">👤</div><div class="kpi-trend up">↑ 108%</div></div><div class="kpi-value">108%</div><div class="kpi-label">Customer Target Achievement</div><div class="kpi-sub">2,156 of <span>2,000</span></div></div>
+        <div class="kpi-card avg"><div class="kpi-header"><div class="kpi-icon">📈</div><div class="kpi-trend up">↑ 105%</div></div><div class="kpi-value">105%</div><div class="kpi-label">Avg Order Value Target</div><div class="kpi-sub">JD 11.01 of <span>JD 10.50</span></div></div>
+      </div>
+
+      <!-- Targets Progress -->
+      <div class="table-card" style="margin-bottom:28px;">
+        <div class="table-header"><h3>Quarterly Goals Progress — Q2 2025</h3></div>
+        <table>
+          <thead><tr><th>Goal</th><th>Category</th><th>Target</th><th>Current</th><th>Progress</th><th>Deadline</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>Revenue Q2</strong></td><td>Financial</td>
+              <td>JD 115,000</td><td>JD 42,300</td>
+              <td><div style="display:flex;align-items:center;gap:8px;"><div class="progress-bar" style="width:120px"><div class="progress-fill green" style="width:37%"></div></div>37% (on track)</div></td>
+              <td>Jun 30</td><td><span class="status-pill green">On Track</span></td>
+            </tr>
+            <tr>
+              <td><strong>New Customers</strong></td><td>Growth</td>
+              <td>800 new</td><td>342 new</td>
+              <td><div style="display:flex;align-items:center;gap:8px;"><div class="progress-bar" style="width:120px"><div class="progress-fill" style="width:43%"></div></div>43%</div></td>
+              <td>Jun 30</td><td><span class="status-pill blue">Ahead</span></td>
+            </tr>
+            <tr>
+              <td><strong>New Menu Items</strong></td><td>Product</td>
+              <td>4 items</td><td>2 items</td>
+              <td><div style="display:flex;align-items:center;gap:8px;"><div class="progress-bar" style="width:120px"><div class="progress-fill" style="width:50%"></div></div>50%</div></td>
+              <td>Jun 30</td><td><span class="status-pill blue">In Progress</span></td>
+            </tr>
+            <tr>
+              <td><strong>Staff Training</strong></td><td>HR</td>
+              <td>12 sessions</td><td>5 sessions</td>
+              <td><div style="display:flex;align-items:center;gap:8px;"><div class="progress-bar" style="width:120px"><div class="progress-fill" style="width:42%"></div></div>42%</div></td>
+              <td>Jun 30</td><td><span class="status-pill blue">On Track</span></td>
+            </tr>
+            <tr>
+              <td><strong>Customer Rating</strong></td><td>Quality</td>
+              <td>4.9 ★</td><td>4.9 ★</td>
+              <td><div style="display:flex;align-items:center;gap:8px;"><div class="progress-bar" style="width:120px"><div class="progress-fill green" style="width:100%"></div></div>100%</div></td>
+              <td>Ongoing</td><td><span class="status-pill green">Achieved ✓</span></td>
+            </tr>
+            <tr>
+              <td><strong>Cost Reduction</strong></td><td>Financial</td>
+              <td>-5% COGS</td><td>-2.1%</td>
+              <td><div style="display:flex;align-items:center;gap:80px;"><div class="progress-bar" style="width:120px"><div class="progress-fill" style="width:42%"></div></div>42%</div></td>
+              <td>Jun 30</td><td><span class="status-pill orange">Behind</span></td>
+            </tr>
+            <tr>
+              <td><strong>Loyalty Members</strong></td><td>Marketing</td>
+              <td>500 members</td><td>284 members</td>
+              <td><div style="display:flex;align-items:center;gap:8px;"><div class="progress-bar" style="width:120px"><div class="progress-fill" style="width:57%"></div></div>57%</div></td>
+              <td>Jun 30</td><td><span class="status-pill green">On Track</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="charts-row">
+        <div class="chart-card">
+          <div class="chart-header"><div><h3>Target vs Actual</h3><p>Monthly comparison</p></div></div>
+          <div class="chart-canvas-wrap" style="height:240px;"><canvas id="targetChart"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header"><div><h3>Goal Achievement Rate</h3><p>By department</p></div></div>
+          <div class="chart-canvas-wrap" style="height:240px;"><canvas id="deptChart"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header"><div><h3>KPI Scorecard</h3><p>Overall health</p></div></div>
+          <div class="chart-canvas-wrap" style="height:240px;"><canvas id="kpiChart"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main-content -->
+
+<script src="js/dashboard.js"></script>
+<script>
+// ===== EXTRA CHARTS FOR INNER PANELS =====
+
+// Duplicate charts for Sales panel
+const wkCtx2 = document.getElementById('weeklySalesChart2');
+if (wkCtx2) {
+  new Chart(wkCtx2, {
+    type: 'bar',
+    data: {
+      labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+      datasets: [
+        { label: 'This Week', data: [1840,2100,1920,2450,3200,3800,2900], backgroundColor: '#D4A76A', borderRadius: 10 },
+        { label: 'Last Week', data: [1600,1850,1700,2100,2800,3500,2600], backgroundColor: 'rgba(212,167,106,0.25)', borderRadius: 10 }
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { font: { family: 'Poppins' } } } }, scales: { x: { grid: { display: false } }, y: { grid: { color: 'rgba(44,24,16,0.06)' }, ticks: { callback: v => 'JD ' + v } } } }
+  });
+}
+
+const sc2 = document.getElementById('salesCategoryChart2');
+if (sc2) {
+  new Chart(sc2, {
+    type: 'doughnut',
+    data: {
+      labels: ['Hot Coffee','Cold Coffee','Juices','Desserts','Tea','Snacks'],
+      datasets: [{ data: [32,24,18,14,7,5], backgroundColor: ['#2C1810','#D4A76A','#F97316','#A855F7','#3B82F6','#22C55E'], borderWidth: 4, borderColor: '#fff', hoverOffset: 8 }]
+    },
+    options: { responsive: true, maintainAspectRatio: false, cutout: '72%', plugins: { legend: { position: 'bottom', labels: { font: { family: 'Poppins', size: 11 }, usePointStyle: true } } } }
+  });
+}
+
+// Revenue panel extra charts
+const rv2 = document.getElementById('revenueChart2');
+if (rv2) {
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  new Chart(rv2, {
+    type: 'line',
+    data: {
+      labels: months,
+      datasets: [
+        { label: 'Revenue', data: [18500,21200,19800,24500,28300,31200,29800,33500,36200,34800,38500,42300], borderColor: '#D4A76A', backgroundColor: 'rgba(212,167,106,0.1)', borderWidth: 3, tension: 0.45, fill: true, pointRadius: 4 },
+        { label: 'Profit', data: [5200,6100,5700,7300,8900,10200,9600,11500,12800,11900,13700,15600], borderColor: '#22C55E', backgroundColor: 'rgba(34,197,94,0.08)', borderWidth: 3, tension: 0.45, fill: true, pointRadius: 4 },
+        { label: 'Cost', data: [13300,15100,14100,17200,19400,21000,20200,22000,23400,22900,24800,26700], borderColor: '#EF4444', borderWidth: 2, borderDash: [6,3], tension: 0.45, fill: false, pointRadius: 3 }
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { font: { family: 'Poppins' }, usePointStyle: true } } }, scales: { x: { grid: { color: 'rgba(44,24,16,0.06)' } }, y: { grid: { color: 'rgba(44,24,16,0.06)' }, ticks: { callback: v => 'JD ' + (v/1000).toFixed(0) + 'K' } } } }
+  });
+}
+
+const rvc = document.getElementById('revenueCatChart');
+if (rvc) {
+  new Chart(rvc, {
+    type: 'doughnut',
+    data: {
+      labels: ['Hot Coffee','Cold Drinks','Desserts','Juices','Tea & Others'],
+      datasets: [{ data: [13534,10152,7614,5922,5078], backgroundColor: ['#2C1810','#D4A76A','#A855F7','#F97316','#3B82F6'], borderWidth: 4, borderColor: '#fff', hoverOffset: 8 }]
+    },
+    options: { responsive: true, maintainAspectRatio: false, cutout: '68%', plugins: { legend: { position: 'bottom', labels: { font: { family: 'Poppins', size: 11 }, usePointStyle: true } } } }
+  });
+}
+
+const ptc2 = document.getElementById('profitTrendChart2');
+if (ptc2) {
+  new Chart(ptc2, {
+    type: 'line',
+    data: {
+      labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+      datasets: [{ label: 'Profit Margin %', data: [28.1,28.8,28.8,29.8,31.4,32.7,32.2,34.3,35.4,34.2,35.6,36.9], borderColor: '#22C55E', backgroundColor: 'rgba(34,197,94,0.1)', borderWidth: 3, pointBackgroundColor: '#22C55E', pointRadius: 5, tension: 0.45, fill: true }]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { color: 'rgba(44,24,16,0.06)' } }, y: { grid: { color: 'rgba(44,24,16,0.06)' }, ticks: { callback: v => v + '%' }, suggestedMin: 24, suggestedMax: 40 } } }
+  });
+}
+
+// Inventory consumption chart
+const consCtx = document.getElementById('consumptionChart');
+if (consCtx) {
+  new Chart(consCtx, {
+    type: 'line',
+    data: {
+      labels: ['Week 1','Week 2','Week 3','Week 4'],
+      datasets: [
+        { label: 'Coffee Beans (kg)', data: [4.2,4.8,5.1,4.6], borderColor: '#D4A76A', borderWidth: 2, tension: 0.4, pointRadius: 5, fill: false },
+        { label: 'Milk (L)', data: [18,22,20,24], borderColor: '#3B82F6', borderWidth: 2, tension: 0.4, pointRadius: 5, fill: false },
+        { label: 'Berries (kg)', data: [1.8,2.2,2.4,2.8], borderColor: '#EF4444', borderWidth: 2, tension: 0.4, pointRadius: 5, fill: false }
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { font: { family: 'Poppins', size: 11 }, usePointStyle: true } } }, scales: { x: { grid: { display: false } }, y: { grid: { color: 'rgba(44,24,16,0.06)' } } } }
+  });
+}
+
+// Employee target chart
+const etCtx = document.getElementById('empTargetChart');
+if (etCtx) {
+  new Chart(etCtx, {
+    type: 'bar',
+    data: {
+      labels: ['Ahmed K.','Sarah M.','Rami N.','Lina A.','Khaled H.','Nour F.'],
+      datasets: [
+        { label: 'Target', data: [280,255,194,455,240,200], backgroundColor: 'rgba(212,167,106,0.3)', borderRadius: 8 },
+        { label: 'Achieved', data: [312,285,198,420,245,178], backgroundColor: ['#22C55E','#22C55E','#22C55E','#F97316','#22C55E','#EF4444'], borderRadius: 8 }
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { font: { family: 'Poppins', size: 11 }, usePointStyle: true } } }, scales: { x: { grid: { display: false } }, y: { grid: { color: 'rgba(44,24,16,0.06)' } } } }
+  });
+}
+
+// Procurement donut
+const pCtx = document.getElementById('procurementChart');
+if (pCtx) {
+  new Chart(pCtx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Al-Aman Coffee','Jordan Fresh','Sweet World','Barista Pro','Grain Masters','Others'],
+      datasets: [{ data: [8400,9200,5600,1800,1700,0], backgroundColor: ['#D4A76A','#22C55E','#A855F7','#3B82F6','#F97316','#EAB308'], borderWidth: 4, borderColor: '#fff', hoverOffset: 8 }]
+    },
+    options: { responsive: true, maintainAspectRatio: false, cutout: '68%', plugins: { legend: { position: 'bottom', labels: { font: { family: 'Poppins', size: 11 }, usePointStyle: true } } } }
+  });
+}
+
+// Bundle revenue chart
+const bCtx = document.getElementById('bundleChart');
+if (bCtx) {
+  new Chart(bCtx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Organic Sales','Cross-sell', 'Upsell', 'Bundle Deals'],
+      datasets: [{ data: [30010,7200,5090,0], backgroundColor: ['#2C1810','#D4A76A','#A855F7','#3B82F6'], borderWidth: 4, borderColor: '#fff', hoverOffset: 8 }]
+    },
+    options: { responsive: true, maintainAspectRatio: false, cutout: '68%', plugins: { legend: { position: 'bottom', labels: { font: { family: 'Poppins', size: 11 }, usePointStyle: true } } } }
+  });
+}
+
+// Target vs actual chart
+const tvCtx = document.getElementById('targetChart');
+if (tvCtx) {
+  new Chart(tvCtx, {
+    type: 'bar',
+    data: {
+      labels: ['Jan','Feb','Mar','Apr'],
+      datasets: [
+        { label: 'Target', data: [32000,33000,35000,37000], backgroundColor: 'rgba(212,167,106,0.35)', borderRadius: 8 },
+        { label: 'Actual', data: [34800,38500,38500,42300], backgroundColor: '#D4A76A', borderRadius: 8 }
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { font: { family: 'Poppins', size: 11 }, usePointStyle: true } } }, scales: { x: { grid: { display: false } }, y: { grid: { color: 'rgba(44,24,16,0.06)' }, ticks: { callback: v => 'JD ' + (v/1000).toFixed(0) + 'K' } } } }
+  });
+}
+
+// Dept achievement chart
+const deptCtx = document.getElementById('deptChart');
+if (deptCtx) {
+  new Chart(deptCtx, {
+    type: 'bar',
+    indexAxis: 'y',
+    data: {
+      labels: ['Operations','Marketing','HR','Finance','Quality'],
+      datasets: [{ label: 'Achievement %', data: [112,108,95,114,100], backgroundColor: ['#22C55E','#22C55E','#F97316','#22C55E','#22C55E'], borderRadius: 8 }]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { color: 'rgba(44,24,16,0.06)' }, ticks: { callback: v => v + '%' }, suggestedMax: 130 }, y: { grid: { display: false } } } }
+  });
+}
+
+// KPI polar chart
+const kpiCtx = document.getElementById('kpiChart');
+if (kpiCtx) {
+  new Chart(kpiCtx, {
+    type: 'polarArea',
+    data: {
+      labels: ['Revenue','Orders','Customers','Satisfaction','Margin','Inventory'],
+      datasets: [{ data: [114,107,108,100,98,72], backgroundColor: ['rgba(34,197,94,0.7)','rgba(212,167,106,0.7)','rgba(59,130,246,0.7)','rgba(34,197,94,0.7)','rgba(168,85,247,0.7)','rgba(249,115,22,0.7)'] }]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { font: { family: 'Poppins', size: 10 }, usePointStyle: true } } }, scales: { r: { ticks: { display: false }, grid: { color: 'rgba(44,24,16,0.08)' } } } }
+  });
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clarix Solutions – Logistics & Supply Chain Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --primary-dark:   #1e3c72;
+            --primary-mid:    #2a5298;
+            --primary-light:  #3b6fd4;
+            --bg-page:        #f4f7fc;
+            --bg-card:        #ffffff;
+            --border:         #e2e8f0;
+            --text-dark:      #1e293b;
+            --text-mid:       #64748b;
+            --text-light:     #94a3b8;
+            --green:          #059669;
+            --green-light:    #10b981;
+            --amber:          #d97706;
+            --amber-light:    #f59e0b;
+            --red:            #dc2626;
+            --red-light:      #ef4444;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-page);
+            color: var(--text-dark);
+            line-height: 1.4;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ── SIDEBAR ─────────────────────────────────────────── */
+        .sidebar {
+            width: 220px;
+            min-height: 100vh;
+            background: linear-gradient(180deg, var(--primary-dark) 0%, var(--primary-mid) 100%);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0; left: 0;
+            z-index: 100;
+            transition: width 0.3s;
+        }
+
+        .sidebar-brand {
+            padding: 18px 16px 14px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-brand .brand-icon {
+            width: 36px; height: 36px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px; color: white;
+            flex-shrink: 0;
+        }
+
+        .sidebar-brand .brand-text h2 {
+            font-size: 14px; font-weight: 700; color: white; margin: 0;
+        }
+
+        .sidebar-brand .brand-text p {
+            font-size: 9px; color: rgba(255,255,255,0.6); margin: 0; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 12px 0;
+            overflow-y: auto;
+        }
+
+        .nav-section-title {
+            font-size: 9px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding: 10px 16px 4px;
+        }
+
+        .nav-item {
+            padding: 0 8px;
+            margin-bottom: 2px;
+        }
+
+        .nav-link-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+        }
+
+        .nav-link-item:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        .nav-link-item.active {
+            background: rgba(255,255,255,0.18);
+            color: white;
+            font-weight: 600;
+        }
+
+        .nav-link-item i { font-size: 15px; flex-shrink: 0; }
+
+        .nav-badge {
+            margin-left: auto;
+            background: var(--amber-light);
+            color: white;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 1px 6px;
+            border-radius: 10px;
+        }
+
+        .sidebar-footer {
+            padding: 12px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .user-avatar {
+            width: 30px; height: 30px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px; color: white; flex-shrink: 0;
+        }
+
+        .user-name { font-size: 11px; font-weight: 600; color: white; }
+        .user-role { font-size: 9px; color: rgba(255,255,255,0.6); }
+
+        /* ── MAIN ────────────────────────────────────────────── */
+        .main-content {
+            margin-left: 220px;
+            flex: 1;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── TOP BAR ─────────────────────────────────────────── */
+        .topbar {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 100%);
+            color: white;
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(30,60,114,0.2);
+        }
+
+        .topbar-left h1 { font-size: 18px; font-weight: 700; margin: 0; }
+        .topbar-left p  { font-size: 11px; color: rgba(255,255,255,0.7); margin: 0; }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .topbar-badge {
+            background: rgba(255,255,255,0.12);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            display: flex; align-items: center; gap: 5px;
+        }
+
+        .status-live {
+            background: var(--green-light);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 600;
+            display: flex; align-items: center; gap: 4px;
+        }
+
+        .pulse-dot {
+            width: 6px; height: 6px;
+            background: white;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50%       { opacity: 0.5; transform: scale(1.3); }
+        }
+
+        /* ── PAGE BODY ───────────────────────────────────────── */
+        .page-body {
+            padding: 20px 24px;
+            flex: 1;
+        }
+
+        .page-section { display: none; }
+        .page-section.active { display: block; }
+
+        /* ── FILTER BAR ──────────────────────────────────────── */
+        .filter-bar {
+            background: white;
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 18px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .filter-bar label {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-mid);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .filter-bar select, .filter-bar input {
+            padding: 5px 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 12px;
+            color: var(--text-dark);
+            background: white;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .filter-bar select:focus, .filter-bar input:focus {
+            outline: none;
+            border-color: var(--primary-mid);
+        }
+
+        .btn-primary-sm {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 100%);
+            color: white; border: none;
+            padding: 6px 16px; border-radius: 20px;
+            font-size: 11px; font-weight: 600;
+            cursor: pointer; display: flex; align-items: center; gap: 4px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-primary-sm:hover { opacity: 0.9; }
+
+        /* ── KPI CARDS ───────────────────────────────────────── */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .kpi-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(30,60,114,0.1);
+        }
+
+        .kpi-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .kpi-icon {
+            width: 38px; height: 38px;
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px;
+        }
+
+        .kpi-icon.blue  { background: #dbeafe; color: var(--primary-mid); }
+        .kpi-icon.green { background: #d1fae5; color: var(--green); }
+        .kpi-icon.amber { background: #fef3c7; color: var(--amber); }
+        .kpi-icon.red   { background: #fee2e2; color: var(--red); }
+        .kpi-icon.purple { background: #ede9fe; color: #7c3aed; }
+        .kpi-icon.teal  { background: #ccfbf1; color: #0d9488; }
+        .kpi-icon.orange { background: #ffedd5; color: #ea580c; }
+        .kpi-icon.indigo { background: #e0e7ff; color: #4338ca; }
+
+        .kpi-delta {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 7px;
+            border-radius: 20px;
+            display: flex; align-items: center; gap: 2px;
+        }
+
+        .kpi-delta.up   { background: #d1fae5; color: var(--green); }
+        .kpi-delta.down { background: #fee2e2; color: var(--red); }
+        .kpi-delta.flat { background: #f1f5f9; color: var(--text-mid); }
+
+        .kpi-value {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-dark);
+            line-height: 1;
+        }
+
+        .kpi-label {
+            font-size: 11px;
+            color: var(--text-mid);
+            font-weight: 500;
+        }
+
+        .kpi-sub {
+            font-size: 10px;
+            color: var(--text-light);
+        }
+
+        /* ── PROGRESS BAR ────────────────────────────────────── */
+        .progress-bar-bg {
+            width: 100%; height: 5px;
+            background: var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 10px;
+            background: linear-gradient(90deg, var(--primary-dark), var(--primary-light));
+        }
+
+        .progress-fill.green { background: linear-gradient(90deg, var(--green), var(--green-light)); }
+        .progress-fill.amber { background: linear-gradient(90deg, var(--amber), var(--amber-light)); }
+        .progress-fill.red   { background: linear-gradient(90deg, var(--red), var(--red-light)); }
+
+        /* ── CARDS / PANELS ──────────────────────────────────── */
+        .panel {
+            background: white;
+            border-radius: 12px;
+            padding: 18px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border: 1px solid var(--border);
+            margin-bottom: 18px;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .panel-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary-dark);
+            display: flex; align-items: center; gap: 6px;
+            border-left: 3px solid var(--primary-mid);
+            padding-left: 10px;
+        }
+
+        .panel-actions { display: flex; gap: 6px; }
+
+        .btn-icon {
+            border: 1px solid var(--border);
+            background: white;
+            color: var(--text-mid);
+            padding: 4px 8px; border-radius: 6px;
+            font-size: 11px; cursor: pointer;
+            display: flex; align-items: center; gap: 3px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-icon:hover { border-color: var(--primary-mid); color: var(--primary-mid); }
+
+        /* ── CHARTS GRID ─────────────────────────────────────── */
+        .charts-grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+
+        .charts-grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+
+        .chart-box {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border: 1px solid var(--border);
+        }
+
+        .chart-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 12px;
+            display: flex; align-items: center; gap: 6px;
+        }
+
+        .chart-wrap { position: relative; height: 200px; }
+
+        /* ── DATA TABLE ──────────────────────────────────────── */
+        .data-table-wrap {
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            max-height: 380px;
+            overflow-y: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+        }
+
+        .data-table th {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 100%);
+            padding: 9px 10px;
+            font-weight: 600;
+            color: white;
+            text-align: left;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+            position: sticky; top: 0; z-index: 5;
+        }
+
+        .data-table td {
+            padding: 7px 10px;
+            border-bottom: 1px solid #f1f5f9;
+            color: var(--text-dark);
+        }
+
+        .data-table tr:hover td { background: #f8fafc; }
+
+        .badge-status {
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .badge-delivered  { background: #d1fae5; color: #065f46; }
+        .badge-transit    { background: #dbeafe; color: #1e40af; }
+        .badge-pending    { background: #fef3c7; color: #92400e; }
+        .badge-delayed    { background: #fee2e2; color: #991b1b; }
+        .badge-processing { background: #ede9fe; color: #5b21b6; }
+
+        /* ── MAP PLACEHOLDER ─────────────────────────────────── */
+        .map-placeholder {
+            background: linear-gradient(135deg, #e8f0fe 0%, #dbeafe 100%);
+            border: 2px dashed #93c5fd;
+            border-radius: 10px;
+            height: 260px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-mid);
+            gap: 8px;
+        }
+
+        .map-placeholder i { font-size: 42px; opacity: 0.5; }
+        .map-placeholder p { font-size: 13px; font-weight: 500; opacity: 0.7; }
+
+        /* ── ALERT STRIP ─────────────────────────────────────── */
+        .alert-strip {
+            background: #fef3c7;
+            border: 1px solid var(--amber-light);
+            border-radius: 8px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            color: #92400e;
+            margin-bottom: 18px;
+        }
+
+        .alert-strip.danger {
+            background: #fee2e2;
+            border-color: var(--red-light);
+            color: #991b1b;
+        }
+
+        .alert-strip.success {
+            background: #d1fae5;
+            border-color: var(--green-light);
+            color: #065f46;
+        }
+
+        /* ── TIMELINE ────────────────────────────────────────── */
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .timeline-item:last-child { border-bottom: none; }
+
+        .timeline-dot {
+            width: 28px; height: 28px; flex-shrink: 0;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px;
+            margin-top: 2px;
+        }
+
+        .timeline-dot.green  { background: #d1fae5; color: var(--green); }
+        .timeline-dot.amber  { background: #fef3c7; color: var(--amber); }
+        .timeline-dot.blue   { background: #dbeafe; color: var(--primary-mid); }
+        .timeline-dot.red    { background: #fee2e2; color: var(--red); }
+
+        .timeline-body {}
+        .timeline-title { font-size: 12px; font-weight: 600; color: var(--text-dark); margin-bottom: 2px; }
+        .timeline-meta  { font-size: 10px; color: var(--text-light); }
+
+        /* ── METRIC ROW ──────────────────────────────────────── */
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 12px;
+        }
+
+        .metric-row:last-child { border-bottom: none; }
+
+        .metric-name { color: var(--text-mid); }
+
+        .metric-val {
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        /* ── SECTION TABS ────────────────────────────────────── */
+        .tab-strip {
+            display: flex;
+            gap: 4px;
+            background: white;
+            padding: 5px;
+            border-radius: 30px;
+            margin-bottom: 18px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+            border: 1px solid var(--border);
+            overflow-x: auto;
+            flex-wrap: nowrap;
+        }
+
+        .tab-pill {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-mid);
+            cursor: pointer;
+            white-space: nowrap;
+            border: none;
+            background: transparent;
+            display: flex; align-items: center; gap: 4px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s;
+        }
+
+        .tab-pill:hover { background: #f8fafc; color: var(--primary-dark); }
+
+        .tab-pill.active {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-mid));
+            color: white;
+        }
+
+        /* ── FOOTER ──────────────────────────────────────────── */
+        .footer {
+            text-align: center;
+            padding: 14px;
+            color: var(--text-light);
+            font-size: 10px;
+            border-top: 1px solid var(--border);
+            background: white;
+            margin-top: auto;
+        }
+
+        /* ── RESPONSIVE ──────────────────────────────────────── */
+        @media (max-width: 1200px) {
+            .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+            .charts-grid-3 { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 900px) {
+            .sidebar { width: 60px; }
+            .sidebar-brand .brand-text,
+            .nav-link-item span,
+            .nav-section-title,
+            .nav-badge,
+            .user-name, .user-role { display: none; }
+            .main-content { margin-left: 60px; }
+            .charts-grid-2, .charts-grid-3 { grid-template-columns: 1fr; }
+            .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 600px) {
+            .kpi-grid { grid-template-columns: 1fr; }
+            .topbar { flex-direction: column; gap: 8px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ═══════════════ SIDEBAR ══════════════════════════════════ -->
+<aside class="sidebar">
+    <div class="sidebar-brand">
+        <div class="brand-icon"><i class="bi bi-truck-front-fill"></i></div>
+        <div class="brand-text">
+            <h2>Clarix</h2>
+            <p>Logistics Platform</p>
+        </div>
+    </div>
+
+    <nav class="sidebar-nav">
+        <div class="nav-section-title">Overview</div>
+        <div class="nav-item">
+            <button class="nav-link-item active" onclick="showSection('overview', this)">
+                <i class="bi bi-grid-fill"></i><span>Dashboard</span>
+            </button>
+        </div>
+        <div class="nav-item">
+            <button class="nav-link-item" onclick="showSection('shipments', this)">
+                <i class="bi bi-box-seam"></i><span>Shipments</span>
+                <span class="nav-badge">12</span>
+            </button>
+        </div>
+
+        <div class="nav-section-title">Operations</div>
+        <div class="nav-item">
+            <button class="nav-link-item" onclick="showSection('fleet', this)">
+                <i class="bi bi-truck"></i><span>Fleet</span>
+            </button>
+        </div>
+        <div class="nav-item">
+            <button class="nav-link-item" onclick="showSection('warehouse', this)">
+                <i class="bi bi-building"></i><span>Warehouse</span>
+            </button>
+        </div>
+        <div class="nav-item">
+            <button class="nav-link-item" onclick="showSection('routes', this)">
+                <i class="bi bi-map"></i><span>Routes</span>
+            </button>
+        </div>
+
+        <div class="nav-section-title">Supply Chain</div>
+        <div class="nav-item">
+            <button class="nav-link-item" onclick="showSection('inventory', this)">
+                <i class="bi bi-clipboard-data"></i><span>Inventory</span>
+                <span class="nav-badge" style="background:#ef4444;">!</span>
+            </button>
+        </div>
+        <div class="nav-item">
+            <button class="nav-link-item" onclick="showSection('suppliers', this)">
+                <i class="bi bi-diagram-3"></i><span>Suppliers</span>
+            </button>
+        </div>
+        <div class="nav-item">
+            <button class="nav-link-item" onclick="showSection('analytics', this)">
+                <i class="bi bi-bar-chart-line"></i><span>Analytics</span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="sidebar-footer">
+        <div class="user-info">
+            <div class="user-avatar"><i class="bi bi-person-fill"></i></div>
+            <div>
+                <div class="user-name">Admin User</div>
+                <div class="user-role">Supply Chain Mgr</div>
+            </div>
+        </div>
+    </div>
+</aside>
+
+<!-- ═══════════════ MAIN ══════════════════════════════════════ -->
+<div class="main-content">
+
+    <!-- TOP BAR -->
+    <div class="topbar">
+        <div class="topbar-left">
+            <h1>Supply Chain Control Tower</h1>
+            <p id="currentDateLabel">Loading...</p>
+        </div>
+        <div class="topbar-right">
+            <div class="topbar-badge"><i class="bi bi-geo-alt-fill"></i> Region: All</div>
+            <div class="topbar-badge"><i class="bi bi-calendar3"></i> <span id="topDate">--</span></div>
+            <div class="status-live"><div class="pulse-dot"></div> Live</div>
+        </div>
+    </div>
+
+    <div class="page-body">
+
+        <!-- ████  OVERVIEW SECTION  ████ -->
+        <div class="page-section active" id="section-overview">
+
+            <!-- Alert -->
+            <div class="alert-strip">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <strong>Attention:</strong>&nbsp; 3 shipments are delayed due to port congestion in Dubai Terminal. Expected resolution: 48 hrs.
+            </div>
+
+            <!-- KPI Grid -->
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-top">
+                        <div class="kpi-icon blue"><i class="bi bi-boxes"></i></div>
+                        <div class="kpi-delta up"><i class="bi bi-arrow-up"></i> 8.2%</div>
+                    </div>
+                    <div class="kpi-value">1,284</div>
+                    <div class="kpi-label">Active Shipments</div>
+                    <div class="kpi-sub">vs 1,186 last month</div>
+                    <div class="progress-bar-bg"><div class="progress-fill" style="width:72%"></div></div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-top">
+                        <div class="kpi-icon green"><i class="bi bi-check-circle"></i></div>
+                        <div class="kpi-delta up"><i class="bi bi-arrow-up"></i> 3.1%</div>
+                    </div>
+                    <div class="kpi-value">94.7%</div>
+                    <div class="kpi-label">On-Time Delivery Rate</div>
+                    <div class="kpi-sub">Target: 95% | Gap: 0.3%</div>
+                    <div class="progress-bar-bg"><div class="progress-fill green" style="width:94.7%"></div></div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-top">
+                        <div class="kpi-icon amber"><i class="bi bi-clock-history"></i></div>
+                        <div class="kpi-delta down"><i class="bi bi-arrow-down"></i> 12%</div>
+                    </div>
+                    <div class="kpi-value">2.3 days</div>
+                    <div class="kpi-label">Avg Lead Time</div>
+                    <div class="kpi-sub">Target: &lt; 2 days</div>
+                    <div class="progress-bar-bg"><div class="progress-fill amber" style="width:58%"></div></div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-top">
+                        <div class="kpi-icon red"><i class="bi bi-exclamation-circle"></i></div>
+                        <div class="kpi-delta down"><i class="bi bi-arrow-down"></i> 2</div>
+                    </div>
+                    <div class="kpi-value">17</div>
+                    <div class="kpi-label">Delayed Shipments</div>
+                    <div class="kpi-sub">Critical: 3 | Minor: 14</div>
+                    <div class="progress-bar-bg"><div class="progress-fill red" style="width:22%"></div></div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-top">
+                        <div class="kpi-icon purple"><i class="bi bi-currency-dollar"></i></div>
+                        <div class="kpi-delta up"><i class="bi bi-arrow-up"></i> 5.4%</div>
+                    </div>
+                    <div class="kpi-value">$4.2M</div>
+                    <div class="kpi-label">Monthly Revenue</div>
+                    <div class="kpi-sub">Target: $4.5M</div>
+                    <div class="progress-bar-bg"><div class="progress-fill" style="width:93%"></div></div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-top">
+                        <div class="kpi-icon teal"><i class="bi bi-fuel-pump"></i></div>
+                        <div class="kpi-delta flat"><i class="bi bi-dash"></i> 0%</div>
+                    </div>
+                    <div class="kpi-value">87.3%</div>
+                    <div class="kpi-label">Fleet Utilization</div>
+                    <div class="kpi-sub">42 of 48 vehicles active</div>
+                    <div class="progress-bar-bg"><div class="progress-fill green" style="width:87%"></div></div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-top">
+                        <div class="kpi-icon orange"><i class="bi bi-building-check"></i></div>
+                        <div class="kpi-delta up"><i class="bi bi-arrow-up"></i> 1.8%</div>
+                    </div>
+                    <div class="kpi-value">68.4%</div>
+                    <div class="kpi-label">Warehouse Occupancy</div>
+                    <div class="kpi-sub">3 of 5 warehouses</div>
+                    <div class="progress-bar-bg"><div class="progress-fill amber" style="width:68%"></div></div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-top">
+                        <div class="kpi-icon indigo"><i class="bi bi-people"></i></div>
+                        <div class="kpi-delta up"><i class="bi bi-arrow-up"></i> 7%</div>
+                    </div>
+                    <div class="kpi-value">98.1%</div>
+                    <div class="kpi-label">Customer Satisfaction</div>
+                    <div class="kpi-sub">Based on 2,140 ratings</div>
+                    <div class="progress-bar-bg"><div class="progress-fill green" style="width:98%"></div></div>
+                </div>
+            </div>
+
+            <!-- Charts row -->
+            <div class="charts-grid-2">
+                <div class="chart-box">
+                    <div class="chart-title"><i class="bi bi-graph-up"></i> Monthly Shipment Volume</div>
+                    <div class="chart-wrap"><canvas id="chartVolume"></canvas></div>
+                </div>
+                <div class="chart-box">
+                    <div class="chart-title"><i class="bi bi-pie-chart-fill"></i> Shipment Status Breakdown</div>
+                    <div class="chart-wrap"><canvas id="chartStatus"></canvas></div>
+                </div>
+            </div>
+
+            <!-- Bottom row: table + timeline -->
+            <div class="charts-grid-2">
+                <div class="panel" style="margin-bottom:0">
+                    <div class="panel-header">
+                        <div class="panel-title"><i class="bi bi-lightning-fill"></i> Recent Activity</div>
+                    </div>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-dot green"><i class="bi bi-check-lg"></i></div>
+                            <div class="timeline-body">
+                                <div class="timeline-title">SHP-20481 Delivered – Dubai Port</div>
+                                <div class="timeline-meta">Today, 09:14 AM · 24 pallets · Consignee: Gulf Traders LLC</div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot amber"><i class="bi bi-exclamation"></i></div>
+                            <div class="timeline-body">
+                                <div class="timeline-title">SHP-20449 Delay – Customs Hold</div>
+                                <div class="timeline-meta">Today, 07:30 AM · ETA pushed by 2 days</div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot blue"><i class="bi bi-truck"></i></div>
+                            <div class="timeline-body">
+                                <div class="timeline-title">SHP-20510 Dispatched – Riyadh Hub</div>
+                                <div class="timeline-meta">Yesterday, 11:55 PM · 8 ton cargo · Driver: A. Hassan</div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot green"><i class="bi bi-box-seam"></i></div>
+                            <div class="timeline-body">
+                                <div class="timeline-title">PO-4411 Received – Warehouse B</div>
+                                <div class="timeline-meta">Yesterday, 06:00 PM · 320 units · Supplier: Al Noor Co.</div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot red"><i class="bi bi-x-lg"></i></div>
+                            <div class="timeline-body">
+                                <div class="timeline-title">SHP-20398 Failed Delivery – Wrong Address</div>
+                                <div class="timeline-meta">Yesterday, 02:15 PM · Rescheduled for tomorrow</div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot blue"><i class="bi bi-arrow-repeat"></i></div>
+                            <div class="timeline-body">
+                                <div class="timeline-title">Inventory Reorder Triggered – SKU-7721</div>
+                                <div class="timeline-meta">Yesterday, 10:00 AM · 500 units · Auto-PO sent</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel" style="margin-bottom:0">
+                    <div class="panel-header">
+                        <div class="panel-title"><i class="bi bi-bar-chart-steps"></i> Route Performance</div>
+                    </div>
+                    <div class="chart-wrap" style="height:280px"><canvas id="chartRoutes"></canvas></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ████  SHIPMENTS SECTION  ████ -->
+        <div class="page-section" id="section-shipments">
+            <div class="filter-bar">
+                <label>Status</label>
+                <select>
+                    <option>All Statuses</option>
+                    <option>Delivered</option>
+                    <option>In Transit</option>
+                    <option>Pending</option>
+                    <option>Delayed</option>
+                </select>
+                <label>Origin</label>
+                <select>
+                    <option>All Origins</option>
+                    <option>Dubai</option>
+                    <option>Riyadh</option>
+                    <option>Abu Dhabi</option>
+                    <option>Sharjah</option>
+                </select>
+                <label>Date From</label>
+                <input type="date" value="2026-04-01">
+                <label>Date To</label>
+                <input type="date" value="2026-04-05">
+                <button class="btn-primary-sm"><i class="bi bi-funnel-fill"></i> Apply</button>
+            </div>
+
+            <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr)">
+                <div class="kpi-card">
+                    <div class="kpi-top"><div class="kpi-icon blue"><i class="bi bi-boxes"></i></div><div class="kpi-delta up"><i class="bi bi-arrow-up"></i>8%</div></div>
+                    <div class="kpi-value">1,284</div><div class="kpi-label">Total Shipments</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-top"><div class="kpi-icon green"><i class="bi bi-check2-circle"></i></div><div class="kpi-delta up"><i class="bi bi-arrow-up"></i>3%</div></div>
+                    <div class="kpi-value">986</div><div class="kpi-label">Delivered</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-top"><div class="kpi-icon amber"><i class="bi bi-arrow-right-circle"></i></div><div class="kpi-delta flat"><i class="bi bi-dash"></i></div></div>
+                    <div class="kpi-value">281</div><div class="kpi-label">In Transit</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-top"><div class="kpi-icon red"><i class="bi bi-clock"></i></div><div class="kpi-delta down"><i class="bi bi-arrow-down"></i>2</div></div>
+                    <div class="kpi-value">17</div><div class="kpi-label">Delayed</div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title"><i class="bi bi-table"></i> Shipment Register</div>
+                    <div class="panel-actions">
+                        <button class="btn-icon"><i class="bi bi-download"></i> Export</button>
+                        <button class="btn-icon"><i class="bi bi-printer"></i> Print</button>
+                    </div>
+                </div>
+                <div class="data-table-wrap">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Shipment ID</th>
+                                <th>Origin</th>
+                                <th>Destination</th>
+                                <th>Carrier</th>
+                                <th>Consignee</th>
+                                <th>Weight (kg)</th>
+                                <th>Dispatch Date</th>
+                                <th>ETA</th>
+                                <th>Status</th>
+                                <th>Cost ($)</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="shipmentsTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ████  FLEET SECTION  ████ -->
+        <div class="page-section" id="section-fleet">
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-top"><div class="kpi-icon blue"><i class="bi bi-truck"></i></div><div class="kpi-delta flat"><i class="bi bi-dash"></i></div></div>
+                    <div class="kpi-value">48</div><div class="kpi-label">Total Vehicles</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-top"><div class="kpi-icon green"><i class="bi bi-truck-front"></i></div><div class="kpi-delta up"><i class="bi bi-arrow-up"></i>2</div></div>
+                    <div class="kpi-value">42</div><div class="kpi-label">Active</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-top"><div class="kpi-icon amber"><i class="bi bi-wrench"></i></div><div class="kpi-delta down"><i class="bi bi-arrow-down"></i>1</div></div>
+                    <div class="kpi-value">4</div><div class="kpi-label">Under Maintenance</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-top"><div class="kpi-icon red"><i class="bi bi-x-circle"></i></div><div class="kpi-delta flat"><i class="bi bi-dash"></i></div></div>
+                    <div class="kpi-value">2</div><div class="kpi-label">Out of Service</div>
+                </div>
+            </div>
+
+            <div class="charts-grid-2">
+                <div class="chart-box">
+                    <div class="chart-title"><i class="bi bi-speedometer2"></i> Fleet Utilization by Type</div>
+                    <div class="chart-wrap"><canvas id="chartFleetType"></canvas></div>
+                </div>
+                <div class="chart-box">
+                    <div class="chart-title"><i class="bi bi-fuel-pump"></i> Fuel Consumption (L/100km) – Monthly</div>
+                    <div class="chart-wrap"><canvas id="chartFuel"></canvas></div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title"><i class="bi bi-list-check"></i> Vehicle Registry</div>
+                    <div class="panel-actions">
+                        <button class="btn-icon"><i class="bi bi-plus-lg"></i> Add Vehicle</button>
+                    </div>
+                </div>
+                <div class="data-table-wrap">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Vehicle ID</th><th>Type</th><th>Plate</th><th>Driver</th>
+                                <th>Last Location</th><th>Mileage (km)</th><th>Fuel (L)</th>
+                                <th>Next Service</th><th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="fleetTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ████  WAREHOUSE SECTION  ████ -->
+        <div class="page-section" id="section-warehouse">
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-top"><div class="kpi-icon blue"><i class="bi bi-building"></i></div><div class="kpi-delta flat"><i class="bi bi-dash"></i></div></div>
+                    <div class="kpi-value">5</div><div class="kpi-label">Warehouses</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-top"><div class="kpi-icon green"><i class="bi bi-bar-chart"></i></div><div class="kpi-delta up"><i class="bi bi-arrow-up"></i>1.8%</div></div>
+                    <div class="kpi-value">68.4%</div><div class="kpi-label">Avg Occupancy</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-top"><div class="kpi-icon orange"><i class="bi bi-boxes"></i></div><div class="kpi-delta up"><i class="bi bi-arrow-up"></i>5%</div></div>
+                    <div class="kpi-value">124,500</div><div class="kpi-label">Total SKUs Stored</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-top"><div class="kpi-icon red"><i class="bi bi-exclamation-triangle"></i></div><div class="kpi-delta down"><i class="bi bi-arrow-down"></i>3</div></div>
+                    <div class="kpi-value">8</div><div class="kpi-label">Low Stock Alerts</div>
+                </div>
+            </div>
+
+            <div class="charts-grid-3">
+                <div class="chart-box">
+                    <div class="chart-title"><i class="bi bi-pie-chart"></i> Occupancy by Warehouse</div>
+                    <div class="chart-wrap"><canvas id="chartWarehouseOcc"></canvas></div>
+                </div>
+                <div class="chart-box">
+                    <div class="chart-title"><i class="bi bi-arrow-left-right"></i> Inbound vs Outbound (Units)</div>
+                    <div class="chart-wrap"><canvas id="chartInboundOutbound"></canvas></div>
+                </div>
+                <div class="chart-box">
+                    <div class="chart-title"><i class="bi bi-clock"></i> Dwell Time (Days)</div>
+                    <div class="chart-wrap"><canvas id="chartDwell"></canvas></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ████  ROUTES SECTION  ████ -->
+        <div class="page-section" id="section-routes">
+            <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr)">
+                <div class="kpi-card">
+                    <div class="kpi-top"><div class="kpi-icon blue"><i class="bi bi-map"></i></div></div>
+                    <div class="kpi-value">26</div><div class="kpi-label">Active Routes</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-top"><div class="kpi-icon green"><i class="bi bi-geo-alt"></i></div></div>
+                    <div class="kpi-value">142,300 km</div><div class="kpi-label">Distance This Month</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-top"><div class="kpi-icon amber"><i class="bi bi-stopwatch"></i></div></div>
+                    <div class="kpi-value">3.8 hrs</div><div class="kpi-label">Avg Transit Time</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-top"><div class="kpi-icon teal"><i class="bi bi-arrow-down-circle"></i></div></div>
+                    <div class="kpi-value">$0.42/km</div><div class="kpi-label">Cost per km</div>
+                </div>
+            </div>
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title"><i class="bi bi-geo"></i> Live Route Map</div>
+                </div>
+                <div class="map-placeholder">
+                    <i class="bi bi-map"></i>
+                    <p>Interactive Map – Integrate Google Maps / Mapbox API</p>
+                    <small style="font-size:10px;color:#94a3b8">Shows live vehicle positions and route overlays</small>
+                </div>
+            </div>
+
+            <div class="charts-grid-2">
+                <div class="chart-box">
+                    <div class="chart-title"><i class="bi bi-bar-chart-steps"></i> Top Routes by Volume</div>
+                    <div class="chart-wrap"><canvas id="chartTopRoutes"></canvas></div>
+                </div>
+                <div class="chart-box">
+                    <div class="chart-title"><i class="bi bi-currency-dollar"></i> Route Cost Trend</div>
+                    <div class="chart-wrap"><canvas id="chartRouteCost"></canvas></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ████  INVENTORY SECTION  ████ -->
+        <div class="page-section" id="section-inventory">
+            <div class="alert-strip danger">
+                <i class="bi bi-exclamation-octagon-fill"></i>
+                <strong>Critical:</strong>&nbsp; SKU-7721 (Engine Oil 5W-40) is below reorder point. Auto-PO has been triggered.
+            </div>
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-top"><div class="kpi-icon blue"><i class="bi bi-archive"></i></div></div>
+                    <div class="kpi-value">3,842</div><div class="kpi-label">Total SKUs</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-top"><div class="kpi-icon green"><i class="bi bi-box-seam"></i></div></div>
+                    <div class="kpi-value">98.2%</div><div class="kpi-label">Inventory Accuracy</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-top"><div class="kpi-icon amber"><i class="bi bi-arrow-repeat"></i></div></div>
+                    <div class="kpi-value">4.6x</div><div class="kpi-label">Turnover Rate</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-top"><div class="kpi-icon red"><i class="bi bi-exclamation-circle"></i></div></div>
+                    <div class="kpi-value">8</div><div class="kpi-label">Low Stock Alerts</div>
+                </div>
+            </div>
+
+            <div class="charts-grid-2">
+                <div class="chart-box">
+                    <div class="chart-title"><i class="bi bi-graph-up"></i> Stock Level Trend</div>
+                    <div class="chart-wrap"><canvas id="chartStock"></canvas></div>
+                </div>
+                <div class="chart-box">
+                    <div class="chart-title"><i class="bi bi-pie-chart"></i> Category Breakdown</div>
+                    <div class="chart-wrap"><canvas id="chartInvCat"></canvas></div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title"><i class="bi bi-table"></i> Inventory Register</div>
+                    <div class="panel-actions">
+                        <button class="btn-icon"><i class="bi bi-download"></i> Export</button>
+                    </div>
+                </div>
+                <div class="data-table-wrap">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>SKU</th><th>Product Name</th><th>Category</th>
+                                <th>On Hand</th><th>Reorder Point</th><th>On Order</th>
+                                <th>Location</th><th>Last Count</th><th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventoryTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ████  SUPPLIERS SECTION  ████ -->
+        <div class="page-section" id="section-suppliers">
+            <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr)">
+                <div class="kpi-card">
+                    <div class="kpi-top"><div class="kpi-icon blue"><i class="bi bi-diagram-3"></i></div></div>
+                    <div class="kpi-value">64</div><div class="kpi-label">Active Suppliers</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-top"><div class="kpi-icon green"><i class="bi bi-star-fill"></i></div></div>
+                    <div class="kpi-value">4.3 / 5</div><div class="kpi-label">Avg Supplier Score</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-top"><div class="kpi-icon amber"><i class="bi bi-hourglass-split"></i></div></div>
+                    <div class="kpi-value">8.2 days</div><div class="kpi-label">Avg PO Lead Time</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-top"><div class="kpi-icon red"><i class="bi bi-file-x"></i></div></div>
+                    <div class="kpi-value">3</div><div class="kpi-label">Overdue POs</div>
+                </div>
+            </div>
+
+            <div class="charts-grid-2">
+                <div class="chart-box">
+                    <div class="chart-title"><i class="bi bi-bar-chart"></i> Supplier On-Time Rate (%)</div>
+                    <div class="chart-wrap"><canvas id="chartSupplierOTD"></canvas></div>
+                </div>
+                <div class="chart-box">
+                    <div class="chart-title"><i class="bi bi-pie-chart"></i> Spend by Category</div>
+                    <div class="chart-wrap"><canvas id="chartSpend"></canvas></div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title"><i class="bi bi-table"></i> Supplier Directory</div>
+                </div>
+                <div class="data-table-wrap">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Supplier ID</th><th>Name</th><th>Country</th>
+                                <th>Category</th><th>OTD Rate</th><th>Score</th>
+                                <th>Open POs</th><th>YTD Spend ($)</th><th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="suppliersTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ████  ANALYTICS SECTION  ████ -->
+        <div class="page-section" id="section-analytics">
+            <div class="tab-strip">
+                <button class="tab-pill active" onclick="showTab('tab-cost', this)"><i class="bi bi-currency-dollar"></i> Cost Analysis</button>
+                <button class="tab-pill" onclick="showTab('tab-perf', this)"><i class="bi bi-speedometer2"></i> Performance</button>
+                <button class="tab-pill" onclick="showTab('tab-demand', this)"><i class="bi bi-graph-up-arrow"></i> Demand Forecast</button>
+            </div>
+
+            <div id="tab-cost">
+                <div class="charts-grid-3">
+                    <div class="chart-box">
+                        <div class="chart-title"><i class="bi bi-graph-down"></i> Cost per Shipment ($)</div>
+                        <div class="chart-wrap"><canvas id="chartCostPerShip"></canvas></div>
+                    </div>
+                    <div class="chart-box">
+                        <div class="chart-title"><i class="bi bi-pie-chart-fill"></i> Cost Breakdown</div>
+                        <div class="chart-wrap"><canvas id="chartCostBreak"></canvas></div>
+                    </div>
+                    <div class="chart-box">
+                        <div class="chart-title"><i class="bi bi-bar-chart-line"></i> Revenue vs Cost</div>
+                        <div class="chart-wrap"><canvas id="chartRevCost"></canvas></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-perf" style="display:none">
+                <div class="charts-grid-2">
+                    <div class="chart-box">
+                        <div class="chart-title"><i class="bi bi-activity"></i> On-Time Delivery Trend</div>
+                        <div class="chart-wrap"><canvas id="chartOTDTrend"></canvas></div>
+                    </div>
+                    <div class="chart-box">
+                        <div class="chart-title"><i class="bi bi-speedometer2"></i> KPI Scorecard Radar</div>
+                        <div class="chart-wrap"><canvas id="chartRadar"></canvas></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-demand" style="display:none">
+                <div class="panel">
+                    <div class="panel-header">
+                        <div class="panel-title"><i class="bi bi-graph-up-arrow"></i> Demand Forecast – Next 6 Months</div>
+                    </div>
+                    <div class="chart-wrap" style="height:280px"><canvas id="chartForecast"></canvas></div>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- end page-body -->
+
+    <div class="footer">
+        &copy; 2026 Clarix Solutions – Logistics &amp; Supply Chain Platform &nbsp;|&nbsp; All rights reserved
+    </div>
+</div><!-- end main-content -->
+
+<script>
+/* ══════════════════════════════════════════════════════
+   NAVIGATION
+══════════════════════════════════════════════════════ */
+function showSection(id, btn) {
+    document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-link-item').forEach(b => b.classList.remove('active'));
+    document.getElementById('section-' + id).classList.add('active');
+    btn.classList.add('active');
+}
+
+function showTab(id, btn) {
+    document.querySelectorAll('#section-analytics > div[id^="tab-"]').forEach(t => t.style.display = 'none');
+    document.querySelectorAll('.tab-pill').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).style.display = 'block';
+    btn.classList.add('active');
+}
+
+/* ══════════════════════════════════════════════════════
+   DATE
+══════════════════════════════════════════════════════ */
+const now = new Date();
+const dateStr = now.toLocaleDateString('en-GB', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+document.getElementById('currentDateLabel').textContent = dateStr;
+document.getElementById('topDate').textContent = now.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
+
+/* ══════════════════════════════════════════════════════
+   CHART DEFAULTS
+══════════════════════════════════════════════════════ */
+Chart.defaults.font.family = "'Inter', sans-serif";
+Chart.defaults.font.size   = 11;
+Chart.defaults.color       = '#64748b';
+
+const NAVY  = '#1e3c72';
+const BLUE  = '#2a5298';
+const LBLUE = '#3b82f6';
+const GREEN = '#10b981';
+const AMBER = '#f59e0b';
+const RED   = '#ef4444';
+const TEAL  = '#0d9488';
+const PURP  = '#7c3aed';
+const INDIGO= '#4338ca';
+const ORANGE= '#ea580c';
+
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+/* ══════════════════════════════════════════════════════
+   OVERVIEW CHARTS
+══════════════════════════════════════════════════════ */
+new Chart(document.getElementById('chartVolume'), {
+    type: 'bar',
+    data: {
+        labels: MONTHS,
+        datasets: [{
+            label: 'Actual',
+            data: [980,1040,1120,1090,1150,1200,1180,1240,1260,1210,1270,1284],
+            backgroundColor: `rgba(42,82,152,0.8)`,
+            borderRadius: 4,
+            order: 1
+        },{
+            label: 'Target',
+            data: [1000,1050,1100,1100,1150,1200,1200,1250,1250,1230,1280,1300],
+            type: 'line',
+            borderColor: AMBER,
+            borderDash: [5,4],
+            borderWidth: 2,
+            pointRadius: 2,
+            fill: false,
+            order: 0
+        }]
+    },
+    options: { responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{ position:'bottom', labels:{ boxWidth:10 } } },
+        scales:{ y:{ beginAtZero:false, grid:{ color:'#f1f5f9' } }, x:{ grid:{ display:false } } }
+    }
+});
+
+new Chart(document.getElementById('chartStatus'), {
+    type: 'doughnut',
+    data: {
+        labels: ['Delivered','In Transit','Pending','Delayed','Processing'],
+        datasets: [{ data:[986,281,156,17,44],
+            backgroundColor:[GREEN,'#3b82f6',AMBER,RED,PURP],
+            borderWidth:0, hoverOffset:6
+        }]
+    },
+    options: { responsive:true, maintainAspectRatio:false, cutout:'65%',
+        plugins:{ legend:{ position:'bottom', labels:{ boxWidth:10, padding:8 } } }
+    }
+});
+
+new Chart(document.getElementById('chartRoutes'), {
+    type: 'bar',
+    data: {
+        labels: ['Dubai→Riyadh','Sharjah→Jeddah','Abu Dhabi→Kuwait','Dubai→Muscat','Riyadh→Dammam','Doha→Bahrain'],
+        datasets: [{
+            label: 'Shipments',
+            data: [248,196,174,158,142,110],
+            backgroundColor:[BLUE,LBLUE,TEAL,GREEN,AMBER,INDIGO].map(c=>`${c}cc`),
+            borderRadius:4,
+            indexAxis:'y'
+        }]
+    },
+    options: { responsive:true, maintainAspectRatio:false, indexAxis:'y',
+        plugins:{ legend:{ display:false } },
+        scales:{ x:{ grid:{ color:'#f1f5f9' }, beginAtZero:true }, y:{ grid:{ display:false } } }
+    }
+});
+
+/* ══════════════════════════════════════════════════════
+   SHIPMENTS TABLE
+══════════════════════════════════════════════════════ */
+const shipData = [
+    ['SHP-20481','Dubai Port','Riyadh Hub','Fast Freight LLC','Gulf Traders LLC','5,400','01 Apr 2026','03 Apr 2026','Delivered','$1,240'],
+    ['SHP-20482','Sharjah DC','Jeddah WH','Al Noor Transport','Saudi Foods Co.','2,800','01 Apr 2026','04 Apr 2026','Delivered','$890'],
+    ['SHP-20483','Abu Dhabi','Kuwait City','Express Gulf','Al Jazeera Group','8,100','02 Apr 2026','05 Apr 2026','In Transit','$2,100'],
+    ['SHP-20484','Dubai Port','Muscat','SeaLink LLC','Oman Dist. Co.','3,600','02 Apr 2026','06 Apr 2026','In Transit','$750'],
+    ['SHP-20449','Riyadh','Dammam','Al Noor Transport','Gulf Oil Mgmt','1,200','31 Mar 2026','03 Apr 2026','Delayed','$420'],
+    ['SHP-20485','Doha','Bahrain Port','Qatar Express','Bahrain Trade','4,700','03 Apr 2026','05 Apr 2026','Processing','$1,050'],
+    ['SHP-20486','Dubai Port','Riyadh Hub','Fast Freight LLC','Al Futtaim LLC','6,200','03 Apr 2026','06 Apr 2026','In Transit','$1,600'],
+    ['SHP-20487','Sharjah DC','Abu Dhabi','Clarix Fleet','Etisalat Supply','980','04 Apr 2026','04 Apr 2026','Delivered','$210'],
+    ['SHP-20488','Abu Dhabi','Jeddah WH','Gulf Air Cargo','Saudi Airlines','14,000','04 Apr 2026','07 Apr 2026','Pending','$4,200'],
+    ['SHP-20398','Dubai Port','Dubai Mall','Clarix Fleet','LuLu Hypermarket','440','03 Apr 2026','04 Apr 2026','Delayed','$180'],
+];
+
+const statusMap = {
+    'Delivered':'badge-delivered','In Transit':'badge-transit','Pending':'badge-pending',
+    'Delayed':'badge-delayed','Processing':'badge-processing'
+};
+
+const tbody = document.getElementById('shipmentsTableBody');
+shipData.forEach(r => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td><strong>${r[0]}</strong></td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td>
+        <td class="text-end">${r[5]}</td><td>${r[6]}</td><td>${r[7]}</td>
+        <td><span class="badge-status ${statusMap[r[8]]}">${r[8]}</span></td>
+        <td class="text-end">${r[9]}</td>
+        <td><button class="btn-icon" style="font-size:10px;padding:2px 6px"><i class="bi bi-eye"></i></button></td>`;
+    tbody.appendChild(tr);
+});
+
+/* ══════════════════════════════════════════════════════
+   FLEET TABLE
+══════════════════════════════════════════════════════ */
+const fleetData = [
+    ['VH-001','Heavy Truck','DXB-T-1234','Ahmed Hassan','Dubai → Riyadh','142,400','80','15 May 2026','Active'],
+    ['VH-002','Van','SHJ-V-5521','Omar Al Rashid','Sharjah DC','98,200','60','20 Apr 2026','Active'],
+    ['VH-003','Refrigerated Truck','AUH-R-3310','Sara Mohammed','Abu Dhabi Port','204,100','45','10 May 2026','Active'],
+    ['VH-004','Flatbed','DXB-F-7741','Ali Nasser','Workshop','188,600','Full','07 Apr 2026','Maintenance'],
+    ['VH-005','Heavy Truck','RUH-T-9920','Khalid Al Saud','Riyadh Hub','311,000','20','01 Apr 2026','Out of Service'],
+    ['VH-006','Van','DXB-V-0042','Fatima Al Ali','Dubai Port','55,300','90','30 Jun 2026','Active'],
+    ['VH-007','Refrigerated Truck','SHJ-R-1182','Hassan Ibrahim','Sharjah → Jeddah','171,800','70','18 May 2026','Active'],
+    ['VH-008','Heavy Truck','AUH-T-6603','Bilal Khan','Abu Dhabi WH','256,400','35','25 Apr 2026','Maintenance'],
+];
+
+const fleetStatusMap = { 'Active':'badge-delivered', 'Maintenance':'badge-pending', 'Out of Service':'badge-delayed' };
+const fbody = document.getElementById('fleetTableBody');
+fleetData.forEach(r => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td><strong>${r[0]}</strong></td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td>
+        <td>${r[4]}</td><td class="text-end">${r[5]}</td><td>${r[6]}L</td>
+        <td>${r[7]}</td><td><span class="badge-status ${fleetStatusMap[r[8]]}">${r[8]}</span></td>`;
+    fbody.appendChild(tr);
+});
+
+/* Fleet Charts */
+new Chart(document.getElementById('chartFleetType'), {
+    type: 'bar',
+    data: {
+        labels: ['Heavy Truck','Van','Reefer','Flatbed','Tanker'],
+        datasets: [{
+            label: 'Active', data:[14,10,8,6,4],
+            backgroundColor: `${BLUE}cc`, borderRadius:4
+        },{
+            label: 'Idle', data:[2,1,1,1,1],
+            backgroundColor: `${AMBER}cc`, borderRadius:4
+        },{
+            label: 'Maintenance', data:[1,0,1,1,0],
+            backgroundColor: `${RED}cc`, borderRadius:4
+        }]
+    },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'bottom', labels:{ boxWidth:10 } } },
+        scales:{ x:{ stacked:true, grid:{ display:false } }, y:{ stacked:true, grid:{ color:'#f1f5f9' } } } }
+});
+
+new Chart(document.getElementById('chartFuel'), {
+    type: 'line',
+    data: {
+        labels: MONTHS,
+        datasets: [{
+            label: 'Avg L/100km', data:[28,27.5,29,26,27,28,27,26.5,28,27.5,26,27],
+            borderColor: TEAL, backgroundColor: `${TEAL}22`, fill:true,
+            tension:0.4, pointRadius:3
+        }]
+    },
+    options: { responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{ position:'bottom', labels:{ boxWidth:10 } } },
+        scales:{ y:{ grid:{ color:'#f1f5f9' } }, x:{ grid:{ display:false } } } }
+});
+
+/* ══════════════════════════════════════════════════════
+   WAREHOUSE CHARTS
+══════════════════════════════════════════════════════ */
+new Chart(document.getElementById('chartWarehouseOcc'), {
+    type: 'bar',
+    data: {
+        labels: ['Dubai WH A','Dubai WH B','Sharjah WH','Abu Dhabi WH','Riyadh WH'],
+        datasets: [{
+            label: 'Occupancy %', data:[82,74,61,58,70],
+            backgroundColor:[BLUE,LBLUE,TEAL,GREEN,AMBER].map(c=>`${c}cc`),
+            borderRadius:5
+        }]
+    },
+    options: { responsive:true, maintainAspectRatio:false, indexAxis:'y',
+        plugins:{ legend:{ display:false } },
+        scales:{ x:{ max:100, grid:{ color:'#f1f5f9' } }, y:{ grid:{ display:false } } } }
+});
+
+new Chart(document.getElementById('chartInboundOutbound'), {
+    type: 'bar',
+    data: {
+        labels: MONTHS.slice(0,6),
+        datasets: [
+            { label:'Inbound',  data:[8200,9100,8700,9400,8900,9800], backgroundColor:`${GREEN}cc`, borderRadius:3 },
+            { label:'Outbound', data:[7800,8600,8400,9200,8700,9500], backgroundColor:`${BLUE}cc`,  borderRadius:3 }
+        ]
+    },
+    options: { responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{ position:'bottom', labels:{ boxWidth:10 } } },
+        scales:{ x:{ grid:{ display:false } }, y:{ grid:{ color:'#f1f5f9' } } } }
+});
+
+new Chart(document.getElementById('chartDwell'), {
+    type: 'bar',
+    data: {
+        labels: ['Dubai WH A','Dubai WH B','Sharjah WH','Abu Dhabi WH','Riyadh WH'],
+        datasets: [{
+            label: 'Avg Dwell (days)', data:[3.2,2.8,4.1,3.7,2.4],
+            backgroundColor:[INDIGO,PURP,TEAL,AMBER,GREEN].map(c=>`${c}cc`),
+            borderRadius:4
+        }]
+    },
+    options: { responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{ display:false } },
+        scales:{ x:{ grid:{ display:false } }, y:{ grid:{ color:'#f1f5f9' } } } }
+});
+
+/* ══════════════════════════════════════════════════════
+   ROUTES CHARTS
+══════════════════════════════════════════════════════ */
+new Chart(document.getElementById('chartTopRoutes'), {
+    type: 'bar',
+    data: {
+        labels: ['Dubai→Riyadh','Sharjah→Jeddah','Abu Dhabi→Kuwait','Dubai→Muscat','Riyadh→Dammam'],
+        datasets: [{
+            data:[248,196,174,158,142],
+            backgroundColor:[NAVY,BLUE,LBLUE,TEAL,GREEN].map(c=>`${c}cc`),
+            borderRadius:4
+        }]
+    },
+    options: { responsive:true, maintainAspectRatio:false, indexAxis:'y',
+        plugins:{ legend:{ display:false } },
+        scales:{ x:{ grid:{ color:'#f1f5f9' } }, y:{ grid:{ display:false } } } }
+});
+
+new Chart(document.getElementById('chartRouteCost'), {
+    type: 'line',
+    data: {
+        labels: MONTHS.slice(0,6),
+        datasets: [
+            { label:'Dubai→Riyadh', data:[0.44,0.43,0.42,0.45,0.41,0.42], borderColor:NAVY, tension:0.4, pointRadius:3 },
+            { label:'Sharjah→Jeddah', data:[0.38,0.40,0.39,0.41,0.38,0.37], borderColor:GREEN, tension:0.4, pointRadius:3 },
+            { label:'Abu Dhabi→Kuwait', data:[0.51,0.50,0.53,0.49,0.52,0.50], borderColor:AMBER, tension:0.4, pointRadius:3 }
+        ]
+    },
+    options: { responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{ position:'bottom', labels:{ boxWidth:10 } } },
+        scales:{ y:{ grid:{ color:'#f1f5f9' }, title:{ display:true, text:'$/km' } }, x:{ grid:{ display:false } } } }
+});
+
+/* ══════════════════════════════════════════════════════
+   INVENTORY
+══════════════════════════════════════════════════════ */
+const invData = [
+    ['SKU-7721','Engine Oil 5W-40','Lubricants','142','200','500 (PO)','Dubai WH A','01 Apr 2026','Low Stock'],
+    ['SKU-1102','Packing Tape 50m','Packaging','8,400','1,000','–','Sharjah WH','02 Apr 2026','Normal'],
+    ['SKU-2204','Industrial Gloves L','Safety','620','400','–','Dubai WH B','31 Mar 2026','Normal'],
+    ['SKU-3310','Forklift Battery 48V','Equipment','18','10','20 (PO)','Abu Dhabi WH','28 Mar 2026','Normal'],
+    ['SKU-4402','Pallet Wrap 500m','Packaging','2,100','500','–','Riyadh WH','02 Apr 2026','Normal'],
+    ['SKU-5501','Corrugated Box A3','Packaging','14,200','2,000','–','Dubai WH A','03 Apr 2026','Normal'],
+    ['SKU-6614','Hydraulic Oil ISO 46','Lubricants','88','150','300 (PO)','Sharjah WH','01 Apr 2026','Low Stock'],
+    ['SKU-8831','Safety Vest XL','Safety','240','100','–','Dubai WH B','02 Apr 2026','Normal'],
+];
+
+const invStatusMap = { 'Normal':'badge-delivered', 'Low Stock':'badge-delayed', 'Overstocked':'badge-transit' };
+const ibody = document.getElementById('inventoryTableBody');
+invData.forEach(r => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td><strong>${r[0]}</strong></td><td>${r[1]}</td><td>${r[2]}</td>
+        <td class="text-end">${r[3]}</td><td class="text-end">${r[4]}</td><td class="text-end">${r[5]}</td>
+        <td>${r[6]}</td><td>${r[7]}</td>
+        <td><span class="badge-status ${invStatusMap[r[8]]}">${r[8]}</span></td>`;
+    ibody.appendChild(tr);
+});
+
+new Chart(document.getElementById('chartStock'), {
+    type: 'line',
+    data: {
+        labels: MONTHS,
+        datasets: [{
+            label:'Stock Level (units)',
+            data:[105000,112000,108000,118000,122000,115000,120000,124500,119000,121000,123000,124500],
+            borderColor: BLUE, backgroundColor:`${BLUE}15`, fill:true, tension:0.4, pointRadius:2
+        },{
+            label:'Safety Stock',
+            data: Array(12).fill(90000),
+            borderColor:RED, borderDash:[5,4], borderWidth:1.5, pointRadius:0, fill:false
+        }]
+    },
+    options: { responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{ position:'bottom', labels:{ boxWidth:10 } } },
+        scales:{ y:{ grid:{ color:'#f1f5f9' } }, x:{ grid:{ display:false } } } }
+});
+
+new Chart(document.getElementById('chartInvCat'), {
+    type: 'doughnut',
+    data: {
+        labels: ['Lubricants','Packaging','Safety','Equipment','Spare Parts','Other'],
+        datasets: [{ data:[18,34,12,8,20,8],
+            backgroundColor:[NAVY,BLUE,TEAL,GREEN,AMBER,PURP], borderWidth:0, hoverOffset:5 }]
+    },
+    options: { responsive:true, maintainAspectRatio:false, cutout:'60%',
+        plugins:{ legend:{ position:'bottom', labels:{ boxWidth:10, padding:8 } } } }
+});
+
+/* ══════════════════════════════════════════════════════
+   SUPPLIERS
+══════════════════════════════════════════════════════ */
+const suppData = [
+    ['SUP-001','Al Noor Transport Co.','UAE','Transportation','96.2%','4.8','3','$485,200','Active'],
+    ['SUP-002','Gulf Oil Products LLC','Saudi Arabia','Lubricants','91.5%','4.2','1','$312,400','Active'],
+    ['SUP-003','Emirates Packaging','UAE','Packaging','98.1%','4.9','0','$198,700','Active'],
+    ['SUP-004','Riyadh Safety Supplies','Saudi Arabia','Safety Equip.','88.4%','3.9','2','$124,500','Active'],
+    ['SUP-005','Kuwait Industrial Co.','Kuwait','Equipment','82.0%','3.4','3','$89,200','At Risk'],
+    ['SUP-006','Oman Chemicals LLC','Oman','Chemicals','94.7%','4.5','0','$231,100','Active'],
+    ['SUP-007','Bahrain Metal Works','Bahrain','Spare Parts','90.3%','4.1','1','$176,800','Active'],
+];
+
+const supStatusMap = { 'Active':'badge-delivered', 'At Risk':'badge-delayed', 'Inactive':'badge-pending' };
+const sbody = document.getElementById('suppliersTableBody');
+suppData.forEach(r => {
+    const tr = document.createElement('tr');
+    const otdNum = parseFloat(r[4]);
+    const otdColor = otdNum >= 95 ? 'style="color:var(--green);font-weight:600"' :
+                     otdNum >= 88 ? 'style="color:var(--amber);font-weight:600"' :
+                     'style="color:var(--red);font-weight:600"';
+    tr.innerHTML = `<td><strong>${r[0]}</strong></td><td>${r[1]}</td><td>${r[2]}</td>
+        <td>${r[3]}</td><td ${otdColor}>${r[4]}</td><td>${r[5]}</td>
+        <td class="text-end">${r[6]}</td><td class="text-end">${r[7]}</td>
+        <td><span class="badge-status ${supStatusMap[r[8]]}">${r[8]}</span></td>`;
+    sbody.appendChild(tr);
+});
+
+new Chart(document.getElementById('chartSupplierOTD'), {
+    type: 'bar',
+    data: {
+        labels: suppData.map(r => r[1].split(' ')[0]),
+        datasets: [{
+            label:'OTD %',
+            data: suppData.map(r => parseFloat(r[4])),
+            backgroundColor: suppData.map(r => {
+                const v = parseFloat(r[4]);
+                return v >= 95 ? `${GREEN}cc` : v >= 88 ? `${AMBER}cc` : `${RED}cc`;
+            }),
+            borderRadius: 4
+        }]
+    },
+    options: { responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{ display:false } },
+        scales:{ y:{ min:75, max:100, grid:{ color:'#f1f5f9' } }, x:{ grid:{ display:false } } } }
+});
+
+new Chart(document.getElementById('chartSpend'), {
+    type: 'pie',
+    data: {
+        labels: ['Transportation','Lubricants','Packaging','Safety','Equipment','Spare Parts'],
+        datasets: [{ data:[485200,312400,198700,124500,89200,176800],
+            backgroundColor:[NAVY,BLUE,TEAL,GREEN,AMBER,PURP], borderWidth:0, hoverOffset:5 }]
+    },
+    options: { responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{ position:'bottom', labels:{ boxWidth:10, padding:6 } } } }
+});
+
+/* ══════════════════════════════════════════════════════
+   ANALYTICS CHARTS
+══════════════════════════════════════════════════════ */
+new Chart(document.getElementById('chartCostPerShip'), {
+    type: 'line',
+    data: {
+        labels: MONTHS,
+        datasets: [{
+            label:'Cost per Shipment ($)',
+            data:[1140,1210,1180,1100,1060,1080,1020,990,1010,980,970,960],
+            borderColor:NAVY, backgroundColor:`${NAVY}15`, fill:true, tension:0.4, pointRadius:3
+        }]
+    },
+    options: { responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{ position:'bottom', labels:{ boxWidth:10 } } },
+        scales:{ y:{ grid:{ color:'#f1f5f9' } }, x:{ grid:{ display:false } } } }
+});
+
+new Chart(document.getElementById('chartCostBreak'), {
+    type: 'doughnut',
+    data: {
+        labels: ['Fuel','Labour','Maintenance','Port Fees','Admin','Other'],
+        datasets: [{ data:[32,24,14,18,7,5],
+            backgroundColor:[ORANGE,BLUE,RED,TEAL,PURP,INDIGO], borderWidth:0, hoverOffset:5 }]
+    },
+    options: { responsive:true, maintainAspectRatio:false, cutout:'60%',
+        plugins:{ legend:{ position:'bottom', labels:{ boxWidth:10, padding:6 } } } }
+});
+
+new Chart(document.getElementById('chartRevCost'), {
+    type: 'bar',
+    data: {
+        labels: MONTHS,
+        datasets: [
+            { label:'Revenue ($K)', data:[3600,3800,3750,4000,4100,4200,4050,4300,4200,4250,4180,4200], backgroundColor:`${BLUE}cc`, borderRadius:3 },
+            { label:'Cost ($K)',    data:[2900,3000,2950,3100,3200,3250,3150,3300,3280,3200,3150,3180], backgroundColor:`${AMBER}cc`, borderRadius:3 }
+        ]
+    },
+    options: { responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{ position:'bottom', labels:{ boxWidth:10 } } },
+        scales:{ x:{ grid:{ display:false } }, y:{ grid:{ color:'#f1f5f9' } } } }
+});
+
+new Chart(document.getElementById('chartOTDTrend'), {
+    type: 'line',
+    data: {
+        labels: MONTHS,
+        datasets: [{
+            label:'OTD %', data:[91,90.5,92,91.5,93,92.5,93.5,94,93.8,94.2,94.5,94.7],
+            borderColor:GREEN, backgroundColor:`${GREEN}15`, fill:true, tension:0.4, pointRadius:3
+        },{
+            label:'Target 95%', data: Array(12).fill(95),
+            borderColor:AMBER, borderDash:[5,4], borderWidth:1.5, pointRadius:0, fill:false
+        }]
+    },
+    options: { responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{ position:'bottom', labels:{ boxWidth:10 } } },
+        scales:{ y:{ min:88, max:100, grid:{ color:'#f1f5f9' } }, x:{ grid:{ display:false } } } }
+});
+
+new Chart(document.getElementById('chartRadar'), {
+    type: 'radar',
+    data: {
+        labels: ['OTD Rate','Fleet Util.','Cust. Sat.','Inv. Accuracy','Cost Eff.','Supplier OTD'],
+        datasets: [
+            { label:'Actual',  data:[94.7,87.3,98.1,98.2,84,91.5], borderColor:BLUE, backgroundColor:`${BLUE}25`, pointRadius:3 },
+            { label:'Target',  data:[95,90,98,99,90,95],            borderColor:AMBER, borderDash:[4,3], backgroundColor:'transparent', pointRadius:2 }
+        ]
+    },
+    options: { responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{ position:'bottom', labels:{ boxWidth:10 } } },
+        scales:{ r:{ min:70, max:100, ticks:{ stepSize:10, font:{ size:9 } }, grid:{ color:'#e2e8f0' } } } }
+});
+
+new Chart(document.getElementById('chartForecast'), {
+    type: 'bar',
+    data: {
+        labels: ['May 2026','Jun 2026','Jul 2026','Aug 2026','Sep 2026','Oct 2026'],
+        datasets: [
+            { label:'Forecast Volume', data:[1310,1340,1290,1360,1400,1440], backgroundColor:`${BLUE}99`, borderRadius:4 },
+            { label:'Forecast Revenue ($K)', data:[4280,4350,4220,4400,4480,4540],
+              type:'line', borderColor:GREEN, backgroundColor:'transparent',
+              tension:0.4, pointRadius:4, yAxisID:'y2' }
+        ]
+    },
+    options: { responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{ position:'bottom', labels:{ boxWidth:10 } } },
+        scales: {
+            x:  { grid:{ display:false } },
+            y:  { grid:{ color:'#f1f5f9' }, title:{ display:true, text:'Shipments' } },
+            y2: { position:'right', grid:{ display:false }, title:{ display:true, text:'Revenue $K' } }
+        } }
+});
+</script>
+</body>
+</html>

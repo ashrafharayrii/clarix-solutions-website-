@@ -1,0 +1,3818 @@
+# dashboard.py
+# Location: C:\Users\a.harayri\OneDrive - Al-Behar Group\Desktop\python\dashboard.py
+
+import pandas as pd
+import numpy as np
+import json
+import webbrowser
+import os
+from datetime import datetime
+import warnings
+import base64
+import re
+warnings.filterwarnings('ignore')
+
+# Custom JSON encoder for numpy types and Python booleans
+class NumpyEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, (np.integer, np.int64, np.int32)):
+            return int(obj)
+        elif isinstance(obj, (np.floating, np.float64, np.float32)):
+            return float(obj)
+        elif isinstance(obj, np.ndarray):
+            return obj.tolist()
+        elif isinstance(obj, pd.Timestamp):
+            return obj.strftime('%Y-%m-%d')
+        elif isinstance(obj, bool):
+            return obj
+        elif isinstance(obj, (np.bool_)):
+            return bool(obj)
+        elif pd.isna(obj):
+            return None
+        return super().default(obj)
+
+def get_logo_base64():
+    """Convert logo image to base64 for embedding in HTML"""
+    logo_path = r'C:\Users\a.harayri\OneDrive - Al-Behar Group\Desktop\python\img.jpg'
+    
+    if os.path.exists(logo_path):
+        try:
+            with open(logo_path, 'rb') as img_file:
+                return base64.b64encode(img_file.read()).decode('utf-8')
+        except Exception as e:
+            print(f"⚠️ Could not read logo file: {e}")
+            return None
+    else:
+        print(f"⚠️ Logo not found at: {logo_path}")
+        return None
+
+def extract_month_from_filename(filename):
+    """Extract month number from S&OP filename (S&OP1 = January, etc.)"""
+    if pd.isna(filename) or not isinstance(filename, str):
+        return None
+    
+    # Pattern for S&OP followed by number
+    match = re.search(r'S&OP(\d+)', filename, re.IGNORECASE)
+    if match:
+        month_num = int(match.group(1))
+        if 1 <= month_num <= 12:
+            return month_num
+    return None
+
+def get_month_name(month_num):
+    """Convert month number to month name"""
+    month_names = ['January', 'February', 'March', 'April', 'May', 'June',
+                   'July', 'August', 'September', 'October', 'November', 'December']
+    if month_num and 1 <= month_num <= 12:
+        return month_names[month_num - 1]
+    return None
+
+def get_month_abbreviation(month_num):
+    """Convert month number to 3-letter abbreviation (Jan, Feb, etc.)"""
+    month_abbr = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    if month_num and 1 <= month_num <= 12:
+        return month_abbr[month_num - 1]
+    return None
+
+def clean_filename_for_key(filename):
+    """Clean filename to create a valid dictionary key"""
+    if not isinstance(filename, str):
+        return str(filename)
+    # Replace non-alphanumeric characters with underscore
+    return re.sub(r'[^a-zA-Z0-9]', '_', filename)
+
+# Fixed monthly targets from user
+MONTHLY_TARGETS = {
+    1: {'month': 'Jan', 'gp': 70955.6889, 'sales': 1340123.793, 'cogs': -1269168.104, 'commission': 3906.42, 'qty': 1371.74},
+    2: {'month': 'Feb', 'gp': 109681.2675, 'sales': 1865415.873, 'cogs': -1755734.605, 'commission': 9053.4443, 'qty': 1730},
+    3: {'month': 'Mar', 'gp': 89767.79265, 'sales': 2255162.847, 'cogs': -2165395.054, 'commission': 9520.0066, 'qty': 2084.71},
+    4: {'month': 'Apr', 'gp': 122249.2298, 'sales': 2329650.58, 'cogs': -2207401.35, 'commission': 7330.4163, 'qty': 2198.465},
+    5: {'month': 'May', 'gp': 139237.0366, 'sales': 2254543.159, 'cogs': -2115306.122, 'commission': 8535.2863, 'qty': 2143.86},
+    6: {'month': 'Jun', 'gp': 169113.3709, 'sales': 3296326.514, 'cogs': -3127213.143, 'commission': 8717.4368, 'qty': 2982.04},
+    7: {'month': 'Jul', 'gp': 147454.483, 'sales': 2324379.15, 'cogs': -2176924.667, 'commission': 15160.0265, 'qty': 2200.96},
+    8: {'month': 'Aug', 'gp': 126528.9325, 'sales': 2418520.393, 'cogs': -2291991.46, 'commission': 7019.628, 'qty': 2309.1},
+    9: {'month': 'Sep', 'gp': 150593.5497, 'sales': 2611603.899, 'cogs': -2461010.349, 'commission': 9231.846, 'qty': 2183.04},
+    10: {'month': 'Oct', 'gp': 83173.66766, 'sales': 1925567.18, 'cogs': -1842393.512, 'commission': 9770.878, 'qty': 1783.21},
+    11: {'month': 'Nov', 'gp': 100630.7955, 'sales': 1951227.219, 'cogs': -1850596.423, 'commission': 7409.019202, 'qty': 1923.19},
+    12: {'month': 'Dec', 'gp': 103734.6638, 'sales': 1755026.813, 'cogs': -1651292.149, 'commission': 9347.25295, 'qty': 1601.27}
+}
+
+def get_status_for_month(selected_sop_month, current_month, dataset_type='actual'):
+    """
+    Determine status based on S&OP month selection
+    For Actual: Invoiced for months <= selected SOP month, else Booked/Not Booked
+    For Forecast: Always Booked/Not Booked (forecast data)
+    For Previous Year: All statuses (historical data)
+    """
+    if dataset_type == 'actual':
+        if current_month <= selected_sop_month:
+            return ['Invoiced']
+        else:
+            return ['Booked', 'Not Booked']
+    elif dataset_type == 'forecast':
+        # For forecast: always use Booked/Not Booked for the current month
+        return ['Booked', 'Not Booked']
+    else:  # previous year dataset
+        # For previous year: include all statuses (historical data)
+        return ['Invoiced', 'Booked', 'Not Booked']
+
+def calculate_commission(df_data, month_abbr, file_name):
+    """
+    Calculate commission from Broker section
+    IMPORTANT: Section should always be 'Broker' to calculate commission
+    When Section is 'Broker', that means you want to calculate commission
+    """
+    # Section should be 'Broker' for commission calculation
+    if 'Section' in df_data.columns and 'Actual Month' in df_data.columns and 'gp_jod' in df_data.columns:
+        commission_df = df_data[(df_data['Section'] == 'Broker') & (df_data['Actual Month'] == month_abbr)]
+        if len(commission_df) > 0:
+            return float(commission_df['gp_jod'].sum())
+    return 0.0
+
+# Professional HTML Template
+HTML_TEMPLATE_START = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Al-Behar Company (Oils) - S&OP Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f4f7fc;
+            color: #1e293b;
+            line-height: 1.4;
+        }
+
+        .dashboard-wrapper {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 10px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .company-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            background: white;
+            padding: 6px;
+            object-fit: contain;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .header h1 small {
+            font-size: 12px;
+            opacity: 0.8;
+            display: block;
+            font-weight: 400;
+            margin-top: 2px;
+        }
+
+        .header .date-badge {
+            background: rgba(255,255,255,0.1);
+            padding: 6px 12px;
+            border-radius: 25px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .data-source {
+            background: #10b981;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 25px;
+            font-size: 10px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            margin-left: 8px;
+        }
+
+        /* Date Range Filter */
+        .date-filter-panel {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+
+        .date-filter-panel h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1e3c72;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .date-filter-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            align-items: end;
+        }
+
+        .date-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .date-input-group label {
+            font-size: 10px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.2px;
+        }
+
+        .date-input-group input {
+            padding: 6px 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #1e293b;
+            background: white;
+        }
+
+        .apply-btn {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 25px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            height: 32px;
+        }
+
+        /* Achievement Card Styling */
+        .achievement-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+
+        .achievement-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .achievement-header h3 {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1e3c72;
+            margin: 0;
+        }
+
+        .achievement-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .achievement-section {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 12px;
+        }
+
+        .achievement-title {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #1e3c72;
+            margin-bottom: 12px;
+        }
+
+        .gp-title {
+            border-left: 3px solid #059669;
+            padding-left: 8px;
+        }
+
+        .sales-title {
+            border-left: 3px solid #2563eb;
+            padding-left: 8px;
+        }
+
+        .progress-container {
+            margin-bottom: 15px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 3px;
+            font-size: 11px;
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 20px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #059669, #10b981);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 6px;
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .progress-fill.sales {
+            background: linear-gradient(90deg, #2563eb, #3b82f6);
+        }
+
+        .progress-fill.warning {
+            background: linear-gradient(90deg, #d97706, #f59e0b);
+        }
+
+        .progress-fill.danger {
+            background: linear-gradient(90deg, #dc2626, #ef4444);
+        }
+
+        .progress-fill.positive {
+            background: linear-gradient(90deg, #059669, #10b981);
+        }
+
+        .target-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px dashed #e2e8f0;
+        }
+
+        .target-item {
+            text-align: center;
+        }
+
+        .target-label {
+            font-size: 10px;
+            color: #64748b;
+            margin-bottom: 2px;
+        }
+
+        .target-number {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1e3c72;
+        }
+
+        .target-sub {
+            font-size: 9px;
+            color: #94a3b8;
+        }
+
+        /* Dropdown Panel */
+        .dropdown-panel {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+
+        .dropdown-panel h3 {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1e3c72;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .dropdown-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .dropdown-item {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .dropdown-item label {
+            font-size: 10px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.2px;
+        }
+
+        .dropdown-item select {
+            padding: 6px 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #1e293b;
+            background: white;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            background-size: 12px;
+        }
+
+        .dropdown-item select:hover {
+            border-color: #2a5298;
+        }
+
+        .month-badge {
+            background: #f8fafc;
+            padding: 6px 12px;
+            border-radius: 25px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #1e3c72;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .refresh-btn {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 25px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Table Container */
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+
+        .table-container h3 {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1e3c72;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            max-height: 450px;
+            overflow-y: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+            min-width: 1500px;
+        }
+
+        th {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            padding: 8px 4px;
+            font-weight: 600;
+            color: white;
+            text-align: left;
+            white-space: nowrap;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.2px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        td {
+            padding: 6px 4px;
+            border-bottom: 1px solid #e2e8f0;
+            color: #1e293b;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .font-bold {
+            font-weight: 600;
+        }
+
+        .variance-positive {
+            color: #059669;
+            font-weight: 600;
+        }
+
+        .variance-negative {
+            color: #dc2626;
+            font-weight: 600;
+        }
+
+        /* Tabs Navigation */
+        .tabs-nav {
+            display: flex;
+            gap: 2px;
+            background: white;
+            padding: 6px;
+            border-radius: 35px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            overflow-x: auto;
+            flex-wrap: nowrap;
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+
+        .tab-btn {
+            padding: 6px 12px;
+            border: none;
+            background: transparent;
+            border-radius: 25px;
+            font-size: 11px;
+            font-weight: 500;
+            color: #64748b;
+            cursor: pointer;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            color: #1e3c72;
+            background: #f8fafc;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+        }
+
+        .tab-content {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            margin-bottom: 15px;
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        /* Analysis Grids */
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .analysis-grid-3col {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .chart-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 12px;
+            width: 100%;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .chart-header h4 {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1e3c72;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .chart-container {
+            height: 220px;
+            position: relative;
+        }
+
+        /* Inner tables in analysis tabs */
+        .inner-table {
+            width: 100%;
+            font-size: 10px;
+            min-width: 0;
+        }
+
+        .inner-table th {
+            background: #f8fafc;
+            color: #1e3c72;
+            padding: 4px 3px;
+            font-size: 9px;
+            position: static;
+        }
+
+        .inner-table td {
+            padding: 3px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 12px;
+            color: #64748b;
+            font-size: 10px;
+        }
+
+        .alert {
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            margin-bottom: 12px;
+        }
+
+        /* Status badges */
+        .status-badge {
+            padding: 2px 5px;
+            border-radius: 10px;
+            font-size: 9px;
+            font-weight: 600;
+            display: inline-block;
+            white-space: nowrap;
+        }
+
+        .status-achieved {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-on-track {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-at-risk {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* No Data Message */
+        .no-data-message {
+            text-align: center;
+            padding: 40px;
+            background: white;
+            border-radius: 12px;
+            margin: 15px 0;
+        }
+
+        .no-data-message i {
+            font-size: 42px;
+            color: #94a3b8;
+            margin-bottom: 12px;
+        }
+
+        .no-data-message h3 {
+            color: #1e293b;
+            margin-bottom: 8px;
+            font-size: 18px;
+        }
+
+        .no-data-message p {
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        /* Comparison Tables (New) */
+        .comparison-table-container {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+
+        .comparison-table-container h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e3c72;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-left: 3px solid #2a5298;
+            padding-left: 12px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+            min-width: 800px;
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            padding: 10px 6px;
+            font-weight: 600;
+            color: white;
+            text-align: center;
+            font-size: 10px;
+            text-transform: uppercase;
+        }
+
+        .comparison-table td {
+            padding: 8px 6px;
+            border-bottom: 1px solid #e2e8f0;
+            text-align: right;
+        }
+
+        .comparison-table td:first-child {
+            text-align: left;
+            font-weight: 600;
+            background: #f8fafc;
+        }
+
+        .comparison-table tr:hover td {
+            background: #f1f5f9;
+        }
+
+        .comparison-table tr:hover td:first-child {
+            background: #e9ecef;
+        }
+
+        .variance-positive {
+            color: #059669;
+            font-weight: 600;
+        }
+
+        .variance-negative {
+            color: #dc2626;
+            font-weight: 600;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .dropdown-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .analysis-grid, .analysis-grid-3col {
+                grid-template-columns: 1fr;
+            }
+            .achievement-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            .date-filter-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dropdown-grid {
+                grid-template-columns: 1fr;
+            }
+            .header {
+                flex-direction: column;
+                gap: 8px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-wrapper">
+        <div class="header">
+            <div class="logo-container">
+                <img src="data:image/jpeg;base64,{{ logo_base64 }}" alt="Al-Behar Group Logo" class="company-logo">
+                <div>
+                    <h1>
+                        Al-Behar Company - Oils
+                        <small>S&OP Analytics Dashboard</small>
+                    </h1>
+                    <span id="dataSourceBadge" class="data-source">
+                        <i class="bi bi-database"></i> Loading...
+                    </span>
+                </div>
+            </div>
+            <div class="date-badge">
+                <i class="bi bi-calendar3"></i>
+                <span id="dataDateRange">Loading...</span>
+            </div>
+        </div>
+
+        <!-- No Summary Data Message (will be shown if no summary data) -->
+        <div id="noSummaryData" class="no-data-message" style="display: none;">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <h3>No Summary Data Found</h3>
+            <p>The dashboard requires a 'Summary' sheet with achievement data to display achievement bars.</p>
+            <p>Please ensure your Excel file contains a 'Summary' sheet with the required columns.</p>
+        </div>
+
+        <!-- Achievement Cards with Loading Bars -->
+        <div class="achievement-card" id="achievementCard">
+            <div class="achievement-header">
+                <i class="bi bi-bar-chart-fill" style="color: #1e3c72; font-size: 18px;"></i>
+                <h3>Target Achievement</h3>
+            </div>
+            
+            <div class="achievement-grid">
+                <!-- Gross Profit Achievement -->
+                <div class="achievement-section">
+                    <div class="achievement-title gp-title">
+                        <i class="bi bi-piggy-bank" style="color: #059669; font-size: 14px;"></i>
+                        Gross Profit Achievement
+                    </div>
+                    
+                    <div class="progress-container">
+                        <div class="progress-header">
+                            <span class="metric-label">YTD Achievement</span>
+                            <span class="metric-value" id="gpYtdPercent">0%</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-fill" id="gpYtdBar" style="width: 0%">0%</div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-container">
+                        <div class="progress-header">
+                            <span class="metric-label">MTD Achievement</span>
+                            <span class="metric-value" id="gpMtdPercent">0%</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-fill" id="gpMtdBar" style="width: 0%">0%</div>
+                        </div>
+                    </div>
+                    
+                    <div class="target-details">
+                        <div class="target-item">
+                            <div class="target-label">YTD Target</div>
+                            <div class="target-number" id="gpYtdTarget">0 JOD</div>
+                            <div class="target-sub" id="gpYtdActual">Actual: 0 JOD</div>
+                        </div>
+                        <div class="target-item">
+                            <div class="target-label">YTD Remaining</div>
+                            <div class="target-number" id="gpYtdRemaining">0 JOD</div>
+                        </div>
+                        <div class="target-item">
+                            <div class="target-label">MTD Target</div>
+                            <div class="target-number" id="gpMtdTarget">0 JOD</div>
+                            <div class="target-sub" id="gpMtdActual">Actual: 0 JOD</div>
+                        </div>
+                        <div class="target-item">
+                            <div class="target-label">MTD Remaining</div>
+                            <div class="target-number" id="gpMtdRemaining">0 JOD</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sales Achievement -->
+                <div class="achievement-section">
+                    <div class="achievement-title sales-title">
+                        <i class="bi bi-cart" style="color: #2563eb; font-size: 14px;"></i>
+                        Sales Achievement
+                    </div>
+                    
+                    <div class="progress-container">
+                        <div class="progress-header">
+                            <span class="metric-label">YTD Achievement</span>
+                            <span class="metric-value" id="salesYtdPercent">0%</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-fill sales" id="salesYtdBar" style="width: 0%">0%</div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-container">
+                        <div class="progress-header">
+                            <span class="metric-label">MTD Achievement</span>
+                            <span class="metric-value" id="salesMtdPercent">0%</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-fill sales" id="salesMtdBar" style="width: 0%">0%</div>
+                        </div>
+                    </div>
+                    
+                    <div class="target-details">
+                        <div class="target-item">
+                            <div class="target-label">YTD Target</div>
+                            <div class="target-number" id="salesYtdTarget">0 JOD</div>
+                            <div class="target-sub" id="salesYtdActual">Actual: 0 JOD</div>
+                        </div>
+                        <div class="target-item">
+                            <div class="target-label">YTD Remaining</div>
+                            <div class="target-number" id="salesYtdRemaining">0 JOD</div>
+                        </div>
+                        <div class="target-item">
+                            <div class="target-label">MTD Target</div>
+                            <div class="target-number" id="salesMtdTarget">0 JOD</div>
+                            <div class="target-sub" id="salesMtdActual">Actual: 0 JOD</div>
+                        </div>
+                        <div class="target-item">
+                            <div class="target-label">MTD Remaining</div>
+                            <div class="target-number" id="salesMtdRemaining">0 JOD</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Date Range Filter (for all analysis tabs except S&OP) -->
+        <div class="date-filter-panel">
+            <h4>
+                <i class="bi bi-calendar-range"></i>
+                Date Range Filter (Posting Date)
+                <span id="activeFilterBadge" class="filter-badge" style="display: none; background: #1e3c72; color: white; padding: 4px 10px; border-radius: 20px; font-size: 11px; margin-left: 10px;">
+                    <span id="filterDates"></span>
+                    <i class="bi bi-x-circle" onclick="resetDateFilter()" style="cursor: pointer; margin-left: 5px;"></i>
+                </span>
+            </h4>
+            <div class="date-filter-grid">
+                <div class="date-input-group">
+                    <label>From Date</label>
+                    <input type="text" id="fromDate" class="datepicker" placeholder="Select start date">
+                </div>
+                <div class="date-input-group">
+                    <label>To Date</label>
+                    <input type="text" id="toDate" class="datepicker" placeholder="Select end date">
+                </div>
+                <div>
+                    <button class="apply-btn" onclick="applyDateFilter()">
+                        <i class="bi bi-funnel"></i> Apply Filter
+                    </button>
+                    <button class="apply-btn" onclick="resetDateFilter()" style="background: #64748b; margin-left: 5px;">
+                        <i class="bi bi-arrow-counterclockwise"></i> Reset
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analysis Tabs -->
+        <div class="tabs-nav">
+            <button class="tab-btn active" onclick="showTab('sop')"><i class="bi bi-arrow-repeat"></i> S&OP Cycle</button>
+            <button class="tab-btn" onclick="showTab('sales')"><i class="bi bi-graph-up"></i> Sales</button>
+            <button class="tab-btn" onclick="showTab('profitability')"><i class="bi bi-cash-stack"></i> Profitability</button>
+            <button class="tab-btn" onclick="showTab('customers')"><i class="bi bi-people"></i> Customers</button>
+            <button class="tab-btn" onclick="showTab('products')"><i class="bi bi-box-seam"></i> Products</button>
+            <button class="tab-btn" onclick="showTab('suppliers')"><i class="bi bi-truck"></i> Suppliers</button>
+        </div>
+
+        <!-- S&OP CYCLE TAB -->
+        <div id="sopTab" class="tab-content tab-pane active">
+            <!-- Dropdown Control Panel -->
+            <div class="dropdown-panel">
+                <h3>
+                    <i class="bi bi-sliders2"></i>
+                    S&OP Cycle Comparison
+                </h3>
+                
+                <div class="dropdown-grid">
+                    <div class="dropdown-item">
+                        <label><i class="bi bi-check-circle"></i> Actual Dataset (Invoiced)</label>
+                        <select id="actualDataset" class="dataset-select">
+                            <option value="">Select Actual Dataset</option>
+                        </select>
+                    </div>
+                    
+                    <div class="dropdown-item">
+                        <label><i class="bi bi-graph-up-arrow"></i> Forecast Dataset (Booked/Not Booked)</label>
+                        <select id="forecastDataset" class="dataset-select">
+                            <option value="">Select Forecast Dataset</option>
+                        </select>
+                    </div>
+                    
+                    <div class="dropdown-item">
+                        <label><i class="bi bi-calendar2-week"></i> Previous Year Dataset (Same Month)</label>
+                        <select id="prevYearDataset" class="dataset-select">
+                            <option value="">Select Previous Year Dataset</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px;">
+                    <div class="month-badge" id="analysisMonth">
+                        <i class="bi bi-calendar-month"></i>
+                        Analysis Month: <span id="monthDisplay">Not Selected</span>
+                    </div>
+                    
+                    <button class="refresh-btn" onclick="refreshComparison()">
+                        <i class="bi bi-arrow-repeat"></i>
+                        Update
+                    </button>
+                </div>
+            </div>
+
+            <!-- Month Comparison Table -->
+            <div class="table-container">
+                <h3>
+                    <i class="bi bi-calendar-month"></i>
+                    Month Comparison (<span id="monthName">Selected Month</span>)
+                </h3>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th rowspan="2">Metric</th>
+                                <th rowspan="2">Actual</th>
+                                <th rowspan="2">Forecast</th>
+                                <th rowspan="2">Target</th>
+                                <th rowspan="2">Prev Yr</th>
+                                <th colspan="2">Actual vs Forecast</th>
+                                <th colspan="2">Actual vs Target</th>
+                                <th colspan="2">Actual vs Previous Year</th>
+                            </tr>
+                            <tr>
+                                <th>Value</th>
+                                <th>%</th>
+                                <th>Value</th>
+                                <th>%</th>
+                                <th>Value</th>
+                                <th>%</th>
+                            </tr>
+                        </thead>
+                        <tbody id="monthComparisonTableBody">
+                            <tr>
+                                <td colspan="12" class="text-center" style="padding: 25px;">
+                                    <i class="bi bi-arrow-up-circle" style="font-size: 18px;"></i>
+                                    <br>
+                                    Select datasets above to view comparison
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- YTD Comparison Table -->
+            <div class="table-container">
+                <h3>
+                    <i class="bi bi-calendar-range"></i>
+                    YTD Comparison (Jan - <span id="ytdMonthName">Selected Month</span>)
+                </h3>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th rowspan="2">Metric</th>
+                                <th rowspan="2">Actual</th>
+                                <th rowspan="2">Forecast</th>
+                                <th rowspan="2">Target</th>
+                                <th rowspan="2">Prev Yr</th>
+                                <th colspan="2">Actual vs Forecast</th>
+                                <th colspan="2">Actual vs Target</th>
+                                <th colspan="2">Actual vs Previous Year</th>
+                            </tr>
+                            <tr>
+                                <th>Value</th>
+                                <th>%</th>
+                                <th>Value</th>
+                                <th>%</th>
+                                <th>Value</th>
+                                <th>%</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ytdComparisonTableBody">
+                            <tr>
+                                <td colspan="12" class="text-center" style="padding: 25px;">
+                                    <i class="bi bi-arrow-up-circle" style="font-size: 18px;"></i>
+                                    <br>
+                                    Select datasets above to view YTD comparison
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Full Year Comparison Table -->
+            <div class="table-container">
+                <h3>
+                    <i class="bi bi-calendar2-week"></i>
+                    Full Year Comparison (All Months)
+                </h3>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th rowspan="2">Metric</th>
+                                <th rowspan="2">Actual</th>
+                                <th rowspan="2">Forecast</th>
+                                <th rowspan="2">Target</th>
+                                <th rowspan="2">Prev Yr</th>
+                                <th colspan="2">Actual vs Forecast</th>
+                                <th colspan="2">Actual vs Target</th>
+                                <th colspan="2">Actual vs Previous Year</th>
+                            </tr>
+                            <tr>
+                                <th>Value</th>
+                                <th>%</th>
+                                <th>Value</th>
+                                <th>%</th>
+                                <th>Value</th>
+                                <th>%</th>
+                            </tr>
+                        </thead>
+                        <tbody id="fullYearComparisonTableBody">
+                            <tr>
+                                <td colspan="12" class="text-center" style="padding: 25px;">
+                                    <i class="bi bi-arrow-up-circle" style="font-size: 18px;"></i>
+                                    <br>
+                                    Select datasets above to view full year comparison
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Status Distribution Charts -->
+            <div class="analysis-grid">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h4><i class="bi bi-pie-chart"></i> Sales by Status</h4>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="salesStatusChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h4><i class="bi bi-pie-chart"></i> Gross Profit by Status</h4>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="gpStatusChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NEW: Sales Comparison Table -->
+            <div class="comparison-table-container">
+                <h3>
+                    <i class="bi bi-cart"></i>
+                    Sales Comparison (JOD)
+                </h3>
+                <div class="table-responsive">
+                    <table class="comparison-table" id="salesComparisonTable">
+                        <thead>
+                            <tr>
+                                <th>Metric</th>
+                                <th>Jan</th>
+                                <th>Feb</th>
+                                <th>Mar</th>
+                                <th>Apr</th>
+                                <th>May</th>
+                                <th>Jun</th>
+                                <th>Jul</th>
+                                <th>Aug</th>
+                                <th>Sep</th>
+                                <th>Oct</th>
+                                <th>Nov</th>
+                                <th>Dec</th>
+                                <th>Full Year</th>
+                            </tr>
+                        </thead>
+                        <tbody id="salesComparisonBody">
+                            <tr>
+                                <td colspan="13" class="text-center">Select datasets above to view sales comparison</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- NEW: Gross Profit Comparison Table -->
+            <div class="comparison-table-container">
+                <h3>
+                    <i class="bi bi-piggy-bank"></i>
+                    Gross Profit Comparison (JOD)
+                </h3>
+                <div class="table-responsive">
+                    <table class="comparison-table" id="gpComparisonTable">
+                        <thead>
+                            <tr>
+                                <th>Metric</th>
+                                <th>Jan</th>
+                                <th>Feb</th>
+                                <th>Mar</th>
+                                <th>Apr</th>
+                                <th>May</th>
+                                <th>Jun</th>
+                                <th>Jul</th>
+                                <th>Aug</th>
+                                <th>Sep</th>
+                                <th>Oct</th>
+                                <th>Nov</th>
+                                <th>Dec</th>
+                                <th>Full Year</th>
+                            </tr>
+                        </thead>
+                        <tbody id="gpComparisonBody">
+                            <tr>
+                                <td colspan="13" class="text-center">Select datasets above to view gross profit comparison</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- NEW: Gross Margin % Comparison Table -->
+            <div class="comparison-table-container">
+                <h3>
+                    <i class="bi bi-percent"></i>
+                    Gross Margin % Comparison
+                </h3>
+                <div class="table-responsive">
+                    <table class="comparison-table" id="gmComparisonTable">
+                        <thead>
+                            <tr>
+                                <th>Metric</th>
+                                <th>Jan</th>
+                                <th>Feb</th>
+                                <th>Mar</th>
+                                <th>Apr</th>
+                                <th>May</th>
+                                <th>Jun</th>
+                                <th>Jul</th>
+                                <th>Aug</th>
+                                <th>Sep</th>
+                                <th>Oct</th>
+                                <th>Nov</th>
+                                <th>Dec</th>
+                                <th>Full Year</th>
+                            </tr>
+                        </thead>
+                        <tbody id="gmComparisonBody">
+                            <tr>
+                                <td colspan="13" class="text-center">Select datasets above to view gross margin comparison</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- NEW: Quantity Comparison Table -->
+            <div class="comparison-table-container">
+                <h3>
+                    <i class="bi bi-box-seam"></i>
+                    Quantity Comparison (MT)
+                </h3>
+                <div class="table-responsive">
+                    <table class="comparison-table" id="qtyComparisonTable">
+                        <thead>
+                            <tr>
+                                <th>Metric</th>
+                                <th>Jan</th>
+                                <th>Feb</th>
+                                <th>Mar</th>
+                                <th>Apr</th>
+                                <th>May</th>
+                                <th>Jun</th>
+                                <th>Jul</th>
+                                <th>Aug</th>
+                                <th>Sep</th>
+                                <th>Oct</th>
+                                <th>Nov</th>
+                                <th>Dec</th>
+                                <th>Full Year</th>
+                            </tr>
+                        </thead>
+                        <tbody id="qtyComparisonBody">
+                            <tr>
+                                <td colspan="13" class="text-center">Select datasets above to view quantity comparison</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- SALES ANALYSIS TAB -->
+        <div id="salesTab" class="tab-content tab-pane">
+            <div class="analysis-grid">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h4><i class="bi bi-calendar-check"></i> Sales Trend</h4>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h4><i class="bi bi-pie-chart"></i> Sales by Category</h4>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="categoryPieChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h4><i class="bi bi-bar-chart"></i> Sales by Section</h4>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="inner-table">
+                            <thead>
+                                <tr>
+                                    <th>Section</th>
+                                    <th class="text-right">Sales</th>
+                                    <th class="text-right">%</th>
+                                </tr>
+                            </thead>
+                            <tbody id="salesBySectionTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h4><i class="bi bi-bar-chart"></i> Sales by Country</h4>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="inner-table">
+                            <thead>
+                                <tr>
+                                    <th>Country</th>
+                                    <th class="text-right">Sales</th>
+                                    <th class="text-right">%</th>
+                                </tr>
+                            </thead>
+                            <tbody id="salesByCountryTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h4><i class="bi bi-check-circle"></i> Status Analysis (Invoice Status)</h4>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="inner-table">
+                            <thead>
+                                <tr>
+                                    <th>Status</th>
+                                    <th class="text-right">Count</th>
+                                    <th class="text-right">Sales</th>
+                                </tr>
+                            </thead>
+                            <tbody id="statusAnalysisTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PROFITABILITY ANALYSIS TAB -->
+        <div id="profitabilityTab" class="tab-content tab-pane">
+            <div class="analysis-grid-3col">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h4><i class="bi bi-box"></i> Profit by Product</h4>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="inner-table">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th class="text-right">Sales</th>
+                                    <th class="text-right">GP</th>
+                                    <th class="text-right">GP%</th>
+                                </tr>
+                            </thead>
+                            <tbody id="profitByProductTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h4><i class="bi bi-people"></i> Profit by Customer</h4>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="inner-table">
+                            <thead>
+                                <tr>
+                                    <th>Customer</th>
+                                    <th class="text-right">Sales</th>
+                                    <th class="text-right">GP</th>
+                                    <th class="text-right">GP%</th>
+                                </tr>
+                            </thead>
+                            <tbody id="profitByCustomerTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h4><i class="bi bi-tags"></i> Profit by Category</h4>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="inner-table">
+                            <thead>
+                                <tr>
+                                    <th>Category</th>
+                                    <th class="text-right">Sales</th>
+                                    <th class="text-right">GP</th>
+                                    <th class="text-right">GP%</th>
+                                </tr>
+                            </thead>
+                            <tbody id="profitByCategoryTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h4><i class="bi bi-truck"></i> Profit by Supplier</h4>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="inner-table">
+                            <thead>
+                                <tr>
+                                    <th>Supplier</th>
+                                    <th class="text-right">Sales</th>
+                                    <th class="text-right">GP</th>
+                                    <th class="text-right">GP%</th>
+                                </tr>
+                            </thead>
+                            <tbody id="profitBySupplierTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h4><i class="bi bi-calendar-month"></i> Profit by Quarter</h4>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="inner-table">
+                            <thead>
+                                <tr>
+                                    <th>Quarter</th>
+                                    <th class="text-right">Sales</th>
+                                    <th class="text-right">GP</th>
+                                    <th class="text-right">GP%</th>
+                                </tr>
+                            </thead>
+                            <tbody id="profitByQuarterTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h4><i class="bi bi-exclamation-triangle"></i> Loss-Making Products</h4>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="inner-table">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th class="text-right">Sales</th>
+                                    <th class="text-right">GP</th>
+                                    <th class="text-right">GP%</th>
+                                </tr>
+                            </thead>
+                            <tbody id="lossMakingProductsTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CUSTOMER ANALYSIS TAB - UPDATED (removed Payment Delay) -->
+        <div id="customersTab" class="tab-content tab-pane">
+            <div class="analysis-grid">
+                <!-- 1) Client Profitability -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h4><i class="bi bi-cash-stack"></i> 1) Client Profitability</h4>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="inner-table">
+                            <thead>
+                                <tr>
+                                    <th>Customer</th>
+                                    <th class="text-right">Sales (JOD)</th>
+                                    <th class="text-right">GP (JOD)</th>
+                                    <th class="text-right">GP%</th>
+                                </tr>
+                            </thead>
+                            <tbody id="clientProfitabilityTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 2) Loss & Low-Margin Clients -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h4><i class="bi bi-exclamation-triangle"></i> 2) Loss & Low-Margin Clients</h4>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="inner-table">
+                            <thead>
+                                <tr>
+                                    <th>Customer</th>
+                                    <th class="text-right">Sales</th>
+                                    <th class="text-right">GP</th>
+                                    <th class="text-right">GP%</th>
+                                    <th>Customer Avg GP%</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="lossLowMarginTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 3) Purchase → Sales Days per Client (Cash Cycle) -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h4><i class="bi bi-arrow-left-right"></i> 3) Purchase → Sales Days (Cash Cycle)</h4>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="inner-table">
+                            <thead>
+                                <tr>
+                                    <th>Customer</th>
+                                    <th class="text-right">Avg P→S Days</th>
+                                    <th class="text-right">Max P→S Days</th>
+                                    <th class="text-right">Transaction Count</th>
+                                </tr>
+                            </thead>
+                            <tbody id="purchaseSalesDaysTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 4) Hidden Cost Clients -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h4><i class="bi bi-receipt"></i> 4) Hidden Cost Clients</h4>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="inner-table">
+                            <thead>
+                                <tr>
+                                    <th>Customer</th>
+                                    <th class="text-right">Other Charges Cost</th>
+                                    <th class="text-right">Brokerage Cost</th>
+                                    <th class="text-right">Total Hidden Cost</th>
+                                </tr>
+                            </thead>
+                            <tbody id="hiddenCostTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PRODUCT PERFORMANCE TAB - UPDATED with 3 new analyses -->
+        <div id="productsTab" class="tab-content tab-pane">
+            <div class="analysis-grid">
+                <!-- 1) Top Products by Sales -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h4><i class="bi bi-bar-chart"></i> Top Products by Sales</h4>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="inner-table">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th class="text-right">Qty</th>
+                                    <th class="text-right">Sales</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bestSellingTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 2) Most Profitable Products -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h4><i class="bi bi-star"></i> Most Profitable Products</h4>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="inner-table">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th class="text-right">GP</th>
+                                    <th class="text-right">GP%</th>
+                                </tr>
+                            </thead>
+                            <tbody id="mostProfitableTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 3) Products by Category -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h4><i class="bi bi-tags"></i> Products by Category</h4>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="inner-table">
+                            <thead>
+                                <tr>
+                                    <th>Category</th>
+                                    <th class="text-right">Products</th>
+                                    <th class="text-right">Sales</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productsByCategoryTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 4) Category Contribution (NEW) -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h4><i class="bi bi-pie-chart"></i> Category Contribution</h4>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="inner-table">
+                            <thead>
+                                <tr>
+                                    <th>Category</th>
+                                    <th class="text-right">Sales</th>
+                                    <th class="text-right">% of Total</th>
+                                    <th class="text-right">GP</th>
+                                    <th class="text-right">GP%</th>
+                                </tr>
+                            </thead>
+                            <tbody id="categoryContributionTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 5) Invoice Count per Product (NEW) -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h4><i class="bi bi-receipt"></i> Invoice Count per Product</h4>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="inner-table">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th class="text-right">Invoice Count</th>
+                                    <th class="text-right">Avg Invoice Value</th>
+                                    <th class="text-right">Total Sales</th>
+                                </tr>
+                            </thead>
+                            <tbody id="invoiceCountPerProductTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 6) Best Vendor for Each Product (NEW) -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h4><i class="bi bi-trophy"></i> Best Vendor for Each Product</h4>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="inner-table">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Best Vendor</th>
+                                    <th class="text-right">Total Purchases</th>
+                                    <th class="text-right">Avg GP%</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bestVendorPerProductTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SUPPLIER ANALYSIS TAB - UPDATED with 5 new analyses -->
+        <div id="suppliersTab" class="tab-content tab-pane">
+            <div class="analysis-grid">
+                <!-- 1) Vendor GP & GP% -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h4><i class="bi bi-cash-stack"></i> 1) Vendor GP & GP%</h4>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="inner-table">
+                            <thead>
+                                <tr>
+                                    <th>Supplier</th>
+                                    <th class="text-right">Sales</th>
+                                    <th class="text-right">GP</th>
+                                    <th class="text-right">GP%</th>
+                                </tr>
+                            </thead>
+                            <tbody id="vendorGpTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 2) Purchase → Sales Days (Supplier Cash Cycle) -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h4><i class="bi bi-arrow-left-right"></i> 2) Purchase → Sales Days</h4>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="inner-table">
+                            <thead>
+                                <tr>
+                                    <th>Supplier</th>
+                                    <th class="text-right">Avg P→S Days</th>
+                                    <th class="text-right">Max P→S Days</th>
+                                    <th class="text-right">Transactions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="supplierPsDaysTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 3) Loss-making vendor items -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h4><i class="bi bi-exclamation-triangle"></i> 3) Loss-Making Vendor Items</h4>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="inner-table">
+                            <thead>
+                                <tr>
+                                    <th>Supplier</th>
+                                    <th>Product</th>
+                                    <th class="text-right">Sales</th>
+                                    <th class="text-right">GP</th>
+                                    <th class="text-right">GP%</th>
+                                </tr>
+                            </thead>
+                            <tbody id="lossMakingVendorItemsTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 4) Vendor hidden costs (brokerage/charges) -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h4><i class="bi bi-receipt"></i> 4) Vendor Hidden Costs</h4>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="inner-table">
+                            <thead>
+                                <tr>
+                                    <th>Supplier</th>
+                                    <th class="text-right">Other Charges</th>
+                                    <th class="text-right">Brokerage Cost</th>
+                                    <th class="text-right">Total Hidden Cost</th>
+                                </tr>
+                            </thead>
+                            <tbody id="vendorHiddenCostsTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 5) Vendor credit days -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h4><i class="bi bi-calendar-check"></i> 5) Vendor Credit Days</h4>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="inner-table">
+                            <thead>
+                                <tr>
+                                    <th>Supplier</th>
+                                    <th class="text-right">Avg Credit Days</th>
+                                    <th class="text-right">Max Credit Days</th>
+                                    <th class="text-right">Transactions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="vendorCreditDaysTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Info Alert -->
+        <div class="alert alert-info" id="dataInfo" style="display: none;">
+            <i class="bi bi-info-circle-fill"></i>
+            <span id="dataMessage"></span>
+        </div>
+
+        <div class="footer">
+            <p>
+                <i class="bi bi-database"></i> S&OP Data: Data Sheet | Analysis Data: Demand Analysis Sheet | 
+                <i class="bi bi-clock"></i> Last Updated: <span id="lastUpdated"></span> | 
+                <i class="bi bi-person"></i> Created By ENG.Ashraf Harayri
+            </p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        const dashboardData = {{ chart_data }};
+        let datasets = [];
+        let salesStatusChart = null;
+        let gpStatusChart = null;
+        let trendChart = null;
+        let categoryPieChart = null;
+        
+        // Date filter variables
+        let currentFromDate = null;
+        let currentToDate = null;
+        
+        // Fixed monthly targets
+        const monthlyTargets = {
+            1: { month: 'Jan', gp: 70955.6889, sales: 1340123.793, qty: 1371.74, commission: 3906.42 },
+            2: { month: 'Feb', gp: 109681.2675, sales: 1865415.873, qty: 1730, commission: 9053.4443 },
+            3: { month: 'Mar', gp: 89767.79265, sales: 2255162.847, qty: 2084.71, commission: 9520.0066 },
+            4: { month: 'Apr', gp: 122249.2298, sales: 2329650.58, qty: 2198.465, commission: 7330.4163 },
+            5: { month: 'May', gp: 139237.0366, sales: 2254543.159, qty: 2143.86, commission: 8535.2863 },
+            6: { month: 'Jun', gp: 169113.3709, sales: 3296326.514, qty: 2982.04, commission: 8717.4368 },
+            7: { month: 'Jul', gp: 147454.483, sales: 2324379.15, qty: 2200.96, commission: 15160.0265 },
+            8: { month: 'Aug', gp: 126528.9325, sales: 2418520.393, qty: 2309.1, commission: 7019.628 },
+            9: { month: 'Sep', gp: 150593.5497, sales: 2611603.899, qty: 2183.04, commission: 9231.846 },
+            10: { month: 'Oct', gp: 83173.66766, sales: 1925567.18, qty: 1783.21, commission: 9770.878 },
+            11: { month: 'Nov', gp: 100630.7955, sales: 1951227.219, qty: 1923.19, commission: 7409.019202 },
+            12: { month: 'Dec', gp: 103734.6638, sales: 1755026.813, qty: 1601.27, commission: 9347.25295 }
+        };
+        
+        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        
+        // Helper function to determine status based on selected SOP month
+        function getStatusForMonth(selectedSopMonth, currentMonth, datasetType) {
+            if (datasetType === 'actual') {
+                if (currentMonth <= selectedSopMonth) {
+                    return ['Invoiced'];
+                } else {
+                    return ['Booked', 'Not Booked'];
+                }
+            } else if (datasetType === 'forecast') {
+                // For forecast: always use Booked/Not Booked
+                return ['Booked', 'Not Booked'];
+            } else {
+                // For previous year: include all statuses
+                return ['Invoiced', 'Booked', 'Not Booked'];
+            }
+        }
+        
+        /**
+         * IMPORTANT: Commission Logic
+         * Section should always be 'Broker' to calculate commission
+         * When Section is 'Broker', that means you want to calculate commission
+         */
+        function getCommissionForMonth(dataset, monthAbbr, selectedSopMonth) {
+            if (!dataset) return 0;
+            const monthNum = monthNames.indexOf(monthAbbr) + 1;
+            const cleanName = dataset.replace(/[^a-zA-Z0-9]/g, '_');
+            
+            // Check if this is an actual dataset (S&OP format)
+            const isActualDataset = dataset.match(/S&OP\\d+/i);
+            
+            if (isActualDataset) {
+                // For actual datasets, get actual commission from Broker section
+                const commissionKey = `${cleanName}_Broker_${monthAbbr}`;
+                return dashboardData.commission_data && dashboardData.commission_data[commissionKey] ? dashboardData.commission_data[commissionKey] : 0;
+            } else {
+                // For forecast or previous year datasets, return target commission
+                return monthlyTargets[monthNum]?.commission || 0;
+            }
+        }
+        
+        // UPDATED: Fixed commission logic - uses actual commission for actual data, target commission for forecast/prev year
+        function getFilteredDataForMonth(dataset, monthAbbr, selectedSopMonth, datasetType) {
+            if (!dataset) return { sales: 0, qty: 0, gp: 0, gm: 0, commission: 0 };
+            
+            const monthNum = monthNames.indexOf(monthAbbr) + 1;
+            const cleanName = dataset.replace(/[^a-zA-Z0-9]/g, '_');
+            
+            // Get target commission for this month from monthlyTargets
+            const targetCommission = monthlyTargets[monthNum]?.commission || 0;
+            
+            if (datasetType === 'prevYear') {
+                // For previous year: use All_Status key (includes all statuses for the month)
+                const prevYearKey = `${cleanName}_Trade_All_Status_${monthAbbr}`;
+                if (dashboardData.filtered_data && dashboardData.filtered_data[prevYearKey]) {
+                    const data = dashboardData.filtered_data[prevYearKey];
+                    // Previous year: use target commission since historical broker data may not exist
+                    const commission = targetCommission;
+                    return {
+                        sales: data.sales || 0,
+                        qty: data.qty || 0,
+                        gp: (data.gp || 0) + commission,
+                        gm: data.gm || 0,
+                        commission: commission
+                    };
+                }
+            } else if (datasetType === 'forecast') {
+                // For forecast: use Booked/Not Booked for the current month
+                const forecastKey = `${cleanName}_Trade_Booked_Not Booked_${monthAbbr}`;
+                if (dashboardData.filtered_data && dashboardData.filtered_data[forecastKey]) {
+                    const data = dashboardData.filtered_data[forecastKey];
+                    // Forecast: use target commission since no broker data in forecast files
+                    const commission = targetCommission;
+                    return {
+                        sales: data.sales || 0,
+                        qty: data.qty || 0,
+                        gp: (data.gp || 0) + commission,
+                        gm: data.gm || 0,
+                        commission: commission
+                    };
+                }
+            } else {
+                // For actual: try to get actual commission from Broker section
+                const statuses = getStatusForMonth(selectedSopMonth, monthNum, datasetType);
+                let filteredKey = `${cleanName}_Trade_${statuses.join('_')}_${monthAbbr}`;
+                if (dashboardData.filtered_data && dashboardData.filtered_data[filteredKey]) {
+                    const data = dashboardData.filtered_data[filteredKey];
+                    // Get actual commission from Broker section for this month
+                    const commission = getCommissionForMonth(dataset, monthAbbr, selectedSopMonth);
+                    return {
+                        sales: data.sales || 0,
+                        qty: data.qty || 0,
+                        gp: (data.gp || 0) + commission,
+                        gm: data.gm || 0,
+                        commission: commission
+                    };
+                }
+                
+                // Fallback: try to get data without status filter
+                const fallbackKey = `${cleanName}_Trade_${monthAbbr}`;
+                if (dashboardData.filtered_data && dashboardData.filtered_data[fallbackKey]) {
+                    const data = dashboardData.filtered_data[fallbackKey];
+                    const commission = getCommissionForMonth(dataset, monthAbbr, selectedSopMonth);
+                    return {
+                        sales: data.sales || 0,
+                        qty: data.qty || 0,
+                        gp: (data.gp || 0) + commission,
+                        gm: data.gm || 0,
+                        commission: commission
+                    };
+                }
+            }
+            
+            return { sales: 0, qty: 0, gp: 0, gm: 0, commission: 0 };
+        }
+        
+        function initDashboard() {
+            console.log('Dashboard Data:', dashboardData);
+            
+            const summary = dashboardData.summary || {};
+            const hasSummaryData = dashboardData.achievement && dashboardData.achievement.length > 0;
+            
+            if (!hasSummaryData) {
+                document.getElementById('noSummaryData').style.display = 'block';
+                document.getElementById('achievementCard').style.display = 'none';
+                document.getElementById('dataSourceBadge').innerHTML = '<i class="bi bi-exclamation-triangle"></i> Missing Summary Sheet';
+                document.getElementById('dataSourceBadge').style.background = '#dc2626';
+                return;
+            }
+            
+            const sourceBadge = document.getElementById('dataSourceBadge');
+            sourceBadge.innerHTML = '<i class="bi bi-database-check"></i> Live Excel Data';
+            sourceBadge.style.background = '#10b981';
+            
+            // Initialize date pickers
+            flatpickr(".datepicker", {
+                dateFormat: "m/d/Y",
+                allowInput: true
+            });
+            
+            // Extract unique datasets from File column
+            if (dashboardData.file_names && dashboardData.file_names.length > 0) {
+                datasets = dashboardData.file_names;
+                populateDropdowns();
+            }
+            
+            updateAchievementBars();
+            updateDataInfo();
+            
+            // Render analysis tabs using Demand Analysis data
+            renderSalesAnalysis();
+            renderProfitabilityAnalysis();
+            renderCustomerAnalysis();
+            renderProductAnalysis();
+            renderSupplierAnalysis();
+            
+            // Auto-select current month dataset for S&OP tabs if available
+            const currentDate = new Date();
+            const currentMonth = currentDate.getMonth() + 1;
+            const currentSOP = datasets.find(d => d === `S&OP${currentMonth}`);
+            
+            if (currentSOP) {
+                document.getElementById('actualDataset').value = currentSOP;
+                
+                const prevMonth = currentMonth - 1;
+                if (prevMonth >= 1) {
+                    const prevSOP = datasets.find(d => d === `S&OP${prevMonth}`);
+                    if (prevSOP) {
+                        document.getElementById('forecastDataset').value = prevSOP;
+                    }
+                }
+                
+                // Auto-select a previous year dataset (like 2024, 2023, etc.)
+                const prevYearDataset = datasets.find(d => d === '2024' || d === '2023' || d === '2022' || d.includes('2024'));
+                if (prevYearDataset) {
+                    document.getElementById('prevYearDataset').value = prevYearDataset;
+                }
+                
+                updateMonthDisplay(currentSOP);
+                setTimeout(() => refreshComparison(), 100);
+            }
+        }
+        
+        function applyDateFilter() {
+            const fromDate = document.getElementById('fromDate').value;
+            const toDate = document.getElementById('toDate').value;
+            
+            if (!fromDate || !toDate) {
+                alert('Please select both From and To dates');
+                return;
+            }
+            
+            currentFromDate = fromDate;
+            currentToDate = toDate;
+            
+            document.getElementById('filterDates').innerHTML = fromDate + ' - ' + toDate;
+            document.getElementById('activeFilterBadge').style.display = 'inline-flex';
+            
+            renderSalesAnalysis();
+            renderProfitabilityAnalysis();
+            renderCustomerAnalysis();
+            renderProductAnalysis();
+            renderSupplierAnalysis();
+        }
+        
+        function resetDateFilter() {
+            document.getElementById('fromDate').value = '';
+            document.getElementById('toDate').value = '';
+            currentFromDate = null;
+            currentToDate = null;
+            document.getElementById('activeFilterBadge').style.display = 'none';
+            
+            renderSalesAnalysis();
+            renderProfitabilityAnalysis();
+            renderCustomerAnalysis();
+            renderProductAnalysis();
+            renderSupplierAnalysis();
+        }
+        
+        function filterDataByDate(dataArray, dateKey) {
+            if (!currentFromDate || !currentToDate || !dataArray) {
+                return dataArray;
+            }
+            
+            const fromDateObj = new Date(currentFromDate);
+            const toDateObj = new Date(currentToDate);
+            
+            return dataArray.filter(item => {
+                const itemDate = item[dateKey] ? new Date(item[dateKey]) : null;
+                return itemDate && itemDate >= fromDateObj && itemDate <= toDateObj;
+            });
+        }
+        
+        function filterTrendDataByDate(data) {
+            if (!currentFromDate || !currentToDate || !data || !data.labels || !data.values) {
+                return data;
+            }
+            
+            const fromDateObj = new Date(currentFromDate);
+            const toDateObj = new Date(currentToDate);
+            
+            const filteredLabels = [];
+            const filteredValues = [];
+            
+            for (let i = 0; i < data.labels.length; i++) {
+                const labelDate = new Date(data.labels[i]);
+                if (!isNaN(labelDate) && labelDate >= fromDateObj && labelDate <= toDateObj) {
+                    filteredLabels.push(data.labels[i]);
+                    filteredValues.push(data.values[i]);
+                }
+            }
+            
+            return {
+                labels: filteredLabels,
+                values: filteredValues
+            };
+        }
+        
+        function updateAchievementBars() {
+            const achievement = dashboardData.achievement || [];
+            
+            let summaryRow = {};
+            if (achievement.length > 0) {
+                summaryRow = achievement[0];
+            }
+            
+            const gpYtdTarget = parseFloat(summaryRow['Total Gross profit Target YTD'] || 0);
+            const gpMtdTarget = parseFloat(summaryRow['Total Gross profit Target MTD'] || 0);
+            const salesYtdTarget = parseFloat(summaryRow['Total total sales Target YTD'] || 0);
+            const salesMtdTarget = parseFloat(summaryRow['Total total sales Target MTD'] || 0);
+            
+            const gpYtdActual = parseFloat(summaryRow['Total gross profit YTD'] || 0);
+            const gpMtdActual = parseFloat(summaryRow['Total gross profit MTD'] || 0);
+            const salesYtdActual = parseFloat(summaryRow['Total Sales YTD'] || 0);
+            const salesMtdActual = parseFloat(summaryRow['Total Sales MTD'] || 0);
+            
+            const gpYtdRemaining = parseFloat(summaryRow['TOTAL GROSS PROFIT remaning YTD'] || 0);
+            const gpMtdRemaining = parseFloat(summaryRow['TOTAL GROSS PROFIT remaning MTD'] || 0);
+            const salesYtdRemaining = parseFloat(summaryRow['sales remaning YTD'] || 0);
+            const salesMtdRemaining = parseFloat(summaryRow['sales remaning MTD'] || 0);
+            
+            const gpYtdPct = gpYtdTarget > 0 ? (gpYtdActual / gpYtdTarget) * 100 : 0;
+            const gpMtdPct = gpMtdTarget > 0 ? (gpMtdActual / gpMtdTarget) * 100 : 0;
+            const salesYtdPct = salesYtdTarget > 0 ? (salesYtdActual / salesYtdTarget) * 100 : 0;
+            const salesMtdPct = salesMtdTarget > 0 ? (salesMtdActual / salesMtdTarget) * 100 : 0;
+            
+            document.getElementById('gpYtdPercent').textContent = formatPercent(gpYtdPct);
+            document.getElementById('gpMtdPercent').textContent = formatPercent(gpMtdPct);
+            document.getElementById('salesYtdPercent').textContent = formatPercent(salesYtdPct);
+            document.getElementById('salesMtdPercent').textContent = formatPercent(salesMtdPct);
+            
+            document.getElementById('gpYtdBar').style.width = Math.min(gpYtdPct, 100) + '%';
+            document.getElementById('gpYtdBar').textContent = formatPercent(gpYtdPct);
+            document.getElementById('gpMtdBar').style.width = Math.min(gpMtdPct, 100) + '%';
+            document.getElementById('gpMtdBar').textContent = formatPercent(gpMtdPct);
+            document.getElementById('salesYtdBar').style.width = Math.min(salesYtdPct, 100) + '%';
+            document.getElementById('salesYtdBar').textContent = formatPercent(salesYtdPct);
+            document.getElementById('salesMtdBar').style.width = Math.min(salesMtdPct, 100) + '%';
+            document.getElementById('salesMtdBar').textContent = formatPercent(salesMtdPct);
+            
+            if (gpYtdPct >= 100) {
+                document.getElementById('gpYtdBar').classList.remove('warning', 'danger');
+                document.getElementById('gpYtdBar').classList.add('positive');
+            } else if (gpYtdPct >= 80) {
+                document.getElementById('gpYtdBar').classList.remove('positive', 'danger');
+                document.getElementById('gpYtdBar').classList.add('warning');
+            } else {
+                document.getElementById('gpYtdBar').classList.remove('positive', 'warning');
+                document.getElementById('gpYtdBar').classList.add('danger');
+            }
+            
+            if (gpMtdPct >= 100) {
+                document.getElementById('gpMtdBar').classList.remove('warning', 'danger');
+                document.getElementById('gpMtdBar').classList.add('positive');
+            } else if (gpMtdPct >= 80) {
+                document.getElementById('gpMtdBar').classList.remove('positive', 'danger');
+                document.getElementById('gpMtdBar').classList.add('warning');
+            } else {
+                document.getElementById('gpMtdBar').classList.remove('positive', 'warning');
+                document.getElementById('gpMtdBar').classList.add('danger');
+            }
+            
+            if (salesYtdPct >= 100) {
+                document.getElementById('salesYtdBar').classList.remove('warning', 'danger');
+                document.getElementById('salesYtdBar').classList.add('positive');
+            } else if (salesYtdPct >= 80) {
+                document.getElementById('salesYtdBar').classList.remove('positive', 'danger');
+                document.getElementById('salesYtdBar').classList.add('warning');
+            } else {
+                document.getElementById('salesYtdBar').classList.remove('positive', 'warning');
+                document.getElementById('salesYtdBar').classList.add('danger');
+            }
+            
+            if (salesMtdPct >= 100) {
+                document.getElementById('salesMtdBar').classList.remove('warning', 'danger');
+                document.getElementById('salesMtdBar').classList.add('positive');
+            } else if (salesMtdPct >= 80) {
+                document.getElementById('salesMtdBar').classList.remove('positive', 'danger');
+                document.getElementById('salesMtdBar').classList.add('warning');
+            } else {
+                document.getElementById('salesMtdBar').classList.remove('positive', 'warning');
+                document.getElementById('salesMtdBar').classList.add('danger');
+            }
+            
+            document.getElementById('gpYtdTarget').textContent = formatNumber(gpYtdTarget) + ' JOD';
+            document.getElementById('gpMtdTarget').textContent = formatNumber(gpMtdTarget) + ' JOD';
+            document.getElementById('salesYtdTarget').textContent = formatNumber(salesYtdTarget) + ' JOD';
+            document.getElementById('salesMtdTarget').textContent = formatNumber(salesMtdTarget) + ' JOD';
+            
+            document.getElementById('gpYtdActual').textContent = 'Actual: ' + formatNumber(gpYtdActual) + ' JOD';
+            document.getElementById('gpMtdActual').textContent = 'Actual: ' + formatNumber(gpMtdActual) + ' JOD';
+            document.getElementById('salesYtdActual').textContent = 'Actual: ' + formatNumber(salesYtdActual) + ' JOD';
+            document.getElementById('salesMtdActual').textContent = 'Actual: ' + formatNumber(salesMtdActual) + ' JOD';
+            
+            document.getElementById('gpYtdRemaining').textContent = formatNumber(gpYtdRemaining) + ' JOD';
+            document.getElementById('gpMtdRemaining').textContent = formatNumber(gpMtdRemaining) + ' JOD';
+            document.getElementById('salesYtdRemaining').textContent = formatNumber(salesYtdRemaining) + ' JOD';
+            document.getElementById('salesMtdRemaining').textContent = formatNumber(salesMtdRemaining) + ' JOD';
+        }
+        
+        function populateDropdowns() {
+            const selects = [
+                document.getElementById('actualDataset'),
+                document.getElementById('forecastDataset'),
+                document.getElementById('prevYearDataset')
+            ];
+            
+            selects.forEach(select => {
+                while (select.options.length > 1) {
+                    select.remove(1);
+                }
+                
+                datasets.forEach(dataset => {
+                    const option = document.createElement('option');
+                    option.value = dataset;
+                    option.textContent = dataset;
+                    select.appendChild(option);
+                });
+            });
+        }
+        
+        function updateMonthDisplay(dataset) {
+            const monthDisplay = document.getElementById('monthDisplay');
+            const monthName = document.getElementById('monthName');
+            const ytdMonthName = document.getElementById('ytdMonthName');
+            
+            if (!dataset) {
+                monthDisplay.textContent = 'Not Selected';
+                monthName.textContent = 'Selected Month';
+                ytdMonthName.textContent = 'Selected Month';
+                return;
+            }
+            
+            const match = dataset.match(/S&OP(\\d+)/i);
+            if (match) {
+                const monthNum = parseInt(match[1]);
+                const monthNamesLong = ['January', 'February', 'March', 'April', 'May', 'June',
+                                   'July', 'August', 'September', 'October', 'November', 'December'];
+                monthDisplay.textContent = monthNamesLong[monthNum - 1] + ' (Month ' + monthNum + ')';
+                monthName.textContent = monthNamesLong[monthNum - 1];
+                ytdMonthName.textContent = monthNamesLong[monthNum - 1];
+            } else {
+                monthDisplay.textContent = dataset;
+                monthName.textContent = dataset;
+                ytdMonthName.textContent = dataset;
+            }
+        }
+        
+        document.getElementById('actualDataset').addEventListener('change', function() {
+            updateMonthDisplay(this.value);
+        });
+        
+        function refreshComparison() {
+            const actual = document.getElementById('actualDataset').value;
+            const forecast = document.getElementById('forecastDataset').value;
+            const prevYear = document.getElementById('prevYearDataset').value;
+            
+            if (!actual) {
+                alert('Please select an Actual dataset first');
+                return;
+            }
+            
+            const loadingHtml = '<tr><td colspan="13" class="text-center"><div class="spinner-border text-primary" style="width: 1rem; height: 1rem;"></div> Loading...</div></tr>';
+            document.getElementById('monthComparisonTableBody').innerHTML = loadingHtml;
+            document.getElementById('ytdComparisonTableBody').innerHTML = loadingHtml;
+            document.getElementById('fullYearComparisonTableBody').innerHTML = loadingHtml;
+            document.getElementById('salesComparisonBody').innerHTML = loadingHtml;
+            document.getElementById('gpComparisonBody').innerHTML = loadingHtml;
+            document.getElementById('gmComparisonBody').innerHTML = loadingHtml;
+            document.getElementById('qtyComparisonBody').innerHTML = loadingHtml;
+            
+            generateAllComparisons(actual, forecast, prevYear);
+        }
+        
+        function generateAllComparisons(actual, forecast, prevYear) {
+            const match = actual.match(/S&OP(\\d+)/i);
+            if (!match) {
+                document.getElementById('monthComparisonTableBody').innerHTML = '<tr><td colspan="12" class="text-center">Selected dataset is not an S&OP file</div></tr>';
+                return;
+            }
+            
+            const selectedSopMonth = parseInt(match[1]);
+            const monthAbbr = monthNames[selectedSopMonth - 1];
+            
+            // Get monthly data for all metrics
+            const monthlyActualSales = [];
+            const monthlyActualGP = [];
+            const monthlyActualQty = [];
+            const monthlyActualCommission = [];
+            const monthlyForecastSales = [];
+            const monthlyForecastGP = [];
+            const monthlyForecastQty = [];
+            const monthlyForecastCommission = [];
+            const monthlyPrevYearSales = [];
+            const monthlyPrevYearGP = [];
+            const monthlyPrevYearQty = [];
+            const monthlyPrevYearCommission = [];
+            const monthlyTargetSales = [];
+            const monthlyTargetGP = [];
+            const monthlyTargetQty = [];
+            const monthlyTargetCommission = [];
+            
+            for (let i = 1; i <= 12; i++) {
+                const monthAbbrLoop = monthNames[i - 1];
+                
+                // Actual data with dynamic status
+                const actualData = getFilteredDataForMonth(actual, monthAbbrLoop, selectedSopMonth, 'actual');
+                monthlyActualSales.push(actualData.sales);
+                monthlyActualGP.push(actualData.gp);
+                monthlyActualQty.push(actualData.qty);
+                monthlyActualCommission.push(actualData.commission);
+                
+                // Forecast data with dynamic status
+                let forecastData = { sales: 0, qty: 0, gp: 0, commission: 0 };
+                if (forecast) {
+                    forecastData = getFilteredDataForMonth(forecast, monthAbbrLoop, selectedSopMonth, 'forecast');
+                }
+                monthlyForecastSales.push(forecastData.sales);
+                monthlyForecastGP.push(forecastData.gp);
+                monthlyForecastQty.push(forecastData.qty);
+                monthlyForecastCommission.push(forecastData.commission);
+                
+                // Previous Year data
+                let prevYearData = { sales: 0, qty: 0, gp: 0, commission: 0 };
+                if (prevYear) {
+                    prevYearData = getFilteredDataForMonth(prevYear, monthAbbrLoop, selectedSopMonth, 'prevYear');
+                }
+                monthlyPrevYearSales.push(prevYearData.sales);
+                monthlyPrevYearGP.push(prevYearData.gp);
+                monthlyPrevYearQty.push(prevYearData.qty);
+                monthlyPrevYearCommission.push(prevYearData.commission);
+                
+                // Target data
+                monthlyTargetSales.push(monthlyTargets[i]?.sales || 0);
+                monthlyTargetGP.push(monthlyTargets[i]?.gp || 0);
+                monthlyTargetQty.push(monthlyTargets[i]?.qty || 0);
+                monthlyTargetCommission.push(monthlyTargets[i]?.commission || 0);
+            }
+            
+            // Calculate Full Year totals
+            const fullYearActualSales = monthlyActualSales.reduce((a, b) => a + b, 0);
+            const fullYearActualGP = monthlyActualGP.reduce((a, b) => a + b, 0);
+            const fullYearActualQty = monthlyActualQty.reduce((a, b) => a + b, 0);
+            const fullYearActualCommission = monthlyActualCommission.reduce((a, b) => a + b, 0);
+            const fullYearForecastSales = monthlyForecastSales.reduce((a, b) => a + b, 0);
+            const fullYearForecastGP = monthlyForecastGP.reduce((a, b) => a + b, 0);
+            const fullYearForecastQty = monthlyForecastQty.reduce((a, b) => a + b, 0);
+            const fullYearForecastCommission = monthlyForecastCommission.reduce((a, b) => a + b, 0);
+            const fullYearPrevYearSales = monthlyPrevYearSales.reduce((a, b) => a + b, 0);
+            const fullYearPrevYearGP = monthlyPrevYearGP.reduce((a, b) => a + b, 0);
+            const fullYearPrevYearQty = monthlyPrevYearQty.reduce((a, b) => a + b, 0);
+            const fullYearPrevYearCommission = monthlyPrevYearCommission.reduce((a, b) => a + b, 0);
+            const fullYearTargetSales = monthlyTargetSales.reduce((a, b) => a + b, 0);
+            const fullYearTargetGP = monthlyTargetGP.reduce((a, b) => a + b, 0);
+            const fullYearTargetQty = monthlyTargetQty.reduce((a, b) => a + b, 0);
+            const fullYearTargetCommission = monthlyTargetCommission.reduce((a, b) => a + b, 0);
+            
+            // Calculate Full Year GM%
+            const fullYearActualGM = fullYearActualSales > 0 ? (fullYearActualGP / fullYearActualSales) * 100 : 0;
+            const fullYearForecastGM = fullYearForecastSales > 0 ? (fullYearForecastGP / fullYearForecastSales) * 100 : 0;
+            const fullYearPrevYearGM = fullYearPrevYearSales > 0 ? (fullYearPrevYearGP / fullYearPrevYearSales) * 100 : 0;
+            const fullYearTargetGM = fullYearTargetSales > 0 ? (fullYearTargetGP / fullYearTargetSales) * 100 : 0;
+            
+            // Generate comparison tables (Month, YTD, Full Year)
+            generateExistingComparisonTables(actual, forecast, prevYear, selectedSopMonth, monthAbbr);
+            
+            // Generate new comparison tables (Sales, GP, GM%, Quantity)
+            generateNewComparisonTables({
+                sales: {
+                    actual: monthlyActualSales,
+                    forecast: monthlyForecastSales,
+                    target: monthlyTargetSales,
+                    prevYear: monthlyPrevYearSales,
+                    fullYearActual: fullYearActualSales,
+                    fullYearForecast: fullYearForecastSales,
+                    fullYearTarget: fullYearTargetSales,
+                    fullYearPrevYear: fullYearPrevYearSales
+                },
+                gp: {
+                    actual: monthlyActualGP,
+                    forecast: monthlyForecastGP,
+                    target: monthlyTargetGP,
+                    prevYear: monthlyPrevYearGP,
+                    fullYearActual: fullYearActualGP,
+                    fullYearForecast: fullYearForecastGP,
+                    fullYearTarget: fullYearTargetGP,
+                    fullYearPrevYear: fullYearPrevYearGP
+                },
+                gm: {
+                    actual: monthlyActualSales.map((sales, idx) => sales > 0 ? (monthlyActualGP[idx] / sales) * 100 : 0),
+                    forecast: monthlyForecastSales.map((sales, idx) => sales > 0 ? (monthlyForecastGP[idx] / sales) * 100 : 0),
+                    target: monthlyTargetSales.map((sales, idx) => sales > 0 ? (monthlyTargetGP[idx] / sales) * 100 : 0),
+                    prevYear: monthlyPrevYearSales.map((sales, idx) => sales > 0 ? (monthlyPrevYearGP[idx] / sales) * 100 : 0),
+                    fullYearActual: fullYearActualGM,
+                    fullYearForecast: fullYearForecastGM,
+                    fullYearTarget: fullYearTargetGM,
+                    fullYearPrevYear: fullYearPrevYearGM
+                },
+                qty: {
+                    actual: monthlyActualQty,
+                    forecast: monthlyForecastQty,
+                    target: monthlyTargetQty,
+                    prevYear: monthlyPrevYearQty,
+                    fullYearActual: fullYearActualQty,
+                    fullYearForecast: fullYearForecastQty,
+                    fullYearTarget: fullYearTargetQty,
+                    fullYearPrevYear: fullYearPrevYearQty
+                },
+                commission: {
+                    actual: monthlyActualCommission,
+                    forecast: monthlyForecastCommission,
+                    target: monthlyTargetCommission,
+                    prevYear: monthlyPrevYearCommission,
+                    fullYearActual: fullYearActualCommission,
+                    fullYearForecast: fullYearForecastCommission,
+                    fullYearTarget: fullYearTargetCommission,
+                    fullYearPrevYear: fullYearPrevYearCommission
+                }
+            });
+            
+            // Generate Status Distribution Charts
+            generateStatusCharts(actual, forecast, prevYear, selectedSopMonth);
+        }
+        
+        function generateExistingComparisonTables(actual, forecast, prevYear, selectedSopMonth, monthAbbr) {
+            // Month Data
+            const monthActualData = getFilteredDataForMonth(actual, monthAbbr, selectedSopMonth, 'actual');
+            let monthForecastData = { sales: 0, qty: 0, gp: 0, gm: 0, commission: 0 };
+            if (forecast) {
+                monthForecastData = getFilteredDataForMonth(forecast, monthAbbr, selectedSopMonth, 'forecast');
+            }
+            let monthPrevYearData = { sales: 0, qty: 0, gp: 0, gm: 0, commission: 0 };
+            if (prevYear) {
+                monthPrevYearData = getFilteredDataForMonth(prevYear, monthAbbr, selectedSopMonth, 'prevYear');
+            }
+            const monthTargetData = {
+                sales: monthlyTargets[selectedSopMonth]?.sales || 0,
+                qty: monthlyTargets[selectedSopMonth]?.qty || 0,
+                gp: monthlyTargets[selectedSopMonth]?.gp || 0,
+                commission: monthlyTargets[selectedSopMonth]?.commission || 0,
+                gm: monthlyTargets[selectedSopMonth]?.sales > 0 ? (monthlyTargets[selectedSopMonth].gp / monthlyTargets[selectedSopMonth].sales) * 100 : 0
+            };
+            
+            // YTD Data
+            let ytdActualSales = 0, ytdActualQty = 0, ytdActualGp = 0, ytdActualCommission = 0;
+            let ytdForecastSales = 0, ytdForecastQty = 0, ytdForecastGp = 0, ytdForecastCommission = 0;
+            let ytdPrevYearSales = 0, ytdPrevYearQty = 0, ytdPrevYearGp = 0, ytdPrevYearCommission = 0;
+            let ytdTargetSales = 0, ytdTargetQty = 0, ytdTargetGp = 0, ytdTargetCommission = 0;
+            
+            for (let i = 1; i <= selectedSopMonth; i++) {
+                const mAbbr = monthNames[i - 1];
+                const actualData = getFilteredDataForMonth(actual, mAbbr, selectedSopMonth, 'actual');
+                ytdActualSales += actualData.sales;
+                ytdActualQty += actualData.qty;
+                ytdActualGp += actualData.gp;
+                ytdActualCommission += actualData.commission;
+                
+                if (forecast) {
+                    const forecastData = getFilteredDataForMonth(forecast, mAbbr, selectedSopMonth, 'forecast');
+                    ytdForecastSales += forecastData.sales;
+                    ytdForecastQty += forecastData.qty;
+                    ytdForecastGp += forecastData.gp;
+                    ytdForecastCommission += forecastData.commission;
+                }
+                
+                if (prevYear) {
+                    const prevYearData = getFilteredDataForMonth(prevYear, mAbbr, selectedSopMonth, 'prevYear');
+                    ytdPrevYearSales += prevYearData.sales;
+                    ytdPrevYearQty += prevYearData.qty;
+                    ytdPrevYearGp += prevYearData.gp;
+                    ytdPrevYearCommission += prevYearData.commission;
+                }
+                
+                ytdTargetSales += monthlyTargets[i]?.sales || 0;
+                ytdTargetQty += monthlyTargets[i]?.qty || 0;
+                ytdTargetGp += monthlyTargets[i]?.gp || 0;
+                ytdTargetCommission += monthlyTargets[i]?.commission || 0;
+            }
+            
+            const ytdActualData = { sales: ytdActualSales, qty: ytdActualQty, gp: ytdActualGp, commission: ytdActualCommission, gm: ytdActualSales > 0 ? (ytdActualGp / ytdActualSales) * 100 : 0 };
+            const ytdForecastData = { sales: ytdForecastSales, qty: ytdForecastQty, gp: ytdForecastGp, commission: ytdForecastCommission, gm: ytdForecastSales > 0 ? (ytdForecastGp / ytdForecastSales) * 100 : 0 };
+            const ytdPrevYearData = { sales: ytdPrevYearSales, qty: ytdPrevYearQty, gp: ytdPrevYearGp, commission: ytdPrevYearCommission, gm: ytdPrevYearSales > 0 ? (ytdPrevYearGp / ytdPrevYearSales) * 100 : 0 };
+            const ytdTargetData = { sales: ytdTargetSales, qty: ytdTargetQty, gp: ytdTargetGp, commission: ytdTargetCommission, gm: ytdTargetSales > 0 ? (ytdTargetGp / ytdTargetSales) * 100 : 0 };
+            
+            // Full Year Data
+            let fullYearActualSales = 0, fullYearActualQty = 0, fullYearActualGp = 0, fullYearActualCommission = 0;
+            let fullYearForecastSales = 0, fullYearForecastQty = 0, fullYearForecastGp = 0, fullYearForecastCommission = 0;
+            let fullYearPrevYearSales = 0, fullYearPrevYearQty = 0, fullYearPrevYearGp = 0, fullYearPrevYearCommission = 0;
+            let fullYearTargetSales = 0, fullYearTargetQty = 0, fullYearTargetGp = 0, fullYearTargetCommission = 0;
+            
+            for (let i = 1; i <= 12; i++) {
+                const mAbbr = monthNames[i - 1];
+                const actualData = getFilteredDataForMonth(actual, mAbbr, selectedSopMonth, 'actual');
+                fullYearActualSales += actualData.sales;
+                fullYearActualQty += actualData.qty;
+                fullYearActualGp += actualData.gp;
+                fullYearActualCommission += actualData.commission;
+                
+                if (forecast) {
+                    const forecastData = getFilteredDataForMonth(forecast, mAbbr, selectedSopMonth, 'forecast');
+                    fullYearForecastSales += forecastData.sales;
+                    fullYearForecastQty += forecastData.qty;
+                    fullYearForecastGp += forecastData.gp;
+                    fullYearForecastCommission += forecastData.commission;
+                }
+                
+                if (prevYear) {
+                    const prevYearData = getFilteredDataForMonth(prevYear, mAbbr, selectedSopMonth, 'prevYear');
+                    fullYearPrevYearSales += prevYearData.sales;
+                    fullYearPrevYearQty += prevYearData.qty;
+                    fullYearPrevYearGp += prevYearData.gp;
+                    fullYearPrevYearCommission += prevYearData.commission;
+                }
+                
+                fullYearTargetSales += monthlyTargets[i]?.sales || 0;
+                fullYearTargetQty += monthlyTargets[i]?.qty || 0;
+                fullYearTargetGp += monthlyTargets[i]?.gp || 0;
+                fullYearTargetCommission += monthlyTargets[i]?.commission || 0;
+            }
+            
+            const fullYearActualData = { sales: fullYearActualSales, qty: fullYearActualQty, gp: fullYearActualGp, commission: fullYearActualCommission, gm: fullYearActualSales > 0 ? (fullYearActualGp / fullYearActualSales) * 100 : 0 };
+            const fullYearForecastData = { sales: fullYearForecastSales, qty: fullYearForecastQty, gp: fullYearForecastGp, commission: fullYearForecastCommission, gm: fullYearForecastSales > 0 ? (fullYearForecastGp / fullYearForecastSales) * 100 : 0 };
+            const fullYearPrevYearData = { sales: fullYearPrevYearSales, qty: fullYearPrevYearQty, gp: fullYearPrevYearGp, commission: fullYearPrevYearCommission, gm: fullYearPrevYearSales > 0 ? (fullYearPrevYearGp / fullYearPrevYearSales) * 100 : 0 };
+            const fullYearTargetData = { sales: fullYearTargetSales, qty: fullYearTargetQty, gp: fullYearTargetGp, commission: fullYearTargetCommission, gm: fullYearTargetSales > 0 ? (fullYearTargetGp / fullYearTargetSales) * 100 : 0 };
+            
+            // Generate tables
+            generateComparisonTable('monthComparisonTableBody', monthActualData, monthForecastData, monthTargetData, monthPrevYearData);
+            generateComparisonTable('ytdComparisonTableBody', ytdActualData, ytdForecastData, ytdTargetData, ytdPrevYearData);
+            generateComparisonTable('fullYearComparisonTableBody', fullYearActualData, fullYearForecastData, fullYearTargetData, fullYearPrevYearData);
+        }
+        
+        function generateNewComparisonTables(data) {
+            generateMetricComparisonTable('salesComparisonBody', data.sales);
+            generateMetricComparisonTable('gpComparisonBody', data.gp);
+            generateMetricComparisonTable('gmComparisonBody', data.gm, true);
+            generateMetricComparisonTable('qtyComparisonBody', data.qty);
+        }
+        
+        function generateMetricComparisonTable(tableBodyId, data, isPercentage = false) {
+            const formatNumber = (num) => {
+                if (num === undefined || num === null || isNaN(num)) return '0';
+                if (isPercentage) {
+                    return num.toFixed(1) + '%';
+                }
+                return new Intl.NumberFormat('en-US', {
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
+                }).format(num);
+            };
+            
+            const formatPercent = (num) => {
+                if (num === undefined || num === null || isNaN(num)) return '0%';
+                const sign = num >= 0 ? '+' : '';
+                return sign + Math.abs(num).toFixed(1) + '%';
+            };
+            
+            const getVarianceClass = (val) => {
+                if (val > 0) return 'variance-positive';
+                if (val < 0) return 'variance-negative';
+                return '';
+            };
+            
+            const rows = [
+                { label: 'Actual', isVariance: false, values: data.actual, fullYear: data.fullYearActual },
+                { label: 'Forecast', isVariance: false, values: data.forecast, fullYear: data.fullYearForecast },
+                { label: 'Target', isVariance: false, values: data.target, fullYear: data.fullYearTarget },
+                { label: 'Prev Year', isVariance: false, values: data.prevYear, fullYear: data.fullYearPrevYear },
+                { label: 'Actual vs Forecast', isVariance: true, actual: data.actual, compare: data.forecast, fullYear: data.fullYearActual - data.fullYearForecast },
+                { label: 'Actual vs Target', isVariance: true, actual: data.actual, compare: data.target, fullYear: data.fullYearActual - data.fullYearTarget },
+                { label: 'Actual vs Prev Year', isVariance: true, actual: data.actual, compare: data.prevYear, fullYear: data.fullYearActual - data.fullYearPrevYear }
+            ];
+            
+            let html = '';
+            rows.forEach(row => {
+                html += '<tr>';
+                html += `<td class="font-bold">${row.label}</div></td>`;
+                
+                if (row.isVariance) {
+                    for (let i = 0; i < 12; i++) {
+                        const actualVal = row.actual[i];
+                        const compareVal = row.compare[i];
+                        let variance = actualVal - compareVal;
+                        let variancePct = compareVal !== 0 ? (variance / compareVal) * 100 : (actualVal !== 0 ? 100 : 0);
+                        
+                        if (isPercentage) {
+                            variance = actualVal - compareVal;
+                            variancePct = compareVal !== 0 ? (variance / Math.abs(compareVal)) * 100 : 0;
+                        }
+                        
+                        const varianceClass = getVarianceClass(variance);
+                        if (isPercentage) {
+                            html += `<td class="${varianceClass}">
+                                        <div>${variance >= 0 ? '+' : ''}${variance.toFixed(1)}pp</div>
+                                        <small style="font-size: 9px;">(${formatPercent(variancePct)})</small>
+                                       </div></div>`;
+                        } else {
+                            html += `<td class="${varianceClass}">
+                                        <div>${variance >= 0 ? '+' : ''}${formatNumber(Math.abs(variance))}</div>
+                                        <small style="font-size: 9px;">(${formatPercent(variancePct)})</small>
+                                       </div>                                       </div></td>`;
+                        }
+                    }
+                    let fullYearVariance = row.fullYear;
+                    let fullYearCompare = row.compare.reduce((a, b) => a + b, 0);
+                    let fullYearVariancePct = fullYearCompare !== 0 ? (fullYearVariance / fullYearCompare) * 100 : (fullYearVariance !== 0 ? 100 : 0);
+                    
+                    if (isPercentage && row.label === 'Actual vs Prev Year') {
+                        const fullYearActualGM = data.fullYearActual;
+                        const fullYearPrevYearGM = data.fullYearPrevYear;
+                        fullYearVariance = fullYearActualGM - fullYearPrevYearGM;
+                        fullYearVariancePct = fullYearPrevYearGM !== 0 ? (fullYearVariance / Math.abs(fullYearPrevYearGM)) * 100 : 0;
+                    }
+                    
+                    const fullYearClass = getVarianceClass(fullYearVariance);
+                    if (isPercentage) {
+                        html += `<td class="${fullYearClass}">
+                                    <div>${fullYearVariance >= 0 ? '+' : ''}${fullYearVariance.toFixed(1)}pp</div>
+                                    <small>(${formatPercent(fullYearVariancePct)})</small>
+                                    </div></div>`;
+                    } else {
+                        html += `<td class="${fullYearClass}">
+                                    <div>${fullYearVariance >= 0 ? '+' : ''}${formatNumber(Math.abs(fullYearVariance))}</div>
+                                    <small>(${formatPercent(fullYearVariancePct)})</small>
+                                    </div></td>`;
+                    }
+                } else {
+                    for (let i = 0; i < 12; i++) {
+                        html += `<td class="text-right">${formatNumber(row.values[i])}</div></td>`;
+                    }
+                    html += `<td class="text-right"><strong>${formatNumber(row.fullYear)}</strong></div></td>`;
+                }
+                html += '</tr>';
+            });
+            
+            document.getElementById(tableBodyId).innerHTML = html;
+        }
+        
+        // UPDATED: Fixed generateComparisonTable to properly handle commission for all dataset types
+        function generateComparisonTable(tableBodyId, actualData, forecastData, targetData, prevYearData) {
+            const actualCogs = actualData.sales - actualData.gp;
+            const forecastCogs = forecastData.sales - forecastData.gp;
+            const targetCogs = targetData.sales - targetData.gp;
+            const prevYearCogs = prevYearData.sales - prevYearData.gp;
+            
+            let html = '';
+            const metrics = ['Quantity (MT)', 'Sales (JOD)', 'COGS (JOD)', 'GM%', 'Commission (JOD)', 'Gross Profit (JOD)'];
+            
+            metrics.forEach(metric => {
+                let actualVal, forecastVal, targetVal, prevYearVal;
+                switch(metric) {
+                    case 'Quantity (MT)': 
+                        actualVal = actualData.qty; 
+                        forecastVal = forecastData.qty; 
+                        targetVal = targetData.qty; 
+                        prevYearVal = prevYearData.qty; 
+                        break;
+                    case 'Sales (JOD)': 
+                        actualVal = actualData.sales; 
+                        forecastVal = forecastData.sales; 
+                        targetVal = targetData.sales; 
+                        prevYearVal = prevYearData.sales; 
+                        break;
+                    case 'COGS (JOD)': 
+                        actualVal = actualCogs; 
+                        forecastVal = forecastCogs; 
+                        targetVal = targetCogs; 
+                        prevYearVal = prevYearCogs; 
+                        break;
+                    case 'GM%': 
+                        actualVal = actualData.gm; 
+                        forecastVal = forecastData.gm; 
+                        targetVal = targetData.gm; 
+                        prevYearVal = prevYearData.gm; 
+                        break;
+                    case 'Commission (JOD)': 
+                        actualVal = actualData.commission; 
+                        forecastVal = forecastData.commission || 0;
+                        targetVal = targetData.commission; 
+                        prevYearVal = prevYearData.commission; 
+                        break;
+                    case 'Gross Profit (JOD)': 
+                        actualVal = actualData.gp; 
+                        forecastVal = forecastData.gp; 
+                        targetVal = targetData.gp; 
+                        prevYearVal = prevYearData.gp; 
+                        break;
+                }
+                
+                const isPercentage = metric === 'GM%';
+                const formatValue = (val) => {
+                    if (val === undefined || val === null) return '-';
+                    if (isPercentage) return val.toFixed(1) + '%';
+                    return new Intl.NumberFormat('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(val);
+                };
+                
+                const vsForecastVal = actualVal - forecastVal;
+                const vsForecastPct = forecastVal !== 0 ? (vsForecastVal / forecastVal) * 100 : 0;
+                const vsTargetVal = actualVal - targetVal;
+                const vsTargetPct = targetVal !== 0 ? (vsTargetVal / targetVal) * 100 : 0;
+                const vsPrevYearVal = actualVal - prevYearVal;
+                const vsPrevYearPct = prevYearVal !== 0 ? (vsPrevYearVal / prevYearVal) * 100 : 0;
+                
+                const formatVariance = (val, pct, isPctMetric) => {
+                    if (val === undefined || val === null) return '-';
+                    if (isPctMetric) {
+                        const valClass = val >= 0 ? 'variance-positive' : 'variance-negative';
+                        return `<span class="${valClass}">${val >= 0 ? '+' : ''}${val.toFixed(1)}%</span>`;
+                    }
+                    const valClass = val >= 0 ? 'variance-positive' : 'variance-negative';
+                    const pctClass = pct >= 0 ? 'variance-positive' : 'variance-negative';
+                    const formattedVal = new Intl.NumberFormat('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(Math.abs(val));
+                    const sign = val >= 0 ? '+' : '-';
+                    const pctSign = pct >= 0 ? '+' : '';
+                    return `<div><span class="${valClass}">${sign}${formattedVal}</span></div><div><small><span class="${pctClass}">${pctSign}${pct.toFixed(1)}%</span></small></div>`;
+                };
+                
+                html += `
+                            <tr>
+                                <td class="font-bold">${metric}</div></td>
+                                <td class="text-right">${formatValue(actualVal)}</div></td>
+                                <td class="text-right">${formatValue(forecastVal)}</div></td>
+                                <td class="text-right">${formatValue(targetVal)}</div></td>
+                                <td class="text-right">${formatValue(prevYearVal)}</div></td>
+                                <td class="text-right">${formatVariance(vsForecastVal, vsForecastPct, isPercentage)}</div></td>
+                                <td class="text-right"> </div></td>
+                                <td class="text-right">${formatVariance(vsTargetVal, vsTargetPct, isPercentage)}</div></td>
+                                <td class="text-right"> </div></td>
+                                <td class="text-right">${formatVariance(vsPrevYearVal, vsPrevYearPct, isPercentage)}</div></td>
+                                <td class="text-right"> </div></td>
+                            </tr>`;
+            });
+            
+            document.getElementById(tableBodyId).innerHTML = html;
+        }
+        
+        function generateStatusCharts(actual, forecast, prevYear, selectedSopMonth) {
+            if (!actual) return;
+            
+            let invoicedSales = 0, invoicedGp = 0, bookedSales = 0, bookedGp = 0, notBookedSales = 0, notBookedGp = 0;
+            
+            for (let month = 1; month <= 12; month++) {
+                const monthAbbr = monthNames[month - 1];
+                const cleanName = actual.replace(/[^a-zA-Z0-9]/g, '_');
+                
+                if (month <= selectedSopMonth) {
+                    const invoicedKey = `${cleanName}_Trade_Invoiced_${monthAbbr}`;
+                    if (dashboardData.filtered_data && dashboardData.filtered_data[invoicedKey]) {
+                        const data = dashboardData.filtered_data[invoicedKey];
+                        const commission = getCommissionForMonth(actual, monthAbbr, selectedSopMonth);
+                        invoicedSales += data.sales || 0;
+                        invoicedGp += (data.gp || 0) + commission;
+                    }
+                } else {
+                    const bookedKey = `${cleanName}_Trade_Booked_Not Booked_${monthAbbr}`;
+                    if (dashboardData.filtered_data && dashboardData.filtered_data[bookedKey]) {
+                        const data = dashboardData.filtered_data[bookedKey];
+                        const commission = getCommissionForMonth(actual, monthAbbr, selectedSopMonth);
+                        bookedSales += (data.sales || 0) * 0.7;
+                        bookedGp += ((data.gp || 0) + commission) * 0.7;
+                        notBookedSales += (data.sales || 0) * 0.3;
+                        notBookedGp += ((data.gp || 0) + commission) * 0.3;
+                    }
+                }
+            }
+            
+            if (salesStatusChart) salesStatusChart.destroy();
+            if (gpStatusChart) gpStatusChart.destroy();
+            
+            const salesCtx = document.getElementById('salesStatusChart').getContext('2d');
+            salesStatusChart = new Chart(salesCtx, {
+                type: 'doughnut',
+                data: { labels: ['Invoiced', 'Booked', 'Not Booked'], datasets: [{ data: [invoicedSales, bookedSales, notBookedSales], backgroundColor: ['#10b981', '#3b82f6', '#f59e0b'], borderWidth: 0 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 8, font: { size: 9 } } }, tooltip: { callbacks: { label: function(context) { const label = context.label || ''; const value = context.raw || 0; const total = context.dataset.data.reduce((a, b) => a + b, 0); const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : '0'; return `${label}: ${formatNumber(value)} JOD (${percentage}%)`; } } } } }
+            });
+            
+            const gpCtx = document.getElementById('gpStatusChart').getContext('2d');
+            gpStatusChart = new Chart(gpCtx, {
+                type: 'doughnut',
+                data: { labels: ['Invoiced', 'Booked', 'Not Booked'], datasets: [{ data: [invoicedGp, bookedGp, notBookedGp], backgroundColor: ['#10b981', '#3b82f6', '#f59e0b'], borderWidth: 0 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 8, font: { size: 9 } } }, tooltip: { callbacks: { label: function(context) { const label = context.label || ''; const value = context.raw || 0; const total = context.dataset.data.reduce((a, b) => a + b, 0); const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : '0'; return `${label}: ${formatNumber(value)} JOD (${percentage}%)`; } } } } }
+            });
+        }
+        
+        function updateDataInfo() {
+            const info = dashboardData.data_info || {};
+            document.getElementById('dataDateRange').innerText = info.date_range || 'N/A';
+            document.getElementById('lastUpdated').innerText = info.last_updated || new Date().toLocaleString();
+        }
+        
+        function formatNumber(num) {
+            if (num === undefined || num === null || isNaN(num)) return '0';
+            return new Intl.NumberFormat('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(num);
+        }
+        
+        function formatPercent(num) {
+            if (num === undefined || num === null || isNaN(num)) return '0%';
+            return Math.round(num) + '%';
+        }
+        
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-pane').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            event.target.classList.add('active');
+        }
+        
+        function renderSalesAnalysis() {
+            const demandData = dashboardData.demand_analysis || {};
+            const sections = demandData.sections || [];
+            let filteredTrendData = demandData.sales_trend || { labels: [], values: [] };
+            if (currentFromDate && currentToDate) filteredTrendData = filterTrendDataByDate(filteredTrendData);
+            if (filteredTrendData && filteredTrendData.labels && filteredTrendData.labels.length > 0) {
+                if (trendChart) trendChart.destroy();
+                setTimeout(() => {
+                    const ctx = document.getElementById('trendChart').getContext('2d');
+                    trendChart = new Chart(ctx, { type: 'line', data: { labels: filteredTrendData.labels.slice(-6), datasets: [{ label: 'Sales JOD', data: filteredTrendData.values.slice(-6), borderColor: '#1e3c72', backgroundColor: 'rgba(30, 60, 114, 0.1)', borderWidth: 2, tension: 0.3, fill: true, pointRadius: 2 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
+                }, 100);
+            }
+            if (demandData.category_sales && demandData.category_sales.labels && demandData.category_sales.labels.length > 0) {
+                if (categoryPieChart) categoryPieChart.destroy();
+                setTimeout(() => {
+                    const ctx2 = document.getElementById('categoryPieChart').getContext('2d');
+                    categoryPieChart = new Chart(ctx2, { type: 'doughnut', data: { labels: demandData.category_sales.labels.slice(0, 5), datasets: [{ data: demandData.category_sales.values.slice(0, 5), backgroundColor: ['#1e3c72', '#2a5298', '#3b6cb0', '#4d7ec9', '#6f9ae0'], borderWidth: 0 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 8, font: { size: 9 } } } } } });
+                }, 100);
+            }
+            let sectionHtml = '';
+            sections.sort((a, b) => b.sales - a.sales).slice(0, 5).forEach(s => { sectionHtml += `<tr><td>${s.name || 'N/A'}</div></td><td class="text-right">${formatNumber(s.sales)}</div></td><td class="text-right">-</div></tr>`; });
+            document.querySelector('#salesBySectionTable').innerHTML = sectionHtml || '<tr><td colspan="3" class="text-center">No data</div></tr>';
+            document.querySelector('#salesByCountryTable').innerHTML = '<tr><td colspan="3" class="text-center">Country data not available in Demand Analysis</div></tr>';
+            
+            const statuses = demandData.statuses || [];
+            let statusHtml = '';
+            statuses.slice(0, 10).forEach(s => { 
+                statusHtml += `<tr>
+                    <td>${s.name || 'N/A'}</div></td>
+                    <td class="text-right">${formatNumber(s.count || 0)}</div></td>
+                    <td class="text-right">${formatNumber(s.sales || 0)}</div></td>
+                `; 
+            });
+            document.querySelector('#statusAnalysisTable').innerHTML = statusHtml || '<tr><td colspan="3" class="text-center">No status data</div></tr>';
+        }
+        
+        function renderProfitabilityAnalysis() {
+            const demandData = dashboardData.demand_analysis || {};
+            const products = demandData.products || [], customers = demandData.customers || [], categories = demandData.categories || [], suppliers = demandData.suppliers || [], quarters = demandData.quarters || [];
+            let productHtml = '', customerHtml = '', categoryHtml = '', supplierHtml = '', quarterHtml = '', lossHtml = '';
+            products.sort((a, b) => b.gp - a.gp).slice(0, 5).forEach(p => { productHtml += `<tr><td>${(p.name || 'N/A').substring(0, 15)}${(p.name || '').length > 15 ? '...' : ''}</div></td><td class="text-right">${formatNumber(p.sales)}</div></td><td class="text-right">${formatNumber(p.gp)}</div></td><td class="text-right">${p.gm ? p.gm.toFixed(1) : '0'}%</div></tr>`; });
+            customers.sort((a, b) => b.gp - a.gp).slice(0, 5).forEach(c => { customerHtml += `<tr><td>${(c.name || 'N/A').substring(0, 15)}${(c.name || '').length > 15 ? '...' : ''}</div></td><td class="text-right">${formatNumber(c.sales)}</div></td><td class="text-right">${formatNumber(c.gp)}</div></td><td class="text-right">${c.gm ? c.gm.toFixed(1) : '0'}%</div></tr>`; });
+            categories.sort((a, b) => b.gp - a.gp).slice(0, 5).forEach(c => { categoryHtml += `<tr><td>${c.name || 'N/A'}</div></td><td class="text-right">${formatNumber(c.sales)}</div></td><td class="text-right">${formatNumber(c.gp)}</div></td><td class="text-right">${c.gm ? c.gm.toFixed(1) : '0'}%</div></tr>`; });
+            suppliers.sort((a, b) => b.gp - a.gp).slice(0, 5).forEach(s => { supplierHtml += `<tr><td>${(s.name || 'N/A').substring(0, 15)}${(s.name || '').length > 15 ? '...' : ''}</div></td><td class="text-right">${formatNumber(s.sales || 0)}</div></td><td class="text-right">${formatNumber(s.gp || 0)}</div></td><td class="text-right">${s.gm ? s.gm.toFixed(1) : '0'}%</div></tr>`; });
+            quarters.slice(0, 4).forEach(q => { quarterHtml += `<tr><td>${q.name || 'N/A'}</div></td><td class="text-right">${formatNumber(q.sales)}</div></td><td class="text-right">${formatNumber(q.gp)}</div></td><td class="text-right">${q.gm ? q.gm.toFixed(1) : '0'}%</div></tr>`; });
+            products.filter(p => p.gp < 0).sort((a, b) => a.gp - b.gp).slice(0, 5).forEach(p => { lossHtml += `<tr><td>${(p.name || 'N/A').substring(0, 15)}${(p.name || '').length > 15 ? '...' : ''}</div></td><td class="text-right">${formatNumber(p.sales)}</div></td><td class="text-right metric-negative">${formatNumber(p.gp)}</div></td><td class="text-right metric-negative">${p.gm ? p.gm.toFixed(1) : '0'}%</div></tr>`; });
+            document.querySelector('#profitByProductTable').innerHTML = productHtml || '<tr><td colspan="4" class="text-center">No data</div></tr>';
+            document.querySelector('#profitByCustomerTable').innerHTML = customerHtml || '<tr><td colspan="4" class="text-center">No data</div></tr>';
+            document.querySelector('#profitByCategoryTable').innerHTML = categoryHtml || '<tr><td colspan="4" class="text-center">No data</div></tr>';
+            document.querySelector('#profitBySupplierTable').innerHTML = supplierHtml || '<tr><td colspan="4" class="text-center">No data</div></tr>';
+            document.querySelector('#profitByQuarterTable').innerHTML = quarterHtml || '<tr><td colspan="4" class="text-center">No data</div></tr>';
+            document.querySelector('#lossMakingProductsTable').innerHTML = lossHtml || '<tr><td colspan="4" class="text-center">No loss-making</div></tr>';
+        }
+        
+        function renderCustomerAnalysis() {
+            const demandData = dashboardData.demand_analysis || {};
+            let customers = demandData.customers || [];
+            
+            if (dashboardData.customer_analysis_data) {
+                const customerData = dashboardData.customer_analysis_data;
+                
+                let profitHtml = '';
+                customerData.profitability.slice(0, 20).forEach(c => {
+                    profitHtml += `<tr>
+                        <td>${c.customer.substring(0, 25)}</div></td>
+                        <td class="text-right">${formatNumber(c.sales)}</div></td>
+                        <td class="text-right">${formatNumber(c.gp)}</div></td>
+                        <td class="text-right ${c.gp_percent < 10 ? 'text-danger' : (c.gp_percent > 30 ? 'text-success' : '')}">${c.gp_percent.toFixed(1)}%</div></td>
+                    `;
+                });
+                document.querySelector('#clientProfitabilityTable').innerHTML = profitHtml || '<tr><td colspan="4" class="text-center">No data</div></tr>';
+                
+                let lossHtml = '';
+                customerData.loss_low_margin.slice(0, 20).forEach(c => {
+                    let statusBadge = '';
+                    if (c.is_loss) statusBadge = '<span class="status-badge status-at-risk">LOSS</span>';
+                    else if (c.is_low_margin) statusBadge = '<span class="status-badge status-on-track">Low Margin</span>';
+                    else statusBadge = '<span class="status-badge status-achieved">Good</span>';
+                    
+                    lossHtml += `<tr>
+                        <td>${c.customer.substring(0, 20)}</div></td>
+                        <td class="text-right">${formatNumber(c.sales)}</div></td>
+                        <td class="text-right ${c.gp < 0 ? 'text-danger' : ''}">${formatNumber(c.gp)}</div></td>
+                        <td class="text-right">${c.gp_percent.toFixed(1)}%</div></td>
+                        <td class="text-right">${c.avg_gp_percent.toFixed(1)}%</div></td>
+                        <td>${statusBadge}</div></td>
+                    `;
+                });
+                document.querySelector('#lossLowMarginTable').innerHTML = lossHtml || '<tr><td colspan="6" class="text-center">No data</div></tr>';
+                
+                let psHtml = '';
+                customerData.purchase_sales_days.slice(0, 20).forEach(c => {
+                    psHtml += `<tr>
+                        <td>${c.customer.substring(0, 20)}</div></td>
+                        <td class="text-right ${c.avg_ps_days > 60 ? 'text-danger' : (c.avg_ps_days > 30 ? 'text-warning' : '')}">${c.avg_ps_days.toFixed(1)} days</div></td>
+                        <td class="text-right">${c.max_ps_days} days</div></td>
+                        <td class="text-right">${c.transaction_count}</div></td>
+                    `;
+                });
+                document.querySelector('#purchaseSalesDaysTable').innerHTML = psHtml || '<tr><td colspan="4" class="text-center">No data</div></tr>';
+                
+                let costHtml = '';
+                customerData.hidden_costs.slice(0, 20).forEach(c => {
+                    costHtml += `<tr>
+                        <td>${c.customer.substring(0, 20)}</div></td>
+                        <td class="text-right">${formatNumber(c.other_charges_cost)}</div></td>
+                        <td class="text-right">${formatNumber(c.brokerage_cost)}</div></td>
+                        <td class="text-right ${c.total_hidden_cost > 10000 ? 'text-danger' : ''}">${formatNumber(c.total_hidden_cost)}</div></td>
+                    `;
+                });
+                document.querySelector('#hiddenCostTable').innerHTML = costHtml || '<tr><td colspan="4" class="text-center">No data</div></tr>';
+                
+            } else {
+                let profitHtml = '';
+                customers.sort((a, b) => b.sales - a.sales).slice(0, 20).forEach(c => { 
+                    profitHtml += `<tr>
+                        <td>${(c.name || 'N/A').substring(0, 25)}</div></td>
+                        <td class="text-right">${formatNumber(c.sales)}</div></td>
+                        <td class="text-right">${formatNumber(c.gp)}</div></td>
+                        <td class="text-right">${c.gm ? c.gm.toFixed(1) : '0'}%</div></td>
+                    `; 
+                });
+                document.querySelector('#clientProfitabilityTable').innerHTML = profitHtml || '<tr><td colspan="4" class="text-center">No data</div></tr>';
+                document.querySelector('#lossLowMarginTable').innerHTML = '<tr><td colspan="6" class="text-center">Extended customer data not available</div></tr>';
+                document.querySelector('#purchaseSalesDaysTable').innerHTML = '<tr><td colspan="4" class="text-center">Extended customer data not available</div></tr>';
+                document.querySelector('#hiddenCostTable').innerHTML = '<tr><td colspan="4" class="text-center">Extended customer data not available</div></tr>';
+            }
+        }
+        
+        function renderProductAnalysis() {
+            const demandData = dashboardData.demand_analysis || {};
+            const products = demandData.products || [], categories = demandData.categories || [];
+            
+            if (dashboardData.product_analysis_data) {
+                const productData = dashboardData.product_analysis_data;
+                
+                let bestHtml = '';
+                productData.top_products.slice(0, 10).forEach(p => {
+                    bestHtml += `<tr>
+                        <td>${p.product.substring(0, 20)}</div></td>
+                        <td class="text-right">${formatNumber(p.qty)}</div></td>
+                        <td class="text-right">${formatNumber(p.sales)}</div></td>
+                    `;
+                });
+                document.querySelector('#bestSellingTable').innerHTML = bestHtml || '<tr><td colspan="3" class="text-center">No data</div></tr>';
+                
+                let profitableHtml = '';
+                productData.most_profitable.slice(0, 10).forEach(p => {
+                    profitableHtml += `<tr>
+                        <td>${p.product.substring(0, 20)}</div></td>
+                        <td class="text-right">${formatNumber(p.gp)}</div></td>
+                        <td class="text-right">${p.gp_percent.toFixed(1)}%</div></td>
+                    `;
+                });
+                document.querySelector('#mostProfitableTable').innerHTML = profitableHtml || '<tr><td colspan="3" class="text-center">No data</div></tr>';
+                
+                let catHtml = '';
+                productData.category_contribution.slice(0, 10).forEach(c => {
+                    catHtml += `<tr>
+                        <td>${c.category}</div></td>
+                        <td class="text-right">${formatNumber(c.sales)}</div></td>
+                        <td class="text-right">${c.percent_of_total.toFixed(1)}%</div></td>
+                        <td class="text-right">${formatNumber(c.gp)}</div></td>
+                        <td class="text-right">${c.gp_percent.toFixed(1)}%</div></td>
+                    `;
+                });
+                document.querySelector('#categoryContributionTable').innerHTML = catHtml || '<tr><td colspan="5" class="text-center">No data</div></tr>';
+                
+                let invoiceHtml = '';
+                productData.invoice_count_per_product.slice(0, 10).forEach(p => {
+                    invoiceHtml += `<tr>
+                        <td>${p.product.substring(0, 20)}</div></td>
+                        <td class="text-right">${p.invoice_count}</div></td>
+                        <td class="text-right">${formatNumber(p.avg_invoice_value)}</div></td>
+                        <td class="text-right">${formatNumber(p.total_sales)}</div></td>
+                    `;
+                });
+                document.querySelector('#invoiceCountPerProductTable').innerHTML = invoiceHtml || '<tr><td colspan="4" class="text-center">No data</div></tr>';
+                
+                let vendorHtml = '';
+                productData.best_vendor_per_product.slice(0, 10).forEach(p => {
+                    vendorHtml += `<tr>
+                        <td>${p.product.substring(0, 20)}</div></td>
+                        <td>${p.best_vendor}</div></td>
+                        <td class="text-right">${formatNumber(p.total_purchases)}</div></td>
+                        <td class="text-right">${p.avg_gp_percent.toFixed(1)}%</div></td>
+                    `;
+                });
+                document.querySelector('#bestVendorPerProductTable').innerHTML = vendorHtml || '<tr><td colspan="4" class="text-center">No data</div></tr>';
+                
+            } else {
+                let bestHtml = '';
+                products.sort((a, b) => b.sales - a.sales).slice(0, 5).forEach(p => { bestHtml += `<tr><td>${(p.name || 'N/A').substring(0, 15)}${(p.name || '').length > 15 ? '...' : ''}</div></td><td class="text-right">${formatNumber(p.qty)}</div></td><td class="text-right">${formatNumber(p.sales)}</div></tr>`; });
+                document.querySelector('#bestSellingTable').innerHTML = bestHtml || '<tr><td colspan="3" class="text-center">No data</div></tr>';
+                document.querySelector('#categoryContributionTable').innerHTML = '<tr><td colspan="5" class="text-center">Extended product data not available</div></tr>';
+                document.querySelector('#invoiceCountPerProductTable').innerHTML = '<tr><td colspan="4" class="text-center">Extended product data not available</div></tr>';
+                document.querySelector('#bestVendorPerProductTable').innerHTML = '<tr><td colspan="4" class="text-center">Extended product data not available</div></tr>';
+            }
+        }
+        
+        function renderSupplierAnalysis() {
+            if (dashboardData.supplier_analysis_data) {
+                const supplierData = dashboardData.supplier_analysis_data;
+                
+                let gpHtml = '';
+                supplierData.vendor_gp.slice(0, 20).forEach(s => {
+                    gpHtml += `<tr>
+                        <td>${s.supplier.substring(0, 25)}</div></td>
+                        <td class="text-right">${formatNumber(s.sales)}</div></td>
+                        <td class="text-right">${formatNumber(s.gp)}</div></td>
+                        <td class="text-right ${s.gp_percent < 5 ? 'text-danger' : (s.gp_percent > 20 ? 'text-success' : '')}">${s.gp_percent.toFixed(1)}%</div></td>
+                    `;
+                });
+                document.querySelector('#vendorGpTable').innerHTML = gpHtml || '<tr><td colspan="4" class="text-center">No data</div></tr>';
+                
+                let psHtml = '';
+                supplierData.supplier_ps_days.slice(0, 20).forEach(s => {
+                    psHtml += `<tr>
+                        <td>${s.supplier.substring(0, 20)}</div></td>
+                        <td class="text-right ${s.avg_ps_days > 60 ? 'text-danger' : (s.avg_ps_days > 30 ? 'text-warning' : '')}">${s.avg_ps_days.toFixed(1)} days</div></td>
+                        <td class="text-right">${s.max_ps_days} days</div></td>
+                        <td class="text-right">${s.transaction_count}</div></td>
+                    `;
+                });
+                document.querySelector('#supplierPsDaysTable').innerHTML = psHtml || '<tr><td colspan="4" class="text-center">No data</div></tr>';
+                
+                let lossHtml = '';
+                supplierData.loss_making_items.slice(0, 20).forEach(s => {
+                    lossHtml += `<tr>
+                        <td>${s.supplier.substring(0, 15)}</div></td>
+                        <td>${s.product.substring(0, 20)}</div></td>
+                        <td class="text-right">${formatNumber(s.sales)}</div></td>
+                        <td class="text-right text-danger">${formatNumber(s.gp)}</div></td>
+                        <td class="text-right text-danger">${s.gp_percent.toFixed(1)}%</div></td>
+                    `;
+                });
+                document.querySelector('#lossMakingVendorItemsTable').innerHTML = lossHtml || '<tr><td colspan="5" class="text-center">No loss-making items</div></tr>';
+                
+                let costHtml = '';
+                supplierData.vendor_hidden_costs.slice(0, 20).forEach(s => {
+                    costHtml += `<tr>
+                        <td>${s.supplier.substring(0, 20)}</div></td>
+                        <td class="text-right">${formatNumber(s.other_charges)}</div></td>
+                        <td class="text-right">${formatNumber(s.brokerage_cost)}</div></td>
+                        <td class="text-right ${s.total_hidden_cost > 5000 ? 'text-danger' : ''}">${formatNumber(s.total_hidden_cost)}</div></td>
+                    `;
+                });
+                document.querySelector('#vendorHiddenCostsTable').innerHTML = costHtml || '<tr><td colspan="4" class="text-center">No data</div></tr>';
+                
+                let creditHtml = '';
+                supplierData.vendor_credit_days.slice(0, 20).forEach(s => {
+                    creditHtml += `<tr>
+                        <td>${s.supplier.substring(0, 20)}</div></td>
+                        <td class="text-right">${s.avg_credit_days.toFixed(1)} days</div></td>
+                        <td class="text-right">${s.max_credit_days} days</div></td>
+                        <td class="text-right">${s.transaction_count}</div></td>
+                    `;
+                });
+                document.querySelector('#vendorCreditDaysTable').innerHTML = creditHtml || '<tr><td colspan="4" class="text-center">No data</div></tr>';
+                
+            } else {
+                const demandData = dashboardData.demand_analysis || {};
+                const suppliers = demandData.suppliers || [];
+                let purchaseHtml = '', profitHtml = '';
+                suppliers.sort((a, b) => b.cogs - a.cogs).slice(0, 5).forEach(s => { purchaseHtml += `<tr><td>${(s.name || 'N/A').substring(0, 15)}${(s.name || '').length > 15 ? '...' : ''}</div></td><td class="text-right">${formatNumber(s.cogs)}</div></td><td class="text-right">-</div></tr>`; });
+                suppliers.filter(s => s.gp).sort((a, b) => b.gp - a.gp).slice(0, 5).forEach(s => { profitHtml += `<tr><td>${(s.name || 'N/A').substring(0, 15)}${(s.name || '').length > 15 ? '...' : ''}</div></td><td class="text-right">${formatNumber(s.sales || 0)}</div></td><td class="text-right">${formatNumber(s.gp || 0)}</div></td><td class="text-right">${s.gm ? s.gm.toFixed(1) : '0'}%</div></tr>`; });
+                document.querySelector('#vendorGpTable').innerHTML = profitHtml || '<tr><td colspan="4" class="text-center">No data</div></tr>';
+                document.querySelector('#supplierPsDaysTable').innerHTML = '<tr><td colspan="4" class="text-center">Extended supplier data not available</div></tr>';
+                document.querySelector('#lossMakingVendorItemsTable').innerHTML = '<tr><td colspan="5" class="text-center">Extended supplier data not available</div></tr>';
+                document.querySelector('#vendorHiddenCostsTable').innerHTML = '<tr><td colspan="4" class="text-center">Extended supplier data not available</div></tr>';
+                document.querySelector('#vendorCreditDaysTable').innerHTML = '<tr><td colspan="4" class="text-center">Extended supplier data not available</div></tr>';
+            }
+        }
+        
+        window.onload = initDashboard;
+    </script>
+</body>
+</html>
+"""
+
+def load_excel_data():
+    """Load ALL data from Excel file dynamically"""
+    print("\n" + "="*70)
+    print("🔍 LOADING EXCEL DATA")
+    print("="*70)
+    
+    excel_path = r'C:\Users\a.harayri\OneDrive - Al-Behar Group\Desktop\python\Demand.xlsx'
+    
+    print(f"\n📁 Looking for: {excel_path}")
+    
+    if not os.path.exists(excel_path):
+        print(f"❌ File not found at: {excel_path}")
+        return None, None, None, [], []
+    
+    print(f"✅ File found! Size: {os.path.getsize(excel_path)} bytes")
+    
+    try:
+        xl = pd.ExcelFile(excel_path, engine='openpyxl')
+        sheet_names = xl.sheet_names
+        print(f"\n📑 Sheets found: {sheet_names}")
+        
+        df_sop = None
+        if 'Data' in sheet_names:
+            df_sop = pd.read_excel(excel_path, sheet_name='Data', engine='openpyxl')
+            print(f"\n✅ 'Data' sheet loaded: {len(df_sop)} rows, {len(df_sop.columns)} columns")
+            print(f"   Columns: {list(df_sop.columns)}")
+        else:
+            print("\n⚠️ 'Data' sheet not found")
+        
+        df_demand = None
+        demand_sheet_name = None
+        for sheet in sheet_names:
+            if 'Demand Analysis' in sheet:
+                demand_sheet_name = sheet
+                break
+        
+        if demand_sheet_name:
+            df_demand = pd.read_excel(excel_path, sheet_name=demand_sheet_name, engine='openpyxl')
+            print(f"\n✅ '{demand_sheet_name}' sheet loaded: {len(df_demand)} rows")
+        else:
+            print("\n⚠️ 'Demand Analysis' sheet not found")
+        
+        file_names = []
+        if df_sop is not None and 'File' in df_sop.columns:
+            file_names = df_sop['File'].dropna().unique().tolist()
+            print(f"\n📁 Unique File names: {len(file_names)}")
+            for i, f in enumerate(file_names[:10]):
+                print(f"   {i+1}. {f}")
+        
+        df_summary = None
+        summary_columns = []
+        if 'summary' in [s.lower() for s in sheet_names]:
+            for sheet in sheet_names:
+                if sheet.lower() == 'summary':
+                    df_summary = pd.read_excel(excel_path, sheet_name=sheet, engine='openpyxl')
+                    summary_columns = list(df_summary.columns)
+                    print(f"\n📊 Found 'Summary' sheet: {len(df_summary)} rows")
+                    break
+        
+        return df_sop, df_demand, df_summary, file_names, summary_columns
+        
+    except Exception as e:
+        print(f"❌ Error loading file: {e}")
+        import traceback
+        traceback.print_exc()
+        return None, None, None, [], []
+
+def process_sop_data(df_sop, file_names):
+    """Process S&OP data from Data sheet"""
+    print("\n" + "="*70)
+    print("📊 PROCESSING S&OP DATA")
+    print("="*70)
+    
+    sop_data = {
+        'file_data': {},
+        'filtered_data': {},
+        'commission_data': {},
+        'file_names': file_names
+    }
+    
+    if df_sop is None or len(df_sop) == 0:
+        print("❌ No S&OP data to process")
+        return sop_data
+    
+    df_sop.columns = df_sop.columns.str.strip()
+    print(f"\n📋 Processing columns: {list(df_sop.columns)}")
+    
+    numeric_mapping = {
+        'Qty (MT)': 'qty_mt',
+        'Sales (JOD)': 'sales_jod',
+        'GP (JOD)': 'gp_jod',
+        'GM%': 'gm'
+    }
+    
+    for old_col, new_col in numeric_mapping.items():
+        if old_col in df_sop.columns:
+            df_sop[new_col] = pd.to_numeric(df_sop[old_col], errors='coerce').fillna(0)
+            print(f"   ✅ Converted: {old_col} -> {new_col}")
+        else:
+            df_sop[new_col] = 0
+            print(f"   ⚠️ Column not found: {old_col}")
+    
+    if 'File' in df_sop.columns:
+        month_abbrs = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        
+        for file_name in file_names:
+            file_df = df_sop[df_sop['File'] == file_name]
+            if len(file_df) > 0:
+                clean_key = clean_filename_for_key(file_name)
+                sop_data['file_data'][f'{clean_key}_sales'] = float(file_df['sales_jod'].sum())
+                sop_data['file_data'][f'{clean_key}_qty'] = float(file_df['qty_mt'].sum())
+                sop_data['file_data'][f'{clean_key}_gp'] = float(file_df['gp_jod'].sum())
+                print(f"\n   📊 {file_name}: Sales={sop_data['file_data'][f'{clean_key}_sales']:,.0f}, GP={sop_data['file_data'][f'{clean_key}_gp']:,.0f}")
+                
+                if 'Section' in df_sop.columns and 'Actual Month' in df_sop.columns and 'Status' in df_sop.columns:
+                    for month_abbr in month_abbrs:
+                        invoiced_df = file_df[(file_df['Section'] == 'Trade') & (file_df['Status'] == 'Invoiced') & (file_df['Actual Month'] == month_abbr)]
+                        if len(invoiced_df) > 0:
+                            filtered_key = f"{clean_key}_Trade_Invoiced_{month_abbr}"
+                            sales_sum = float(invoiced_df['sales_jod'].sum())
+                            gp_sum = float(invoiced_df['gp_jod'].sum())
+                            sop_data['filtered_data'][filtered_key] = {
+                                'sales': sales_sum,
+                                'qty': float(invoiced_df['qty_mt'].sum()),
+                                'gp': gp_sum,
+                                'gm': (gp_sum / sales_sum * 100) if sales_sum > 0 else 0
+                            }
+                        
+                        booked_df = file_df[(file_df['Section'] == 'Trade') & (file_df['Status'].isin(['Booked', 'Not Booked'])) & (file_df['Actual Month'] == month_abbr)]
+                        if len(booked_df) > 0:
+                            filtered_key = f"{clean_key}_Trade_Booked_Not Booked_{month_abbr}"
+                            sales_sum = float(booked_df['sales_jod'].sum())
+                            gp_sum = float(booked_df['gp_jod'].sum())
+                            sop_data['filtered_data'][filtered_key] = {
+                                'sales': sales_sum,
+                                'qty': float(booked_df['qty_mt'].sum()),
+                                'gp': gp_sum,
+                                'gm': (gp_sum / sales_sum * 100) if sales_sum > 0 else 0
+                            }
+                        
+                        prev_year_df = file_df[(file_df['Section'] == 'Trade') & (file_df['Actual Month'] == month_abbr)]
+                        if len(prev_year_df) > 0:
+                            filtered_key = f"{clean_key}_Trade_All_Status_{month_abbr}"
+                            sales_sum = float(prev_year_df['sales_jod'].sum())
+                            gp_sum = float(prev_year_df['gp_jod'].sum())
+                            sop_data['filtered_data'][filtered_key] = {
+                                'sales': sales_sum,
+                                'qty': float(prev_year_df['qty_mt'].sum()),
+                                'gp': gp_sum,
+                                'gm': (gp_sum / sales_sum * 100) if sales_sum > 0 else 0
+                            }
+                    
+                    # IMPORTANT: Section should be 'Broker' for commission calculation
+                    # When Section is 'Broker', that means you want to calculate commission
+                    for month_abbr in month_abbrs:
+                        commission_df = file_df[(file_df['Section'] == 'Broker') & (file_df['Actual Month'] == month_abbr)]
+                        if len(commission_df) > 0:
+                            commission_key = f"{clean_key}_Broker_{month_abbr}"
+                            sop_data['commission_data'][commission_key] = float(commission_df['gp_jod'].sum())
+    
+    print(f"\n✅ S&OP DATA PROCESSING COMPLETE")
+    print(f"   Filtered data combinations: {len(sop_data['filtered_data'])}")
+    print(f"   Commission data entries: {len(sop_data['commission_data'])}")
+    
+    return sop_data
+
+def process_demand_data(df_demand):
+    """Process Demand Analysis data and create extended customer, product, and supplier analyses"""
+    print("\n" + "="*70)
+    print("📊 PROCESSING DEMAND ANALYSIS DATA")
+    print("="*70)
+    
+    demand_data = {
+        'summary': {'sales_jod': 0, 'gp_jod': 0, 'gm': 0, 'qty_mt': 0, 'cogs': 0, 'total_clients': 0, 'total_suppliers': 0, 'total_categories': 0, 'total_rows': 0},
+        'products': [], 'customers': [], 'suppliers': [], 'categories': [], 'sections': [], 'quarters': [], 'statuses': [],
+        'sales_trend': {'labels': [], 'values': []}, 'category_sales': {'labels': [], 'values': []}
+    }
+    
+    if df_demand is None or len(df_demand) == 0:
+        print("❌ No Demand Analysis data")
+        return demand_data, {}, {}, {}
+    
+    df_demand.columns = df_demand.columns.str.strip()
+    print(f"\n📋 Processing columns: {list(df_demand.columns)}")
+    
+    column_mapping = {
+        'Sales Quantity': 'qty_mt', 'Sales Amount': 'sales_jod', 'GP': 'gp_jod',
+        'Customer Name': 'customer_name', 'Item Name': 'product_name',
+        'Parent Category': 'category', 'Vendor Name': 'supplier_name',
+        'Sales Invoice Status': 'status', 'Posting Date': 'posting_date',
+        'Due Date': 'due_date', 'Purch Posting Date': 'purch_posting_date',
+        'Other Charges-Cost': 'other_charges_cost', 'Other Charges Cost Brokerage': 'brokerage_cost',
+        'Invoice No.': 'invoice_no'
+    }
+    
+    for old_col, new_col in column_mapping.items():
+        if old_col in df_demand.columns:
+            if new_col in ['qty_mt', 'sales_jod', 'gp_jod', 'other_charges_cost', 'brokerage_cost']:
+                df_demand[new_col] = pd.to_numeric(df_demand[old_col], errors='coerce').fillna(0)
+            else:
+                df_demand[new_col] = df_demand[old_col]
+            print(f"   ✅ Mapped: {old_col} -> {new_col}")
+    
+    date_columns = ['posting_date', 'due_date', 'purch_posting_date']
+    for col in date_columns:
+        if col in df_demand.columns:
+            df_demand[col] = pd.to_datetime(df_demand[col], errors='coerce')
+    
+    df_demand['section'] = 'Trade'
+    
+    demand_data['summary']['sales_jod'] = float(df_demand['sales_jod'].sum())
+    demand_data['summary']['gp_jod'] = float(df_demand['gp_jod'].sum())
+    demand_data['summary']['qty_mt'] = float(df_demand['qty_mt'].sum())
+    demand_data['summary']['gm'] = (demand_data['summary']['gp_jod'] / demand_data['summary']['sales_jod'] * 100) if demand_data['summary']['sales_jod'] > 0 else 0
+    demand_data['summary']['cogs'] = demand_data['summary']['sales_jod'] - demand_data['summary']['gp_jod']
+    demand_data['summary']['total_rows'] = len(df_demand)
+    
+    print(f"\n📈 Summary: Sales={demand_data['summary']['sales_jod']:,.0f}, GP={demand_data['summary']['gp_jod']:,.0f}, GM={demand_data['summary']['gm']:.1f}%")
+    
+    # ============================================================
+    # CUSTOMER ANALYSIS (4 analyses - removed Payment Delay)
+    # ============================================================
+    customer_analysis = {
+        'profitability': [],
+        'loss_low_margin': [],
+        'purchase_sales_days': [],
+        'hidden_costs': []
+    }
+    
+    # ============================================================
+    # PRODUCT ANALYSIS (3 new analyses)
+    # ============================================================
+    product_analysis = {
+        'top_products': [],
+        'most_profitable': [],
+        'category_contribution': [],
+        'invoice_count_per_product': [],
+        'best_vendor_per_product': []
+    }
+    
+    # ============================================================
+    # SUPPLIER ANALYSIS (5 analyses)
+    # ============================================================
+    supplier_analysis = {
+        'vendor_gp': [],
+        'supplier_ps_days': [],
+        'loss_making_items': [],
+        'vendor_hidden_costs': [],
+        'vendor_credit_days': []
+    }
+    
+    # Process Products
+    if 'product_name' in df_demand.columns:
+        for name, group in df_demand.groupby('product_name'):
+            sales = float(group['sales_jod'].sum())
+            gp = float(group['gp_jod'].sum())
+            qty = float(group['qty_mt'].sum())
+            gp_percent = (gp / sales * 100) if sales > 0 else 0
+            invoice_count = group['invoice_no'].nunique() if 'invoice_no' in group.columns else len(group)
+            avg_invoice_value = sales / invoice_count if invoice_count > 0 else 0
+            
+            demand_data['products'].append({'name': str(name), 'sales': sales, 'gp': gp, 'qty': qty, 'gm': gp_percent})
+            
+            product_analysis['top_products'].append({'product': str(name), 'sales': sales, 'qty': qty})
+            product_analysis['most_profitable'].append({'product': str(name), 'gp': gp, 'gp_percent': gp_percent})
+            product_analysis['invoice_count_per_product'].append({
+                'product': str(name), 
+                'invoice_count': invoice_count, 
+                'avg_invoice_value': avg_invoice_value,
+                'total_sales': sales
+            })
+            
+            # Best vendor for this product
+            if 'supplier_name' in group.columns:
+                vendor_stats = group.groupby('supplier_name').agg({
+                    'purch_posting_date': 'count',
+                    'gp_jod': 'sum',
+                    'sales_jod': 'sum'
+                }).rename(columns={'purch_posting_date': 'count', 'gp_jod': 'gp', 'sales_jod': 'sales'})
+                
+                for vendor, row in vendor_stats.iterrows():
+                    if pd.notna(vendor):
+                        vendor_gp_percent = (row['gp'] / row['sales'] * 100) if row['sales'] > 0 else 0
+                        product_analysis['best_vendor_per_product'].append({
+                            'product': str(name),
+                            'best_vendor': str(vendor),
+                            'total_purchases': row['count'],
+                            'avg_gp_percent': vendor_gp_percent
+                        })
+                        break
+        
+        product_analysis['top_products'].sort(key=lambda x: x['sales'], reverse=True)
+        product_analysis['most_profitable'].sort(key=lambda x: x['gp'], reverse=True)
+        product_analysis['invoice_count_per_product'].sort(key=lambda x: x['invoice_count'], reverse=True)
+        
+        # Category Contribution
+        if 'category' in df_demand.columns:
+            total_sales = demand_data['summary']['sales_jod']
+            for name, group in df_demand.groupby('category'):
+                sales = float(group['sales_jod'].sum())
+                gp = float(group['gp_jod'].sum())
+                gp_percent = (gp / sales * 100) if sales > 0 else 0
+                percent_of_total = (sales / total_sales * 100) if total_sales > 0 else 0
+                product_analysis['category_contribution'].append({
+                    'category': str(name),
+                    'sales': sales,
+                    'percent_of_total': percent_of_total,
+                    'gp': gp,
+                    'gp_percent': gp_percent
+                })
+            product_analysis['category_contribution'].sort(key=lambda x: x['sales'], reverse=True)
+    
+    # Process Customers
+    if 'customer_name' in df_demand.columns:
+        customer_groups = df_demand.groupby('customer_name')
+        
+        for customer_name, group in customer_groups:
+            sales = float(group['sales_jod'].sum())
+            gp = float(group['gp_jod'].sum())
+            gp_percent = (gp / sales * 100) if sales > 0 else 0
+            
+            customer_analysis['profitability'].append({
+                'customer': str(customer_name),
+                'sales': sales,
+                'gp': gp,
+                'gp_percent': gp_percent
+            })
+            
+            customer_transactions = []
+            for idx, row in group.iterrows():
+                trans_sales = float(row['sales_jod']) if pd.notna(row['sales_jod']) else 0
+                trans_gp = float(row['gp_jod']) if pd.notna(row['gp_jod']) else 0
+                trans_gp_percent = (trans_gp / trans_sales * 100) if trans_sales > 0 else 0
+                customer_transactions.append(trans_gp_percent)
+            
+            avg_customer_gp = np.mean(customer_transactions) if customer_transactions else 0
+            is_loss = gp < 0
+            is_low_margin = (gp_percent < avg_customer_gp) and not is_loss
+            
+            customer_analysis['loss_low_margin'].append({
+                'customer': str(customer_name),
+                'sales': sales,
+                'gp': gp,
+                'gp_percent': gp_percent,
+                'avg_gp_percent': avg_customer_gp,
+                'is_loss': int(is_loss),
+                'is_low_margin': int(is_low_margin)
+            })
+            
+            # Purchase to Sales Days
+            ps_days_list = []
+            for idx, row in group.iterrows():
+                posting = row['posting_date'] if pd.notna(row['posting_date']) else None
+                purch_posting = row['purch_posting_date'] if pd.notna(row['purch_posting_date']) else None
+                if posting and purch_posting and isinstance(posting, pd.Timestamp) and isinstance(purch_posting, pd.Timestamp):
+                    ps_days = (posting - purch_posting).days
+                    if ps_days > 0:
+                        ps_days_list.append(ps_days)
+            
+            avg_ps_days = np.mean(ps_days_list) if ps_days_list else 0
+            max_ps_days = max(ps_days_list) if ps_days_list else 0
+            
+            customer_analysis['purchase_sales_days'].append({
+                'customer': str(customer_name),
+                'avg_ps_days': avg_ps_days,
+                'max_ps_days': max_ps_days,
+                'transaction_count': len(group)
+            })
+            
+            # Hidden Costs
+            other_charges = float(group['other_charges_cost'].sum()) if 'other_charges_cost' in group.columns else 0
+            brokerage = float(group['brokerage_cost'].sum()) if 'brokerage_cost' in group.columns else 0
+            
+            customer_analysis['hidden_costs'].append({
+                'customer': str(customer_name),
+                'other_charges_cost': other_charges,
+                'brokerage_cost': brokerage,
+                'total_hidden_cost': other_charges + brokerage
+            })
+            
+            demand_data['customers'].append({'name': str(customer_name), 'sales': sales, 'gp': gp, 'qty': float(group['qty_mt'].sum()), 'gm': gp_percent})
+        
+        customer_analysis['profitability'].sort(key=lambda x: x['sales'], reverse=True)
+        customer_analysis['loss_low_margin'].sort(key=lambda x: (x['is_loss'], x['gp_percent']))
+        customer_analysis['purchase_sales_days'].sort(key=lambda x: x['avg_ps_days'], reverse=True)
+        customer_analysis['hidden_costs'].sort(key=lambda x: x['total_hidden_cost'], reverse=True)
+        
+        demand_data['summary']['total_clients'] = len(demand_data['customers'])
+        print(f"   👥 Customers: {len(demand_data['customers'])}")
+    
+    # Process Suppliers
+    if 'supplier_name' in df_demand.columns:
+        supplier_groups = df_demand.groupby('supplier_name')
+        
+        for supplier_name, group in supplier_groups:
+            sales = float(group['sales_jod'].sum())
+            gp = float(group['gp_jod'].sum())
+            gp_percent = (gp / sales * 100) if sales > 0 else 0
+            
+            supplier_analysis['vendor_gp'].append({
+                'supplier': str(supplier_name),
+                'sales': sales,
+                'gp': gp,
+                'gp_percent': gp_percent
+            })
+            
+            # Purchase to Sales Days for Supplier
+            ps_days_list = []
+            for idx, row in group.iterrows():
+                posting = row['posting_date'] if pd.notna(row['posting_date']) else None
+                purch_posting = row['purch_posting_date'] if pd.notna(row['purch_posting_date']) else None
+                if posting and purch_posting and isinstance(posting, pd.Timestamp) and isinstance(purch_posting, pd.Timestamp):
+                    ps_days = (posting - purch_posting).days
+                    if ps_days > 0:
+                        ps_days_list.append(ps_days)
+            
+            avg_ps_days = np.mean(ps_days_list) if ps_days_list else 0
+            max_ps_days = max(ps_days_list) if ps_days_list else 0
+            
+            supplier_analysis['supplier_ps_days'].append({
+                'supplier': str(supplier_name),
+                'avg_ps_days': avg_ps_days,
+                'max_ps_days': max_ps_days,
+                'transaction_count': len(group)
+            })
+            
+            # Loss-making items per supplier
+            for product_name, product_group in group.groupby('product_name'):
+                product_sales = float(product_group['sales_jod'].sum())
+                product_gp = float(product_group['gp_jod'].sum())
+                product_gp_percent = (product_gp / product_sales * 100) if product_sales > 0 else 0
+                if product_gp < 0:
+                    supplier_analysis['loss_making_items'].append({
+                        'supplier': str(supplier_name),
+                        'product': str(product_name),
+                        'sales': product_sales,
+                        'gp': product_gp,
+                        'gp_percent': product_gp_percent
+                    })
+            
+            # Hidden costs per supplier
+            other_charges = float(group['other_charges_cost'].sum()) if 'other_charges_cost' in group.columns else 0
+            brokerage = float(group['brokerage_cost'].sum()) if 'brokerage_cost' in group.columns else 0
+            
+            supplier_analysis['vendor_hidden_costs'].append({
+                'supplier': str(supplier_name),
+                'other_charges': other_charges,
+                'brokerage_cost': brokerage,
+                'total_hidden_cost': other_charges + brokerage
+            })
+            
+            # Credit days for supplier (using Due Date)
+            credit_days_list = []
+            for idx, row in group.iterrows():
+                purch_posting = row['purch_posting_date'] if pd.notna(row['purch_posting_date']) else None
+                due_date = row['due_date'] if pd.notna(row['due_date']) else None
+                if purch_posting and due_date and isinstance(purch_posting, pd.Timestamp) and isinstance(due_date, pd.Timestamp):
+                    credit_days = (due_date - purch_posting).days
+                    if credit_days > 0:
+                        credit_days_list.append(credit_days)
+            
+            avg_credit_days = np.mean(credit_days_list) if credit_days_list else 0
+            max_credit_days = max(credit_days_list) if credit_days_list else 0
+            
+            supplier_analysis['vendor_credit_days'].append({
+                'supplier': str(supplier_name),
+                'avg_credit_days': avg_credit_days,
+                'max_credit_days': max_credit_days,
+                'transaction_count': len(group)
+            })
+            
+            demand_data['suppliers'].append({'name': str(supplier_name), 'sales': sales, 'gp': gp, 'cogs': sales - gp, 'qty': float(group['qty_mt'].sum()), 'gm': gp_percent})
+        
+        supplier_analysis['vendor_gp'].sort(key=lambda x: x['gp'], reverse=True)
+        supplier_analysis['supplier_ps_days'].sort(key=lambda x: x['avg_ps_days'], reverse=True)
+        supplier_analysis['loss_making_items'].sort(key=lambda x: x['gp'])
+        supplier_analysis['vendor_hidden_costs'].sort(key=lambda x: x['total_hidden_cost'], reverse=True)
+        supplier_analysis['vendor_credit_days'].sort(key=lambda x: x['avg_credit_days'], reverse=True)
+        
+        demand_data['summary']['total_suppliers'] = len(demand_data['suppliers'])
+        print(f"   🚚 Suppliers: {len(demand_data['suppliers'])}")
+        print(f"      - Loss-making items: {len(supplier_analysis['loss_making_items'])}")
+    
+    # Categories
+    if 'category' in df_demand.columns:
+        for name, group in df_demand.groupby('category'):
+            sales = float(group['sales_jod'].sum())
+            gp = float(group['gp_jod'].sum())
+            demand_data['categories'].append({'name': str(name), 'sales': sales, 'gp': gp, 'gm': (gp / sales * 100) if sales > 0 else 0, 'product_count': group['product_name'].nunique() if 'product_name' in group else 0})
+        demand_data['summary']['total_categories'] = len(demand_data['categories'])
+        print(f"   📑 Categories: {len(demand_data['categories'])}")
+    
+    # Sections
+    if 'section' in df_demand.columns:
+        for name, group in df_demand.groupby('section'):
+            sales = float(group['sales_jod'].sum())
+            gp = float(group['gp_jod'].sum())
+            demand_data['sections'].append({'name': str(name), 'sales': sales, 'gp': gp, 'cogs': sales - gp})
+        print(f"   📋 Sections: {len(demand_data['sections'])}")
+    
+    # Statuses
+    if 'status' in df_demand.columns:
+        status_counts = df_demand['status'].value_counts().to_dict()
+        for name, group in df_demand.groupby('status'):
+            sales = float(group['sales_jod'].sum())
+            gp = float(group['gp_jod'].sum())
+            demand_data['statuses'].append({'name': str(name), 'sales': sales, 'gp': gp, 'count': status_counts.get(name, 0)})
+        print(f"   📊 Statuses: {len(demand_data['statuses'])}")
+    
+    # Sales Trend
+    if 'posting_date' in df_demand.columns:
+        date_sales = df_demand.groupby(df_demand['posting_date'].dt.date)['sales_jod'].sum().sort_index()
+        demand_data['sales_trend']['labels'] = [str(d) for d in date_sales.index]
+        demand_data['sales_trend']['values'] = [float(v) for v in date_sales.values]
+        print(f"   📈 Sales Trend: {len(demand_data['sales_trend']['labels'])} points")
+    
+    # Category Sales
+    if 'category' in df_demand.columns:
+        cat_sales = df_demand.groupby('category')['sales_jod'].sum().sort_values(ascending=False)
+        demand_data['category_sales']['labels'] = [str(c) for c in cat_sales.index[:10]]
+        demand_data['category_sales']['values'] = [float(v) for v in cat_sales.values[:10]]
+        print(f"   📊 Category Sales: {len(demand_data['category_sales']['labels'])} categories")
+    
+    # Quarters
+    if 'posting_date' in df_demand.columns:
+        df_demand['quarter'] = df_demand['posting_date'].dt.to_period('Q')
+        for name, group in df_demand.groupby('quarter'):
+            sales = float(group['sales_jod'].sum())
+            gp = float(group['gp_jod'].sum())
+            demand_data['quarters'].append({'name': str(name), 'sales': sales, 'gp': gp, 'gm': (gp / sales * 100) if sales > 0 else 0})
+        print(f"   📅 Quarters: {len(demand_data['quarters'])}")
+    
+    return demand_data, customer_analysis, product_analysis, supplier_analysis
+
+def main():
+    print("=" * 70)
+    print("🚀 Al-Behar Trading Company - Complete S&OP Dashboard")
+    print("=" * 70)
+    print("📊 Achievement Bars from Summary sheet")
+    print("📊 S&OP Cycle tables from Data sheet")
+    print("📊 Analysis tabs from Demand Analysis sheet")
+    print("📊 REMOVED: Client Payment Delay from Customers")
+    print("📊 NEW: 5 Supplier Analyses (GP%, P→S Days, Loss Items, Hidden Costs, Credit Days)")
+    print("📊 NEW: 3 Product Analyses (Category Contribution, Invoice Count, Best Vendor)")
+    print("=" * 70)
+    
+    df_sop, df_demand, df_summary, file_names, summary_columns = load_excel_data()
+    
+    if df_sop is None and df_demand is None:
+        print("\n❌ ERROR: Could not load any Excel data!")
+        return
+    
+    sop_data = process_sop_data(df_sop, file_names)
+    demand_data, customer_analysis, product_analysis, supplier_analysis = process_demand_data(df_demand)
+    
+    achievement_data = []
+    if df_summary is not None and len(df_summary) > 0:
+        print("\n📊 Processing Summary sheet...")
+        for idx, row in df_summary.iterrows():
+            achievement_row = {}
+            for col in df_summary.columns:
+                achievement_row[str(col).strip()] = row[col]
+            achievement_data.append(achievement_row)
+        print(f"✅ Loaded {len(achievement_data)} achievement records")
+    
+    combined_data = {
+        'summary': demand_data['summary'],
+        'products': demand_data['products'],
+        'customers': demand_data['customers'],
+        'suppliers': demand_data['suppliers'],
+        'categories': demand_data['categories'],
+        'sections': demand_data['sections'],
+        'quarters': demand_data['quarters'],
+        'statuses': demand_data['statuses'],
+        'file_data': sop_data['file_data'],
+        'filtered_data': sop_data['filtered_data'],
+        'commission_data': sop_data['commission_data'],
+        'file_names': file_names,
+        'sales_trend': demand_data['sales_trend'],
+        'category_sales': demand_data['category_sales'],
+        'data_info': {
+            'total_rows': (len(df_sop) if df_sop is not None else 0) + (len(df_demand) if df_demand is not None else 0),
+            'date_range': 'N/A',
+            'source': 'Excel',
+            'last_updated': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        },
+        'achievement': achievement_data,
+        'demand_analysis': demand_data,
+        'customer_analysis_data': customer_analysis,
+        'product_analysis_data': product_analysis,
+        'supplier_analysis_data': supplier_analysis
+    }
+    
+    logo_base64 = get_logo_base64()
+    
+    print("\n🔄 Converting to JSON...")
+    chart_data_json = json.dumps(combined_data, cls=NumpyEncoder, ensure_ascii=False)
+    
+    print("🎨 Generating HTML dashboard...")
+    html_content = HTML_TEMPLATE_START.replace('{{ chart_data }}', chart_data_json)
+    
+    if logo_base64:
+        html_content = html_content.replace('{{ logo_base64 }}', logo_base64)
+        print("✅ Logo embedded")
+    else:
+        html_content = html_content.replace('{{ logo_base64 }}', '')
+    
+    output_file = 'al_behar_dashboard_final.html'
+    with open(output_file, 'w', encoding='utf-8') as f:
+        f.write(html_content)
+    
+    full_path = os.path.abspath(output_file)
+    print(f"\n✅ Dashboard created: {full_path}")
+    
+    try:
+        webbrowser.open('file://' + full_path)
+        print("   🌐 Dashboard opened in browser")
+    except:
+        print("   📍 Please open the file manually")
+    
+    print("\n" + "="*70)
+    print("✅✅✅ DASHBOARD READY ✅✅✅")
+    print(f"   S&OP Dataset Files: {len(file_names)}")
+    print(f"   Filtered Combinations: {len(sop_data['filtered_data'])}")
+    print(f"   Commission Data Entries: {len(sop_data['commission_data'])}")
+    print(f"   Demand Analysis Records: {combined_data['summary']['total_rows']}")
+    print(f"   Customer Analysis: {len(customer_analysis['profitability'])} customers")
+    print(f"   Product Analysis: {len(product_analysis['top_products'])} products")
+    print(f"   Supplier Analysis: {len(supplier_analysis['vendor_gp'])} suppliers")
+    print("="*70)
+
+if __name__ == "__main__":
+    main()
