@@ -2,7 +2,31 @@
   "permissions": {
     "allow": [
       "Bash(git --version)",
-      "Bash(gh --version)"
+      "Bash(gh --version)",
+      "Bash(npm i *)",
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "Read(//c/Users/ashra/OneDrive/Desktop/ui-ux-pro-max-skill/**)",
+      "Bash(uipro init *)",
+      "Bash(node *)",
+      "Bash(gh run *)",
+      "Bash(python skills/ui-ux-pro-max/scripts/search.py \"SaaS premium business intelligence dashboard web development dark mode glassmorphism\" --design-system -p \"Clarix Solutions\")",
+      "Bash(python .claude/skills/ui-ux-pro-max/scripts/search.py \"SaaS premium business intelligence dashboard web development dark mode glassmorphism\" --design-system -p \"Clarix Solutions\")",
+      "Bash(python .claude/skills/ui-ux-pro-max/scripts/search.py \"glassmorphism dark premium saas\" --domain style -n 3)",
+      "Bash(python .claude/skills/ui-ux-pro-max/scripts/search.py \"animation scroll stagger intersection observer\" --domain ux -n 3)",
+      "Bash(python .claude/skills/ui-ux-pro-max/scripts/search.py \"hero landing cta conversion\" --domain landing -n 3)",
+      "Bash(python skills/ui-ux-pro-max/scripts/search.py \"github developer platform professional clean minimal\" --design-system -p \"Clarix Solutions GitHub Style\")",
+      "Bash(python3 skills/ui-ux-pro-max/scripts/search.py \"github developer platform professional clean minimal\" --design-system -p \"Clarix Solutions GitHub Style\")",
+      "Bash(python3 .claude/skills/ui-ux-pro-max/scripts/search.py \"restaurant jewelry supermarket bakery retail logistics demo website modern 3d animated\" --design-system -p \"Clarix Industry Demos\")",
+      "Bash(python .claude/skills/ui-ux-pro-max/scripts/search.py \"restaurant jewelry supermarket bakery retail logistics demo website modern 3d animated\" --design-system -p \"Clarix Industry Demos\")",
+      "Bash(sed -i \"s|/clarix/|/clarix-solutions-website-/|g\" src/components/Industries.jsx)",
+      "Read(//c/c/Users/ashra/OneDrive/Desktop/website/src/components/**)",
+      "Bash(start \"\" \"/c/Users/ashra/OneDrive/Desktop/website/coffee house/index.html\")",
+      "Bash(explorer \"/c/Users/ashra/OneDrive/Desktop/website/coffee house/index.html\")",
+      "Bash(sed -n '217,842p' \"/c/Users/ashra/OneDrive/Desktop/website/coffee house/index.html\")",
+      "Read(//tmp/**)",
+      "Bash(cat public/.nojekyll)",
+      "Bash(ls public/)"
     ]
   }
 }
