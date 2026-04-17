@@ -24,6 +24,15 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
+      - name: Copy demo sites into dist
+        run: |
+          cp -r "coffee house" dist/
+          cp -r resorant dist/
+          cp -r jewllery dist/
+          cp -r logistics dist/
+          cp -r supermarket dist/
+          cp -r bakeries dist/
+          cp -r retail dist/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

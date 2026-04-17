@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>FreshMart — Smart Supermarket</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --green:#16A34A;--green2:#22C55E;--blue:#0EA5E9;--dark:#050F08;
+  --dark2:#081A0C;--text:#E8F5EC;--muted:#6B8F74;--card:#0C1F10;
+}
+html{scroll-behavior:smooth;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--dark);color:var(--text);overflow-x:hidden;}
+a{text-decoration:none;color:inherit;}
+
+/* ─── LIVE BACKGROUND ─── */
+.bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+.orb{position:absolute;border-radius:50%;filter:blur(110px);opacity:.16;}
+.orb1{width:600px;height:600px;background:radial-gradient(circle,#16A34A,transparent);top:-15%;left:-10%;animation:dA 15s ease-in-out infinite;}
+.orb2{width:400px;height:400px;background:radial-gradient(circle,#0EA5E9,transparent);top:40%;right:-8%;animation:dB 19s ease-in-out infinite;}
+.orb3{width:350px;height:350px;background:radial-gradient(circle,#166534,transparent);bottom:5%;left:35%;animation:dC 13s ease-in-out infinite;}
+.grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(22,163,74,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(22,163,74,.03) 1px,transparent 1px);background-size:40px 40px;}
+@keyframes dA{0%,100%{transform:translate(0,0);}50%{transform:translate(50px,-40px);}}
+@keyframes dB{0%,100%{transform:translate(0,0);}50%{transform:translate(-40px,50px);}}
+@keyframes dC{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(30px,-30px) scale(1.1);}}
+
+/* ─── NAVBAR ─── */
+.navbar{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 40px;display:flex;align-items:center;justify-content:space-between;background:rgba(5,15,8,.8);backdrop-filter:blur(20px);border-bottom:1px solid rgba(22,163,74,.12);}
+.nav-logo{font-size:22px;font-weight:800;color:var(--green2);}
+.nav-logo span{color:var(--text);}
+.nav-links{display:flex;gap:28px;list-style:none;}
+.nav-links a{font-size:14px;color:rgba(232,245,236,.55);transition:color .2s;}
+.nav-links a:hover{color:var(--green2);}
+.nav-cta{background:linear-gradient(135deg,var(--green),var(--blue));color:#fff!important;padding:10px 22px;border-radius:50px;font-weight:600!important;font-size:13px!important;display:flex;align-items:center;gap:7px;}
+.back-btn{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);padding:9px 18px;border-radius:50px;font-size:13px;display:flex;align-items:center;gap:6px;cursor:pointer;transition:background .2s;}
+.back-btn:hover{background:rgba(255,255,255,.14);}
+
+/* ─── HERO ─── */
+.hero{position:relative;z-index:1;min-height:100vh;display:flex;align-items:center;padding:120px 40px 80px;}
+.hero-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(22,163,74,.1);border:1px solid rgba(22,163,74,.3);color:var(--green2);padding:8px 20px;border-radius:50px;font-size:13px;font-weight:600;margin-bottom:28px;animation:fadeUp .8s ease both;}
+.hero h1{font-size:clamp(2.8rem,5vw,4.2rem);font-weight:800;line-height:1.1;margin-bottom:24px;animation:fadeUp .8s .1s ease both;}
+.hero h1 span{background:linear-gradient(135deg,var(--green2),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero p{font-size:17px;color:var(--muted);line-height:1.8;margin-bottom:40px;animation:fadeUp .8s .2s ease both;}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap;animation:fadeUp .8s .3s ease both;}
+.btn-green{background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;padding:15px 34px;border-radius:50px;font-weight:700;font-size:15px;display:inline-flex;align-items:center;gap:10px;cursor:pointer;transition:transform .2s,box-shadow .2s;border:none;}
+.btn-green:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(22,163,74,.4);}
+.btn-outline{background:transparent;color:var(--text);padding:15px 34px;border-radius:50px;font-size:15px;font-weight:600;border:1px solid rgba(255,255,255,.15);cursor:pointer;display:inline-flex;align-items:center;gap:10px;transition:border-color .2s,background .2s;}
+.btn-outline:hover{border-color:var(--green2);background:rgba(22,163,74,.07);}
+.hero-stats{display:flex;gap:28px;margin-top:48px;animation:fadeUp .8s .4s ease both;flex-wrap:wrap;}
+.stat{background:rgba(255,255,255,.04);border:1px solid rgba(22,163,74,.15);border-radius:16px;padding:16px 22px;text-align:center;min-width:100px;}
+.stat-num{font-size:1.8rem;font-weight:800;color:var(--green2);display:block;}
+.stat-lbl{font-size:12px;color:var(--muted);margin-top:3px;}
+
+/* ─── 3D PRODUCT GRID ─── */
+.product-showcase{display:grid;grid-template-columns:1fr 1fr;gap:14px;animation:fadeUp .8s .5s ease both;}
+.prod-card{border-radius:20px;overflow:hidden;cursor:pointer;transition:transform .5s cubic-bezier(.16,1,.3,1),box-shadow .4s;position:relative;}
+.prod-card:hover{transform:perspective(700px) rotateY(-12deg) rotateX(6deg) scale(1.05);box-shadow:20px 20px 60px rgba(0,0,0,.6),0 0 30px rgba(22,163,74,.12);}
+.prod-card:first-child{grid-column:1/-1;}
+.prod-inner{height:140px;display:flex;align-items:center;justify-content:center;font-size:52px;flex-direction:column;gap:8px;}
+.prod-inner:first-child{height:120px;}
+.prod-lbl{font-size:12px;font-weight:600;color:rgba(232,245,236,.7);letter-spacing:.06em;}
+.fresh{background:linear-gradient(135deg,#0a2010,#0d3318);}
+.dairy{background:linear-gradient(135deg,#0a1520,#0d2035);}
+.meat{background:linear-gradient(135deg,#200a0a,#350d0d);}
+.bakery{background:linear-gradient(135deg,#201500,#352500);}
+.prod-overlay{position:absolute;inset:0;background:rgba(5,15,8,.5);opacity:0;transition:opacity .3s;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--green2);}
+.prod-card:hover .prod-overlay{opacity:1;}
+
+/* ─── SECTIONS ─── */
+section{position:relative;z-index:1;}
+.container{max-width:1200px;margin:0 auto;padding:0 40px;}
+.sec-title{text-align:center;margin-bottom:60px;}
+.sec-badge{display:inline-block;background:rgba(22,163,74,.1);border:1px solid rgba(22,163,74,.2);color:var(--green2);padding:6px 18px;border-radius:50px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:16px;}
+.sec-title h2{font-size:clamp(2rem,4vw,2.8rem);font-weight:800;line-height:1.2;margin-bottom:14px;}
+.sec-title p{font-size:16px;color:var(--muted);max-width:500px;margin:0 auto;line-height:1.8;}
+
+/* ─── CATEGORIES ─── */
+.categories{padding:80px 0;}
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px;}
+.cat-card{background:var(--card);border:1px solid rgba(22,163,74,.1);border-radius:20px;padding:24px 16px;text-align:center;cursor:pointer;transition:transform .3s,border-color .3s,background .3s;}
+.cat-card:hover{transform:translateY(-6px);border-color:rgba(22,163,74,.35);background:rgba(22,163,74,.05);}
+.cat-icon{font-size:40px;margin-bottom:12px;}
+.cat-name{font-size:14px;font-weight:600;margin-bottom:4px;}
+.cat-count{font-size:12px;color:var(--muted);}
+
+/* ─── FEATURES ─── */
+.features{padding:80px 0;}
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;}
+.feat-card{background:var(--card);border:1px solid rgba(22,163,74,.08);border-radius:20px;padding:28px;transition:transform .3s,border-color .3s;}
+.feat-card:hover{transform:translateY(-5px);border-color:rgba(22,163,74,.25);}
+.feat-icon{width:50px;height:50px;border-radius:12px;background:linear-gradient(135deg,rgba(22,163,74,.15),rgba(14,165,233,.1));border:1px solid rgba(22,163,74,.2);display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--green2);margin-bottom:18px;}
+.feat-card h3{font-size:16px;font-weight:700;margin-bottom:8px;}
+.feat-card p{font-size:13px;color:var(--muted);line-height:1.7;}
+
+/* ─── DASHBOARD CTA ─── */
+.dash-cta{padding:100px 0;text-align:center;}
+.dash-card{background:linear-gradient(135deg,rgba(22,163,74,.06),rgba(14,165,233,.04));border:1px solid rgba(22,163,74,.18);border-radius:32px;padding:60px 40px;max-width:860px;margin:0 auto;}
+.dash-card h2{font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:800;margin-bottom:16px;}
+.dash-card p{font-size:16px;color:var(--muted);max-width:520px;margin:0 auto 36px;line-height:1.8;}
+.btn-dashboard{display:inline-flex;align-items:center;gap:12px;background:linear-gradient(135deg,var(--green),var(--blue));color:#fff;padding:18px 48px;border-radius:50px;font-size:16px;font-weight:700;cursor:pointer;transition:transform .2s,box-shadow .2s;text-decoration:none;}
+.btn-dashboard:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(22,163,74,.3);}
+.kpi-row{display:flex;gap:24px;justify-content:center;margin-top:48px;flex-wrap:wrap;}
+.kpi{background:rgba(255,255,255,.03);border:1px solid rgba(22,163,74,.1);border-radius:14px;padding:18px 26px;text-align:center;}
+.kpi-val{font-size:1.7rem;font-weight:800;color:var(--green2);}
+.kpi-lbl{font-size:12px;color:var(--muted);margin-top:3px;}
+
+/* ─── FOOTER ─── */
+.footer{padding:40px;text-align:center;border-top:1px solid rgba(255,255,255,.05);position:relative;z-index:1;}
+.footer p{color:var(--muted);font-size:14px;}
+.footer span{color:var(--green2);}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:translateY(0);}}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+@media(max-width:900px){
+  .hero-inner{grid-template-columns:1fr;gap:40px;}
+  .navbar{padding:14px 20px;}
+  .nav-links{display:none;}
+  .container{padding:0 20px;}
+}
+</style>
+</head>
+<body>
+<div class="bg-canvas">
+  <div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div>
+  <div class="grid-bg"></div>
+</div>
+
+<nav class="navbar">
+  <div class="nav-logo">Fresh<span>Mart</span></div>
+  <ul class="nav-links">
+    <li><a href="#home">Home</a></li>
+    <li><a href="#categories">Shop</a></li>
+    <li><a href="#features">About</a></li>
+    <li><a href="#dashboard-cta" class="nav-cta"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+  </ul>
+  <a href="../index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Clarix</a>
+</nav>
+
+<section class="hero" id="home">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-badge"><i class="fas fa-leaf"></i> Smart Supermarket · Fresh Daily</div>
+      <h1>Fresh Food,<br/><span>Smart Shopping</span>,<br/>Every Day</h1>
+      <p>Your neighborhood supermarket reimagined — thousands of fresh products, competitive prices, and a seamless shopping experience both in-store and online.</p>
+      <div class="hero-btns">
+        <a href="#categories" class="btn-green"><i class="fas fa-shopping-cart"></i> Shop Now</a>
+        <a href="#dashboard-cta" class="btn-outline"><i class="fas fa-chart-bar"></i> Dashboard</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><span class="stat-num" data-target="8500">0</span><span class="stat-lbl">Products</span></div>
+        <div class="stat"><span class="stat-num" data-target="2400">0</span><span class="stat-lbl">Daily Shoppers</span></div>
+        <div class="stat"><span class="stat-num" data-target="99">0</span><span class="stat-lbl">% Fresh Rate</span></div>
+      </div>
+    </div>
+    <div class="product-showcase">
+      <div class="prod-card">
+        <div class="prod-inner fresh">🥬<span class="prod-lbl">Fresh Produce</span></div>
+        <div class="prod-overlay">500+ Items</div>
+      </div>
+      <div class="prod-card">
+        <div class="prod-inner dairy">🥛<span class="prod-lbl">Dairy & Eggs</span></div>
+        <div class="prod-overlay">200+ Items</div>
+      </div>
+      <div class="prod-card">
+        <div class="prod-inner meat">🥩<span class="prod-lbl">Meat & Poultry</span></div>
+        <div class="prod-overlay">150+ Items</div>
+      </div>
+      <div class="prod-card">
+        <div class="prod-inner bakery">🍞<span class="prod-lbl">Bakery</span></div>
+        <div class="prod-overlay">80+ Items</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="categories" id="categories">
+  <div class="container">
+    <div class="sec-title reveal">
+      <span class="sec-badge">All Departments</span>
+      <h2>Everything Under <span style="color:var(--green2)">One Roof</span></h2>
+      <p>From farm-fresh produce to household essentials — find everything your family needs.</p>
+    </div>
+    <div class="cat-grid">
+      <div class="cat-card reveal"><div class="cat-icon">🥦</div><div class="cat-name">Vegetables</div><div class="cat-count">320 items</div></div>
+      <div class="cat-card reveal"><div class="cat-icon">🍎</div><div class="cat-name">Fruits</div><div class="cat-count">180 items</div></div>
+      <div class="cat-card reveal"><div class="cat-icon">🥩</div><div class="cat-name">Meat</div><div class="cat-count">90 items</div></div>
+      <div class="cat-card reveal"><div class="cat-icon">🐟</div><div class="cat-name">Seafood</div><div class="cat-count">60 items</div></div>
+      <div class="cat-card reveal"><div class="cat-icon">🥛</div><div class="cat-name">Dairy</div><div class="cat-count">140 items</div></div>
+      <div class="cat-card reveal"><div class="cat-icon">🍞</div><div class="cat-name">Bakery</div><div class="cat-count">80 items</div></div>
+      <div class="cat-card reveal"><div class="cat-icon">🍫</div><div class="cat-name">Snacks</div><div class="cat-count">420 items</div></div>
+      <div class="cat-card reveal"><div class="cat-icon">🧃</div><div class="cat-name">Beverages</div><div class="cat-count">280 items</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="features" id="features">
+  <div class="container">
+    <div class="sec-title reveal">
+      <span class="sec-badge">Why FreshMart</span>
+      <h2>Built for the <span style="color:var(--green2)">Modern Shopper</span></h2>
+      <p>We combine the convenience of a corner store with the selection of a hypermarket.</p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat-card reveal"><div class="feat-icon"><i class="fas fa-truck"></i></div><h3>Same-Day Delivery</h3><p>Order before 2 PM and receive your groceries at your doorstep the same day — fresh, cold, and on time.</p></div>
+      <div class="feat-card reveal"><div class="feat-icon"><i class="fas fa-tags"></i></div><h3>Weekly Deals</h3><p>50+ products on sale every week, with loyalty card members getting exclusive early access to the best discounts.</p></div>
+      <div class="feat-card reveal"><div class="feat-icon"><i class="fas fa-snowflake"></i></div><h3>Cold Chain Guaranteed</h3><p>From farm to shelf, our temperature-controlled supply chain ensures every product reaches you at peak freshness.</p></div>
+      <div class="feat-card reveal"><div class="feat-icon"><i class="fas fa-mobile-alt"></i></div><h3>Smart App</h3><p>Create shopping lists, track your spending, clip digital coupons, and order for pickup or delivery — all from your phone.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="dash-cta" id="dashboard-cta">
+  <div class="container">
+    <div class="dash-card reveal">
+      <span class="sec-badge">Business Intelligence</span>
+      <h2>Manage 8,500 SKUs<br/><span style="color:var(--green2)">Without the Guesswork</span></h2>
+      <p>Real-time inventory levels, expiry alerts, supplier performance, category analytics, and shrinkage tracking — all in one place.</p>
+      <a href="#" class="btn-dashboard" onclick="alert('Connect your FreshMart system to Clarix to activate the live dashboard.');return false;">
+        <i class="fas fa-chart-line"></i> Open Supermarket Dashboard
+      </a>
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-val">-38%</div><div class="kpi-lbl">Food Waste</div></div>
+        <div class="kpi"><div class="kpi-val">+27%</div><div class="kpi-lbl">Margin Growth</div></div>
+        <div class="kpi"><div class="kpi-val">99.2%</div><div class="kpi-lbl">Stock Accuracy</div></div>
+        <div class="kpi"><div class="kpi-val">4.2x</div><div class="kpi-lbl">Restock Speed</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <p>© 2026 <span>FreshMart</span> · Powered by <span>Clarix Solutions</span></p>
+</footer>
+
+<script>
+function animateCounters(){
+  document.querySelectorAll('.stat-num[data-target]').forEach(el=>{
+    const t=parseInt(el.dataset.target);let c=0;const s=t/80;
+    const ti=setInterval(()=>{c=Math.min(c+s,t);el.textContent=Math.floor(c)+(t>=100?'+':'%');if(c>=t)clearInterval(ti);},20);
+  });
+}
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+window.addEventListener('load',()=>setTimeout(animateCounters,400));
+</script>
+</body>
+</html>
