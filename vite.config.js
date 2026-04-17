@@ -13,7 +13,7 @@ function serveDemosPlugin() {
     configureServer(server) {
       DEMOS.forEach(demo => {
         const demoDir = path.resolve(__dirname, demo)
-        server.middlewares.use(`/clarix/${demo}`, (req, res, next) => {
+        server.middlewares.use(`/clarix-solutions-website-/${demo}`, (req, res, next) => {
           const filePath = path.join(demoDir, req.url === '/' ? '/index.html' : req.url)
           if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
             res.setHeader('Content-Type', filePath.endsWith('.css') ? 'text/css'
@@ -31,7 +31,7 @@ function serveDemosPlugin() {
 }
 
 export default defineConfig({
-  base: '/clarix/',
+  base: '/clarix-solutions-website-/',
   plugins: [
     react(),
     tailwindcss(),
