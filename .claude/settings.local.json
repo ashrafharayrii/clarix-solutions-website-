@@ -26,7 +26,15 @@
       "Bash(sed -n '217,842p' \"/c/Users/ashra/OneDrive/Desktop/website/coffee house/index.html\")",
       "Read(//tmp/**)",
       "Bash(cat public/.nojekyll)",
-      "Bash(ls public/)"
+      "Bash(ls public/)",
+      "WebSearch",
+      "Bash(python -m http.server 3000)",
+      "Bash(python skills/ui-ux-pro-max/scripts/search.py \"fast-food burger brand corporate minimalist professional\" --design-system -p \"FORGE Premium Burgers\")",
+      "Bash(python \".claude/skills/ui-ux-pro-max/scripts/search.py\" \"fast-food burger brand corporate minimalist professional\" --design-system -p \"FORGE Premium Burgers\")",
+      "Bash(python \".claude/skills/ui-ux-pro-max/scripts/search.py\" \"dashboard dark BI analytics corporate\" --design-system -p \"FORGE Dashboard\")",
+      "Bash(python \".claude/skills/ui-ux-pro-max/scripts/search.py\" \"chart area bar donut dark theme\" --domain chart)",
+      "Bash(npm --version)",
+      "Bash(git add *)"
     ]
   }
 }

@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FORGE — Premium Burgers</title>
+  <meta name="description" content="FORGE Premium Burgers — Crafted. Bold. Uncompromising. Premium fast food across 12 locations."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --navy:#1E3A5F; --navy-d:#0F2035; --navy-l:#2D5286;
+      --brand:#D97706; --brand-d:#B45309; --brand-l:#F59E0B;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:'Inter',sans-serif;background:#F8FAFC;color:#1E293B}
+    .fd{font-family:'Barlow Condensed',sans-serif}
+
+    /* NAV */
+    #nav{transition:background .3s,box-shadow .3s;position:fixed;top:0;inset-inline:0;z-index:50}
+    #nav.scrolled{background:rgba(15,32,53,.97)!important;backdrop-filter:blur(20px);box-shadow:0 1px 28px rgba(0,0,0,.35)}
+
+    /* HERO */
+    .hero{background:linear-gradient(135deg,#071426 0%,#0F2035 45%,#1E3A5F 100%);min-height:100vh;position:relative;overflow:hidden}
+    .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 65% 50%,rgba(217,119,6,.1) 0%,transparent 55%);pointer-events:none}
+
+    /* MENU TABS */
+    .mtab{transition:all .2s;cursor:pointer;border:1.5px solid #E2E8F0;background:#fff;color:#475569;font-weight:600;font-size:.875rem;padding:.6rem 1.5rem;border-radius:.75rem}
+    .mtab:hover{border-color:var(--navy);color:var(--navy)}
+    .mtab.active{background:var(--navy)!important;border-color:var(--navy)!important;color:#fff!important;box-shadow:0 4px 14px rgba(30,58,95,.28)}
+
+    /* CARDS */
+    .mcard{background:#fff;border-radius:1.25rem;overflow:hidden;border:1px solid #F1F5F9;box-shadow:0 1px 4px rgba(0,0,0,.06);transition:transform .25s,box-shadow .25s;cursor:default}
+    .mcard:hover{transform:translateY(-5px);box-shadow:0 16px 48px rgba(0,0,0,.12)}
+    .mcard .img-wrap{overflow:hidden}
+    .mcard .img-wrap img{transition:transform .4s;display:block;width:100%;object-fit:cover}
+    .mcard:hover .img-wrap img{transform:scale(1.05)}
+
+    /* BADGE */
+    .badge{font-size:.7rem;font-weight:700;padding:.25rem .65rem;border-radius:9999px;letter-spacing:.06em;position:absolute;top:.75rem;left:.75rem}
+    .badge-b{background:var(--brand);color:#fff}
+    .badge-p{background:var(--navy);color:#fff}
+    .badge-n{background:#059669;color:#fff}
+    .badge-h{background:#DC2626;color:#fff}
+    .badge-c{background:#7C3AED;color:#fff}
+
+    /* ADD BTN */
+    .add-btn{display:inline-flex;align-items:center;gap:.4rem;font-size:.8125rem;font-weight:600;color:#fff;padding:.45rem 1rem;border-radius:.5rem;border:none;cursor:pointer;transition:all .2s;background:var(--navy)}
+    .add-btn:hover{background:var(--navy-d);transform:scale(1.04)}
+    .add-btn:disabled{background:#059669;cursor:default;transform:none}
+
+    /* LOC CARD */
+    .loc-card{background:#fff;border-radius:1.25rem;padding:1.5rem;border:1.5px solid #F1F5F9;box-shadow:0 1px 4px rgba(0,0,0,.04);transition:border-color .2s,box-shadow .2s}
+    .loc-card:hover{border-color:var(--navy);box-shadow:0 8px 28px rgba(0,0,0,.08)}
+
+    /* SECTION TAG */
+    .sec-tag{display:flex;align-items:center;justify-content:center;gap:.75rem;margin-bottom:1rem}
+    .sec-tag .line{height:1px;width:2.5rem;background:var(--brand)}
+    .sec-tag span{font-size:.7rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--brand)}
+
+    /* ANIMATIONS */
+    @keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+    .au{animation:fadeUp .65s ease forwards}
+    .au1{animation:fadeUp .65s .1s ease forwards;opacity:0}
+    .au2{animation:fadeUp .65s .22s ease forwards;opacity:0}
+    .au3{animation:fadeUp .65s .35s ease forwards;opacity:0}
+
+    @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════ NAVBAR ═══════════════════ -->
+<nav id="nav" style="background:transparent">
+  <div style="max-width:1280px;margin:0 auto;padding:0 1.5rem">
+    <div style="display:flex;align-items:center;justify-content:space-between;height:72px">
+
+      <!-- Logo -->
+      <a href="#home" style="display:flex;align-items:center;gap:.75rem;text-decoration:none">
+        <div style="width:38px;height:38px;background:var(--brand);border-radius:.625rem;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11h18"/><path d="M3 11a2 2 0 01-2-2V8a2 2 0 012-2h18a2 2 0 012 2v1a2 2 0 01-2 2"/><path d="M3 11v8a2 2 0 002 2h14a2 2 0 002-2v-8"/><path d="M8 15h8"/></svg>
+        </div>
+        <div>
+          <div class="fd" style="font-weight:900;font-size:1.2rem;color:#fff;letter-spacing:.18em;line-height:1">FORGE</div>
+          <div style="font-size:.65rem;color:rgba(255,255,255,.45);letter-spacing:.18em;font-weight:500;line-height:1;margin-top:2px">PREMIUM BURGERS</div>
+        </div>
+      </a>
+
+      <!-- Desktop links -->
+      <ul id="nav-links" style="display:none;list-style:none;gap:2rem;align-items:center" class="hidden md:flex">
+        <li><a href="#home" style="color:rgba(255,255,255,.65);text-decoration:none;font-size:.875rem;font-weight:500;transition:color .2s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.65)'">Home</a></li>
+        <li><a href="#menu" style="color:rgba(255,255,255,.65);text-decoration:none;font-size:.875rem;font-weight:500;transition:color .2s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.65)'">Menu</a></li>
+        <li><a href="#about" style="color:rgba(255,255,255,.65);text-decoration:none;font-size:.875rem;font-weight:500;transition:color .2s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.65)'">About</a></li>
+        <li><a href="#locations" style="color:rgba(255,255,255,.65);text-decoration:none;font-size:.875rem;font-weight:500;transition:color .2s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.65)'">Locations</a></li>
+        <li><a href="dashboard.html" style="color:var(--brand);text-decoration:none;font-size:.875rem;font-weight:600">Dashboard</a></li>
+      </ul>
+
+      <div style="display:flex;align-items:center;gap:.75rem">
+        <!-- Order Now -->
+        <a href="#menu" class="hidden md:inline-flex" style="display:none;align-items:center;gap:.4rem;background:var(--brand);color:#fff;font-size:.8125rem;font-weight:600;padding:.6rem 1.25rem;border-radius:.625rem;text-decoration:none;transition:background .2s" onmouseover="this.style.background='var(--brand-d)'" onmouseout="this.style.background='var(--brand)'" id="nav-cta">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 001.99 1.61H19.4a2 2 0 001.97-1.67L23 6H6"/></svg>
+          Order Now
+        </a>
+        <!-- Hamburger -->
+        <button id="hamburger" aria-label="Open navigation" aria-expanded="false" style="display:flex;align-items:center;justify-content:center;width:38px;height:38px;background:rgba(255,255,255,.1);border:none;border-radius:.5rem;cursor:pointer;color:#fff" class="md:hidden">
+          <svg id="ham-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile nav -->
+    <div id="mob-nav" style="display:none;padding-bottom:1.25rem;border-top:1px solid rgba(255,255,255,.1);margin-top:.5rem;padding-top:1rem">
+      <div style="display:flex;flex-direction:column;gap:.25rem">
+        <a href="#home" style="color:rgba(255,255,255,.65);text-decoration:none;font-size:.875rem;font-weight:500;padding:.65rem .75rem;border-radius:.5rem;transition:background .2s" onmouseover="this.style.background='rgba(255,255,255,.06)'" onmouseout="this.style.background='transparent'">Home</a>
+        <a href="#menu" style="color:rgba(255,255,255,.65);text-decoration:none;font-size:.875rem;font-weight:500;padding:.65rem .75rem;border-radius:.5rem;transition:background .2s" onmouseover="this.style.background='rgba(255,255,255,.06)'" onmouseout="this.style.background='transparent'">Menu</a>
+        <a href="#about" style="color:rgba(255,255,255,.65);text-decoration:none;font-size:.875rem;font-weight:500;padding:.65rem .75rem;border-radius:.5rem;transition:background .2s" onmouseover="this.style.background='rgba(255,255,255,.06)'" onmouseout="this.style.background='transparent'">About</a>
+        <a href="#locations" style="color:rgba(255,255,255,.65);text-decoration:none;font-size:.875rem;font-weight:500;padding:.65rem .75rem;border-radius:.5rem;transition:background .2s" onmouseover="this.style.background='rgba(255,255,255,.06)'" onmouseout="this.style.background='transparent'">Locations</a>
+        <a href="dashboard.html" style="color:var(--brand);text-decoration:none;font-size:.875rem;font-weight:600;padding:.65rem .75rem">Dashboard</a>
+        <a href="#menu" style="display:flex;align-items:center;justify-content:center;gap:.4rem;background:var(--brand);color:#fff;font-size:.8125rem;font-weight:600;padding:.75rem;border-radius:.625rem;text-decoration:none;margin-top:.5rem">Order Now</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Desktop nav visibility -->
+<script>
+  (function(){
+    var nl=document.getElementById('nav-links'),nc=document.getElementById('nav-cta'),hm=document.getElementById('hamburger');
+    function check(){if(window.innerWidth>=768){nl.style.display='flex';nc.style.display='inline-flex';hm.style.display='none';}else{nl.style.display='none';nc.style.display='none';hm.style.display='flex';}}
+    check();window.addEventListener('resize',check);
+  })();
+</script>
+
+<!-- ═══════════════════ HERO ═══════════════════ -->
+<section id="home" class="hero" style="padding-top:72px;display:flex;align-items:center">
+  <div style="max-width:1280px;margin:0 auto;padding:5rem 1.5rem;width:100%;position:relative;z-index:1">
+    <div style="display:grid;grid-template-columns:1fr;gap:3.5rem;align-items:center" id="hero-grid">
+      <!-- Left -->
+      <div>
+        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.75rem" class="au">
+          <div style="height:1px;width:2.5rem;background:var(--brand);flex-shrink:0"></div>
+          <span style="font-size:.7rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--brand)">Est. 2014 &nbsp;·&nbsp; 12 Locations</span>
+        </div>
+
+        <h1 class="fd au1" style="font-weight:900;color:#fff;line-height:.95;margin-bottom:1.5rem;font-size:clamp(3.5rem,8vw,6rem)">
+          CRAFTED.<br/>
+          <span style="color:var(--brand)">BOLD.</span><br/>
+          UNCOMPROMISING.
+        </h1>
+
+        <p class="au2" style="color:rgba(255,255,255,.58);font-size:1.05rem;line-height:1.75;margin-bottom:2.25rem;max-width:28rem">
+          Premium ingredients. Expert technique. Zero shortcuts. Every burger crafted to order with precision and passion.
+        </p>
+
+        <div style="display:flex;flex-wrap:wrap;gap:1rem;margin-bottom:3.25rem" class="au3">
+          <a href="#menu" style="display:inline-flex;align-items:center;gap:.5rem;background:var(--brand);color:#fff;font-size:.875rem;font-weight:600;padding:.875rem 2rem;border-radius:.75rem;text-decoration:none;box-shadow:0 8px 24px rgba(217,119,6,.32);transition:background .2s" onmouseover="this.style.background='var(--brand-d)'" onmouseout="this.style.background='var(--brand)'">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 001.99 1.61H19.4a2 2 0 001.97-1.67L23 6H6"/></svg>
+            Order Now
+          </a>
+          <a href="#about" style="display:inline-flex;align-items:center;gap:.5rem;color:#fff;font-size:.875rem;font-weight:600;padding:.875rem 2rem;border-radius:.75rem;border:1.5px solid rgba(255,255,255,.2);text-decoration:none;backdrop-filter:blur(8px);transition:background .2s" onmouseover="this.style.background='rgba(255,255,255,.1)'" onmouseout="this.style.background='transparent'">
+            Our Story
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+
+        <!-- Stats -->
+        <div class="au3" style="display:flex;align-items:center;gap:2.5rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,.1)">
+          <div>
+            <div class="fd" style="font-weight:900;color:#fff;font-size:1.9rem;line-height:1">2.4M+</div>
+            <div style="color:rgba(255,255,255,.45);font-size:.75rem;margin-top:.35rem;font-weight:500">Burgers Served</div>
+          </div>
+          <div style="width:1px;height:2.5rem;background:rgba(255,255,255,.15);flex-shrink:0"></div>
+          <div>
+            <div class="fd" style="font-weight:900;color:#fff;font-size:1.9rem;line-height:1">4.9</div>
+            <div style="color:rgba(255,255,255,.45);font-size:.75rem;margin-top:.35rem;font-weight:500">Avg. Rating</div>
+          </div>
+          <div style="width:1px;height:2.5rem;background:rgba(255,255,255,.15);flex-shrink:0"></div>
+          <div>
+            <div class="fd" style="font-weight:900;color:#fff;font-size:1.9rem;line-height:1">12</div>
+            <div style="color:rgba(255,255,255,.45);font-size:.75rem;margin-top:.35rem;font-weight:500">Locations</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: image (hidden on mobile, shown on lg) -->
+      <div id="hero-img-col" style="display:none;position:relative">
+        <div style="border-radius:1.25rem;overflow:hidden;aspect-ratio:4/3;position:relative;box-shadow:0 32px 80px rgba(0,0,0,.5)">
+          <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?w=800&h=600&fit=crop&q=85&auto=format" alt="FORGE Signature Burger — premium Angus beef with house special sauce" style="width:100%;height:100%;object-fit:cover;display:block" loading="eager" width="800" height="600"/>
+          <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.35),transparent);border-radius:1.25rem"></div>
+        </div>
+        <!-- Price badge -->
+        <div style="position:absolute;top:-1.25rem;right:-1.25rem;background:#fff;border-radius:1.125rem;padding:1rem 1.125rem;box-shadow:0 16px 48px rgba(0,0,0,.18);min-width:10rem">
+          <div style="font-size:.65rem;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.12em;margin-bottom:.3rem">Today's Special</div>
+          <div style="font-weight:700;color:var(--navy);font-size:.875rem">Double Smash</div>
+          <div class="fd" style="font-weight:900;color:var(--brand);font-size:1.6rem;line-height:1.1;margin-top:.2rem">$11.49</div>
+          <div style="font-size:.72rem;color:#94A3B8;text-decoration:line-through">was $13.99</div>
+        </div>
+        <!-- Ready badge -->
+        <div style="position:absolute;bottom:-1.25rem;left:-1.25rem;background:var(--navy);border-radius:1.125rem;padding:.9rem 1.25rem;display:flex;align-items:center;gap:.75rem;box-shadow:0 16px 40px rgba(0,0,0,.3)">
+          <div style="width:2.5rem;height:2.5rem;background:rgba(217,119,6,.18);border-radius:.75rem;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div>
+            <div style="color:#fff;font-weight:600;font-size:.875rem">Ready in</div>
+            <div style="color:var(--brand);font-weight:700;font-size:.875rem">8 – 12 min</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ VALUE PROPS ═══════════════════ -->
+<section style="background:var(--navy);padding:1.5rem 0;border-bottom:1px solid rgba(255,255,255,.06)">
+  <div style="max-width:1280px;margin:0 auto;padding:0 1.5rem">
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:1.25rem" id="vp-grid">
+      <!-- VP items -->
+      <div style="display:flex;align-items:center;gap:.75rem">
+        <div style="width:2.5rem;height:2.5rem;background:rgba(217,119,6,.15);border-radius:.75rem;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div><div style="color:#fff;font-weight:600;font-size:.875rem">Premium Quality</div><div style="color:rgba(255,255,255,.4);font-size:.75rem">100% Angus Beef</div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:.75rem">
+        <div style="width:2.5rem;height:2.5rem;background:rgba(217,119,6,.15);border-radius:.75rem;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div><div style="color:#fff;font-weight:600;font-size:.875rem">Fast Service</div><div style="color:rgba(255,255,255,.4);font-size:.75rem">8 – 12 Minutes</div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:.75rem">
+        <div style="width:2.5rem;height:2.5rem;background:rgba(217,119,6,.15);border-radius:.75rem;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        </div>
+        <div><div style="color:#fff;font-weight:600;font-size:.875rem">Loyalty Program</div><div style="color:rgba(255,255,255,.4);font-size:.75rem">Points & Rewards</div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:.75rem">
+        <div style="width:2.5rem;height:2.5rem;background:rgba(217,119,6,.15);border-radius:.75rem;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <div><div style="color:#fff;font-weight:600;font-size:.875rem">12 Locations</div><div style="color:rgba(255,255,255,.4);font-size:.75rem">Across the City</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ MENU ═══════════════════ -->
+<section id="menu" style="padding:5rem 0;background:#F8FAFC">
+  <div style="max-width:1280px;margin:0 auto;padding:0 1.5rem">
+
+    <div style="text-align:center;margin-bottom:3rem">
+      <div class="sec-tag"><div class="line"></div><span>Our Menu</span><div class="line"></div></div>
+      <h2 class="fd" style="font-weight:900;color:var(--navy);font-size:clamp(2.25rem,5vw,3.5rem);line-height:.95;margin-bottom:.75rem">CRAFTED TO ORDER</h2>
+      <p style="color:#64748B;font-size:1rem;max-width:36rem;margin:0 auto;line-height:1.7">Every item made fresh with premium ingredients. No pre-made patties. No shortcuts. Ever.</p>
+    </div>
+
+    <!-- Tabs -->
+    <div style="display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-bottom:2.5rem" role="tablist">
+      <button class="mtab active" data-tab="burgers" role="tab" aria-selected="true">Burgers</button>
+      <button class="mtab" data-tab="sides" role="tab" aria-selected="false">Sides</button>
+      <button class="mtab" data-tab="shakes" role="tab" aria-selected="false">Shakes</button>
+      <button class="mtab" data-tab="drinks" role="tab" aria-selected="false">Drinks</button>
+      <button class="mtab" data-tab="salads" role="tab" aria-selected="false">Salads</button>
+    </div>
+
+    <!-- ── BURGERS ── -->
+    <div class="menu-panel" data-panel="burgers" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:1.5rem">
+
+      <article class="mcard">
+        <div class="img-wrap" style="height:210px"><img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&h=350&fit=crop&q=85" alt="Classic Forge — Angus beef, aged cheddar, lettuce, tomato" loading="lazy" height="210"/><span class="badge badge-b">BESTSELLER</span></div>
+        <div style="padding:1.25rem">
+          <div style="font-size:.68rem;font-weight:700;color:var(--brand);letter-spacing:.16em;text-transform:uppercase;margin-bottom:.375rem">Signature Series</div>
+          <h3 style="font-weight:700;color:var(--navy);font-size:1.05rem;margin-bottom:.5rem">Classic Forge</h3>
+          <p style="color:#64748B;font-size:.83rem;line-height:1.65;margin-bottom:1rem">Angus beef patty, aged cheddar, crisp lettuce, heirloom tomato, and our house-crafted special sauce on a brioche bun.</p>
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <span class="fd" style="font-weight:900;color:var(--navy);font-size:1.5rem">$8.99</span>
+            <button class="add-btn" aria-label="Add Classic Forge to order"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="mcard">
+        <div class="img-wrap" style="height:210px"><img src="https://images.unsplash.com/photo-1607013251379-e6eecfffe234?w=600&h=350&fit=crop&q=85" alt="Double Smash — two smashed patties, American cheese, caramelized onions" loading="lazy" height="210"/><span class="badge badge-p">POPULAR</span></div>
+        <div style="padding:1.25rem">
+          <div style="font-size:.68rem;font-weight:700;color:var(--brand);letter-spacing:.16em;text-transform:uppercase;margin-bottom:.375rem">Smash Series</div>
+          <h3 style="font-weight:700;color:var(--navy);font-size:1.05rem;margin-bottom:.5rem">Double Smash</h3>
+          <p style="color:#64748B;font-size:.83rem;line-height:1.65;margin-bottom:1rem">Two smashed Angus patties, American cheese, caramelized onions, dill pickles, and signature smash sauce.</p>
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <span class="fd" style="font-weight:900;color:var(--navy);font-size:1.5rem">$11.49</span>
+            <button class="add-btn" aria-label="Add Double Smash to order"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="mcard">
+        <div class="img-wrap" style="height:210px"><img src="https://images.unsplash.com/photo-1553979459-d2229ba7433b?w=600&h=350&fit=crop&q=85" alt="Crispy Chicken — buttermilk-brined fillet, honey slaw, hot honey glaze" loading="lazy" height="210"/></div>
+        <div style="padding:1.25rem">
+          <div style="font-size:.68rem;font-weight:700;color:var(--brand);letter-spacing:.16em;text-transform:uppercase;margin-bottom:.375rem">Chicken Series</div>
+          <h3 style="font-weight:700;color:var(--navy);font-size:1.05rem;margin-bottom:.5rem">Crispy Chicken</h3>
+          <p style="color:#64748B;font-size:.83rem;line-height:1.65;margin-bottom:1rem">Buttermilk-brined crispy chicken fillet, honey slaw, dill pickles, and hot honey glaze on toasted brioche.</p>
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <span class="fd" style="font-weight:900;color:var(--navy);font-size:1.5rem">$9.99</span>
+            <button class="add-btn" aria-label="Add Crispy Chicken to order"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="mcard">
+        <div class="img-wrap" style="height:210px"><img src="https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?w=600&h=350&fit=crop&q=85" alt="Forge Signature — triple patty, bacon, egg, truffle mayo" loading="lazy" height="210"/><span class="badge badge-c">CHEF'S PICK</span></div>
+        <div style="padding:1.25rem">
+          <div style="font-size:.68rem;font-weight:700;color:var(--brand);letter-spacing:.16em;text-transform:uppercase;margin-bottom:.375rem">Premium</div>
+          <h3 style="font-weight:700;color:var(--navy);font-size:1.05rem;margin-bottom:.5rem">Forge Signature</h3>
+          <p style="color:#64748B;font-size:.83rem;line-height:1.65;margin-bottom:1rem">Triple beef patty, smoked bacon, fried egg, aged cheddar, and black truffle mayo. Our crown jewel.</p>
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <span class="fd" style="font-weight:900;color:var(--navy);font-size:1.5rem">$14.99</span>
+            <button class="add-btn" aria-label="Add Forge Signature to order"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="mcard">
+        <div class="img-wrap" style="height:210px"><img src="https://images.unsplash.com/photo-1551615593-ef5fe247e8f7?w=600&h=350&fit=crop&q=85" alt="Mushroom Swiss — portobello mushrooms, Swiss cheese, garlic aioli" loading="lazy" height="210"/></div>
+        <div style="padding:1.25rem">
+          <div style="font-size:.68rem;font-weight:700;color:var(--brand);letter-spacing:.16em;text-transform:uppercase;margin-bottom:.375rem">Classic Series</div>
+          <h3 style="font-weight:700;color:var(--navy);font-size:1.05rem;margin-bottom:.5rem">Mushroom Swiss</h3>
+          <p style="color:#64748B;font-size:.83rem;line-height:1.65;margin-bottom:1rem">Juicy beef patty topped with sautéed portobello mushrooms, Swiss cheese, and garlic aioli on sourdough.</p>
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <span class="fd" style="font-weight:900;color:var(--navy);font-size:1.5rem">$10.49</span>
+            <button class="add-btn" aria-label="Add Mushroom Swiss to order"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="mcard">
+        <div class="img-wrap" style="height:210px"><img src="https://images.unsplash.com/photo-1628294896516-b6f9f8eba596?w=600&h=350&fit=crop&q=85" alt="Spicy Ghost — ghost pepper sauce, jalapeños, habanero cheese" loading="lazy" height="210"/><span class="badge badge-h">EXTRA HOT</span></div>
+        <div style="padding:1.25rem">
+          <div style="font-size:.68rem;font-weight:700;color:var(--brand);letter-spacing:.16em;text-transform:uppercase;margin-bottom:.375rem">Fire Series</div>
+          <h3 style="font-weight:700;color:var(--navy);font-size:1.05rem;margin-bottom:.5rem">Spicy Ghost</h3>
+          <p style="color:#64748B;font-size:.83rem;line-height:1.65;margin-bottom:1rem">Ghost pepper sauce, jalapeños, habanero cheese, and sriracha mayo. For serious heat seekers only.</p>
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <span class="fd" style="font-weight:900;color:var(--navy);font-size:1.5rem">$11.99</span>
+            <button class="add-btn" aria-label="Add Spicy Ghost to order"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add</button>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <!-- ── SIDES ── -->
+    <div class="menu-panel" data-panel="sides" style="display:none;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.5rem">
+      <article class="mcard"><div class="img-wrap" style="height:195px"><img src="https://images.unsplash.com/photo-1576107232684-1279f890fd68?w=500&h=300&fit=crop&q=85" alt="Loaded Fries" loading="lazy" height="195"/><span class="badge badge-b">BESTSELLER</span></div><div style="padding:1.125rem"><div style="font-size:.68rem;font-weight:700;color:var(--brand);letter-spacing:.16em;text-transform:uppercase;margin-bottom:.3rem">Loaded</div><h3 style="font-weight:700;color:var(--navy);margin-bottom:.4rem">Loaded Fries</h3><p style="color:#64748B;font-size:.82rem;line-height:1.6;margin-bottom:.875rem">Shoestring fries, cheese sauce, bacon bits, jalapeños, and ranch drizzle.</p><div style="display:flex;align-items:center;justify-content:space-between"><span class="fd" style="font-weight:900;color:var(--navy);font-size:1.375rem">$5.99</span><button class="add-btn" aria-label="Add Loaded Fries"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add</button></div></div></article>
+      <article class="mcard"><div class="img-wrap" style="height:195px"><img src="https://images.unsplash.com/photo-1639024471283-03518883512d?w=500&h=300&fit=crop&q=85" alt="Onion Rings" loading="lazy" height="195"/></div><div style="padding:1.125rem"><div style="font-size:.68rem;font-weight:700;color:var(--brand);letter-spacing:.16em;text-transform:uppercase;margin-bottom:.3rem">Fried</div><h3 style="font-weight:700;color:var(--navy);margin-bottom:.4rem">Onion Rings</h3><p style="color:#64748B;font-size:.82rem;line-height:1.6;margin-bottom:.875rem">Beer-battered, golden crispy rings served with chipotle dipping sauce.</p><div style="display:flex;align-items:center;justify-content:space-between"><span class="fd" style="font-weight:900;color:var(--navy);font-size:1.375rem">$4.99</span><button class="add-btn" aria-label="Add Onion Rings"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add</button></div></div></article>
+      <article class="mcard"><div class="img-wrap" style="height:195px"><img src="https://images.unsplash.com/photo-1518013431117-eb1465fa5afa?w=500&h=300&fit=crop&q=85" alt="Sweet Potato Fries" loading="lazy" height="195"/><span class="badge badge-n">HEALTHY</span></div><div style="padding:1.125rem"><div style="font-size:.68rem;font-weight:700;color:var(--brand);letter-spacing:.16em;text-transform:uppercase;margin-bottom:.3rem">Healthy Choice</div><h3 style="font-weight:700;color:var(--navy);margin-bottom:.4rem">Sweet Potato Fries</h3><p style="color:#64748B;font-size:.82rem;line-height:1.6;margin-bottom:.875rem">Crispy sweet potato fries with a maple cinnamon dipping sauce.</p><div style="display:flex;align-items:center;justify-content:space-between"><span class="fd" style="font-weight:900;color:var(--navy);font-size:1.375rem">$5.49</span><button class="add-btn" aria-label="Add Sweet Potato Fries"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add</button></div></div></article>
+      <article class="mcard"><div class="img-wrap" style="height:195px"><img src="https://images.unsplash.com/photo-1548340748-6d2b7d7da280?w=500&h=300&fit=crop&q=85" alt="Mozzarella Sticks" loading="lazy" height="195"/><span class="badge badge-p">NEW</span></div><div style="padding:1.125rem"><div style="font-size:.68rem;font-weight:700;color:var(--brand);letter-spacing:.16em;text-transform:uppercase;margin-bottom:.3rem">Fried</div><h3 style="font-weight:700;color:var(--navy);margin-bottom:.4rem">Mozzarella Sticks</h3><p style="color:#64748B;font-size:.82rem;line-height:1.6;margin-bottom:.875rem">Golden-fried mozzarella sticks served with house marinara sauce.</p><div style="display:flex;align-items:center;justify-content:space-between"><span class="fd" style="font-weight:900;color:var(--navy);font-size:1.375rem">$5.99</span><button class="add-btn" aria-label="Add Mozzarella Sticks"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add</button></div></div></article>
+    </div>
+
+    <!-- ── SHAKES ── -->
+    <div class="menu-panel" data-panel="shakes" style="display:none;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.5rem">
+      <article class="mcard"><div class="img-wrap" style="height:195px"><img src="https://images.unsplash.com/photo-1572490122747-3e9e1fbfcd6d?w=500&h=300&fit=crop&q=85" alt="Classic Vanilla shake" loading="lazy" height="195"/><span class="badge badge-b">CLASSIC</span></div><div style="padding:1.125rem"><div style="font-size:.68rem;font-weight:700;color:var(--brand);letter-spacing:.16em;text-transform:uppercase;margin-bottom:.3rem">Shakes</div><h3 style="font-weight:700;color:var(--navy);margin-bottom:.4rem">Classic Vanilla</h3><p style="color:#64748B;font-size:.82rem;line-height:1.6;margin-bottom:.875rem">Madagascar vanilla bean ice cream blended to creamy perfection with whole milk.</p><div style="display:flex;align-items:center;justify-content:space-between"><span class="fd" style="font-weight:900;color:var(--navy);font-size:1.375rem">$5.99</span><button class="add-btn" aria-label="Add Classic Vanilla shake"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add</button></div></div></article>
+      <article class="mcard"><div class="img-wrap" style="height:195px"><img src="https://images.unsplash.com/photo-1579954115563-e72bf1381629?w=500&h=300&fit=crop&q=85" alt="Dark Chocolate shake" loading="lazy" height="195"/></div><div style="padding:1.125rem"><div style="font-size:.68rem;font-weight:700;color:var(--brand);letter-spacing:.16em;text-transform:uppercase;margin-bottom:.3rem">Shakes</div><h3 style="font-weight:700;color:var(--navy);margin-bottom:.4rem">Dark Chocolate</h3><p style="color:#64748B;font-size:.82rem;line-height:1.6;margin-bottom:.875rem">Belgian dark chocolate, premium ice cream, and rich cocoa drizzle. Deeply indulgent.</p><div style="display:flex;align-items:center;justify-content:space-between"><span class="fd" style="font-weight:900;color:var(--navy);font-size:1.375rem">$6.49</span><button class="add-btn" aria-label="Add Dark Chocolate shake"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add</button></div></div></article>
+      <article class="mcard"><div class="img-wrap" style="height:195px"><img src="https://images.unsplash.com/photo-1625938144755-652e08e359b7?w=500&h=300&fit=crop&q=85" alt="Salted Caramel shake" loading="lazy" height="195"/><span class="badge badge-b">FAN FAVE</span></div><div style="padding:1.125rem"><div style="font-size:.68rem;font-weight:700;color:var(--brand);letter-spacing:.16em;text-transform:uppercase;margin-bottom:.3rem">Shakes</div><h3 style="font-weight:700;color:var(--navy);margin-bottom:.4rem">Salted Caramel</h3><p style="color:#64748B;font-size:.82rem;line-height:1.6;margin-bottom:.875rem">House-made salted caramel sauce, vanilla ice cream, sea salt flakes on top.</p><div style="display:flex;align-items:center;justify-content:space-between"><span class="fd" style="font-weight:900;color:var(--navy);font-size:1.375rem">$6.49</span><button class="add-btn" aria-label="Add Salted Caramel shake"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add</button></div></div></article>
+      <article class="mcard"><div class="img-wrap" style="height:195px"><img src="https://images.unsplash.com/photo-1535235058754-35bb4eeebcb6?w=500&h=300&fit=crop&q=85" alt="Oreo Crunch shake" loading="lazy" height="195"/><span class="badge badge-p">NEW</span></div><div style="padding:1.125rem"><div style="font-size:.68rem;font-weight:700;color:var(--brand);letter-spacing:.16em;text-transform:uppercase;margin-bottom:.3rem">Shakes</div><h3 style="font-weight:700;color:var(--navy);margin-bottom:.4rem">Oreo Crunch</h3><p style="color:#64748B;font-size:.82rem;line-height:1.6;margin-bottom:.875rem">Crushed Oreos blended with vanilla ice cream, topped with whipped cream and cookie crumbs.</p><div style="display:flex;align-items:center;justify-content:space-between"><span class="fd" style="font-weight:900;color:var(--navy);font-size:1.375rem">$6.99</span><button class="add-btn" aria-label="Add Oreo Crunch shake"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add</button></div></div></article>
+    </div>
+
+    <!-- ── DRINKS ── -->
+    <div class="menu-panel" data-panel="drinks" style="display:none;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.5rem">
+      <article class="mcard"><div class="img-wrap" style="height:195px"><img src="https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?w=500&h=300&fit=crop&q=85" alt="Fresh Lemonade" loading="lazy" height="195"/></div><div style="padding:1.125rem"><div style="font-size:.68rem;font-weight:700;color:var(--brand);letter-spacing:.16em;text-transform:uppercase;margin-bottom:.3rem">Fresh</div><h3 style="font-weight:700;color:var(--navy);margin-bottom:.4rem">Fresh Lemonade</h3><p style="color:#64748B;font-size:.82rem;line-height:1.6;margin-bottom:.875rem">Hand-squeezed lemons with cane sugar and sparkling water over ice.</p><div style="display:flex;align-items:center;justify-content:space-between"><span class="fd" style="font-weight:900;color:var(--navy);font-size:1.375rem">$3.99</span><button class="add-btn" aria-label="Add Fresh Lemonade"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add</button></div></div></article>
+      <article class="mcard"><div class="img-wrap" style="height:195px"><img src="https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=500&h=300&fit=crop&q=85" alt="Iced Tea" loading="lazy" height="195"/></div><div style="padding:1.125rem"><div style="font-size:.68rem;font-weight:700;color:var(--brand);letter-spacing:.16em;text-transform:uppercase;margin-bottom:.3rem">Brewed</div><h3 style="font-weight:700;color:var(--navy);margin-bottom:.4rem">Iced Tea</h3><p style="color:#64748B;font-size:.82rem;line-height:1.6;margin-bottom:.875rem">Freshly brewed iced tea — classic black, peach, or green. Refillable.</p><div style="display:flex;align-items:center;justify-content:space-between"><span class="fd" style="font-weight:900;color:var(--navy);font-size:1.375rem">$2.99</span><button class="add-btn" aria-label="Add Iced Tea"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add</button></div></div></article>
+      <article class="mcard"><div class="img-wrap" style="height:195px"><img src="https://images.unsplash.com/photo-1581636625402-29b2a704ef13?w=500&h=300&fit=crop&q=85" alt="Soft Drinks" loading="lazy" height="195"/></div><div style="padding:1.125rem"><div style="font-size:.68rem;font-weight:700;color:var(--brand);letter-spacing:.16em;text-transform:uppercase;margin-bottom:.3rem">Carbonated</div><h3 style="font-weight:700;color:var(--navy);margin-bottom:.4rem">Soft Drinks</h3><p style="color:#64748B;font-size:.82rem;line-height:1.6;margin-bottom:.875rem">Coca-Cola, Sprite, Fanta, or Dr. Pepper. Regular and diet options available.</p><div style="display:flex;align-items:center;justify-content:space-between"><span class="fd" style="font-weight:900;color:var(--navy);font-size:1.375rem">$2.49</span><button class="add-btn" aria-label="Add Soft Drink"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add</button></div></div></article>
+      <article class="mcard"><div class="img-wrap" style="height:195px"><img src="https://images.unsplash.com/photo-1559839914-17aae19cec71?w=500&h=300&fit=crop&q=85" alt="Sparkling Water" loading="lazy" height="195"/></div><div style="padding:1.125rem"><div style="font-size:.68rem;font-weight:700;color:var(--brand);letter-spacing:.16em;text-transform:uppercase;margin-bottom:.3rem">Premium</div><h3 style="font-weight:700;color:var(--navy);margin-bottom:.4rem">Sparkling Water</h3><p style="color:#64748B;font-size:.82rem;line-height:1.6;margin-bottom:.875rem">Premium imported sparkling mineral water — San Pellegrino or Perrier.</p><div style="display:flex;align-items:center;justify-content:space-between"><span class="fd" style="font-weight:900;color:var(--navy);font-size:1.375rem">$1.99</span><button class="add-btn" aria-label="Add Sparkling Water"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add</button></div></div></article>
+    </div>
+
+    <!-- ── SALADS ── -->
+    <div class="menu-panel" data-panel="salads" style="display:none;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:1.5rem">
+      <article class="mcard"><div class="img-wrap" style="height:210px"><img src="https://images.unsplash.com/photo-1512852939750-1305098529bf?w=600&h=350&fit=crop&q=85" alt="Caesar Salad" loading="lazy" height="210"/><span class="badge badge-b">CLASSIC</span></div><div style="padding:1.25rem"><div style="font-size:.68rem;font-weight:700;color:var(--brand);letter-spacing:.16em;text-transform:uppercase;margin-bottom:.375rem">Salads</div><h3 style="font-weight:700;color:var(--navy);font-size:1.05rem;margin-bottom:.5rem">Caesar Salad</h3><p style="color:#64748B;font-size:.83rem;line-height:1.65;margin-bottom:1rem">Romaine hearts, shaved parmesan, house-made Caesar dressing, and garlic croutons.</p><div style="display:flex;align-items:center;justify-content:space-between"><span class="fd" style="font-weight:900;color:var(--navy);font-size:1.5rem">$8.99</span><button class="add-btn" aria-label="Add Caesar Salad"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add</button></div></div></article>
+      <article class="mcard"><div class="img-wrap" style="height:210px"><img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&h=350&fit=crop&q=85" alt="Grilled Chicken Bowl" loading="lazy" height="210"/><span class="badge badge-n">HEALTHY</span></div><div style="padding:1.25rem"><div style="font-size:.68rem;font-weight:700;color:var(--brand);letter-spacing:.16em;text-transform:uppercase;margin-bottom:.375rem">Power Bowls</div><h3 style="font-weight:700;color:var(--navy);font-size:1.05rem;margin-bottom:.5rem">Grilled Chicken Bowl</h3><p style="color:#64748B;font-size:.83rem;line-height:1.65;margin-bottom:1rem">Mixed greens, grilled chicken breast, avocado, cherry tomatoes, and lemon herb dressing.</p><div style="display:flex;align-items:center;justify-content:space-between"><span class="fd" style="font-weight:900;color:var(--navy);font-size:1.5rem">$10.99</span><button class="add-btn" aria-label="Add Grilled Chicken Bowl"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add</button></div></div></article>
+      <article class="mcard"><div class="img-wrap" style="height:210px"><img src="https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600&h=350&fit=crop&q=85" alt="Garden Fresh Salad" loading="lazy" height="210"/></div><div style="padding:1.25rem"><div style="font-size:.68rem;font-weight:700;color:var(--brand);letter-spacing:.16em;text-transform:uppercase;margin-bottom:.375rem">Salads</div><h3 style="font-weight:700;color:var(--navy);font-size:1.05rem;margin-bottom:.5rem">Garden Fresh</h3><p style="color:#64748B;font-size:.83rem;line-height:1.65;margin-bottom:1rem">Seasonal greens, roasted vegetables, feta cheese, candied walnuts, and balsamic reduction.</p><div style="display:flex;align-items:center;justify-content:space-between"><span class="fd" style="font-weight:900;color:var(--navy);font-size:1.5rem">$9.49</span><button class="add-btn" aria-label="Add Garden Fresh"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add</button></div></div></article>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════ ABOUT ═══════════════════ -->
+<section id="about" style="padding:5rem 0;background:#fff">
+  <div style="max-width:1280px;margin:0 auto;padding:0 1.5rem">
+    <div style="display:grid;grid-template-columns:1fr;gap:4rem;align-items:center" id="about-grid">
+
+      <div style="position:relative">
+        <div style="border-radius:1.25rem;overflow:hidden;aspect-ratio:4/5;box-shadow:0 24px 64px rgba(0,0,0,.12)">
+          <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&h=1000&fit=crop&q=85" alt="FORGE kitchen — where craftsmanship meets fast food" style="width:100%;height:100%;object-fit:cover;display:block" loading="lazy" width="800" height="1000"/>
+        </div>
+        <div id="about-badge" style="display:none;position:absolute;bottom:2rem;right:-1.5rem;background:#fff;border-radius:1.125rem;padding:1.125rem 1.25rem;box-shadow:0 16px 40px rgba(0,0,0,.16);max-width:16rem">
+          <div style="display:flex;align-items:center;gap:.75rem">
+            <div style="width:3rem;height:3rem;background:rgba(217,119,6,.1);border-radius:.75rem;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+            <div><div style="font-weight:700;color:var(--navy);font-size:.875rem">100% Angus Beef</div><div style="color:#64748B;font-size:.75rem;margin-top:.2rem">No fillers. No shortcuts.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="sec-tag" style="justify-content:flex-start"><div class="line"></div><span>Our Philosophy</span></div>
+        <h2 class="fd" style="font-weight:900;color:var(--navy);line-height:.95;margin-bottom:1.5rem;font-size:clamp(2.5rem,5vw,4rem)">
+          WE DON'T<br/>CUT CORNERS.<br/><span style="color:var(--brand)">EVER.</span>
+        </h2>
+        <p style="color:#64748B;font-size:1.05rem;line-height:1.75;margin-bottom:1.125rem">FORGE was built on a single principle: great food requires great ingredients, and great ingredients deserve expert preparation. No frozen patties. No artificial flavors. No shortcuts.</p>
+        <p style="color:#64748B;line-height:1.75;margin-bottom:2.5rem">Every burger is hand-crafted to order using 100% Angus beef, brioche buns baked fresh each morning, and sauces made in our kitchen daily. This is fast food, evolved.</p>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem">
+          <div style="display:flex;align-items:flex-start;gap:.875rem"><div style="width:2.5rem;height:2.5rem;background:var(--navy);border-radius:.625rem;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></div><div><div style="font-weight:700;color:var(--navy);font-size:.875rem">Locally Sourced</div><div style="color:#64748B;font-size:.8rem;margin-top:.25rem">Direct from regional farms</div></div></div>
+          <div style="display:flex;align-items:flex-start;gap:.875rem"><div style="width:2.5rem;height:2.5rem;background:var(--navy);border-radius:.625rem;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></div><div><div style="font-weight:700;color:var(--navy);font-size:.875rem">Fresh Daily</div><div style="color:#64748B;font-size:.8rem;margin-top:.25rem">Nothing frozen, ever</div></div></div>
+          <div style="display:flex;align-items:flex-start;gap:.875rem"><div style="width:2.5rem;height:2.5rem;background:var(--navy);border-radius:.625rem;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></div><div><div style="font-weight:700;color:var(--navy);font-size:.875rem">Expert Craft</div><div style="color:#64748B;font-size:.8rem;margin-top:.25rem">Culinary-trained kitchen team</div></div></div>
+          <div style="display:flex;align-items:flex-start;gap:.875rem"><div style="width:2.5rem;height:2.5rem;background:var(--navy);border-radius:.625rem;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></div><div><div style="font-weight:700;color:var(--navy);font-size:.875rem">Full Transparency</div><div style="color:#64748B;font-size:.8rem;margin-top:.25rem">Complete nutritional info</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ LOCATIONS ═══════════════════ -->
+<section id="locations" style="padding:5rem 0;background:#F8FAFC">
+  <div style="max-width:1280px;margin:0 auto;padding:0 1.5rem">
+    <div style="text-align:center;margin-bottom:3rem">
+      <div class="sec-tag"><div class="line"></div><span>Find Us</span><div class="line"></div></div>
+      <h2 class="fd" style="font-weight:900;color:var(--navy);font-size:clamp(2.25rem,5vw,3.5rem);line-height:.95">12 LOCATIONS &amp; GROWING</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.25rem">
+      <div class="loc-card">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem"><div><div style="font-weight:700;color:var(--navy)">Downtown Flagship</div><div style="color:#64748B;font-size:.83rem;margin-top:.25rem">123 Main St, Financial District</div></div><span style="font-size:.7rem;font-weight:700;padding:.25rem .625rem;border-radius:9999px;background:#DCFCE7;color:#16A34A">Open</span></div>
+        <div style="display:flex;flex-direction:column;gap:.5rem"><div style="display:flex;align-items:center;gap:.5rem;color:#64748B;font-size:.83rem"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Mon – Sun: 10:00 AM – 12:00 AM</div><div style="display:flex;align-items:center;gap:.5rem;color:#64748B;font-size:.83rem"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.09a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>+1 (555) 100-2000</div></div>
+      </div>
+      <div class="loc-card">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem"><div><div style="font-weight:700;color:var(--navy)">Midtown Plaza</div><div style="color:#64748B;font-size:.83rem;margin-top:.25rem">456 Commerce Ave, Midtown</div></div><span style="font-size:.7rem;font-weight:700;padding:.25rem .625rem;border-radius:9999px;background:#DCFCE7;color:#16A34A">Open</span></div>
+        <div style="display:flex;flex-direction:column;gap:.5rem"><div style="display:flex;align-items:center;gap:.5rem;color:#64748B;font-size:.83rem"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Mon – Sun: 10:00 AM – 11:00 PM</div><div style="display:flex;align-items:center;gap:.5rem;color:#64748B;font-size:.83rem"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.09a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>+1 (555) 200-3000</div></div>
+      </div>
+      <div class="loc-card">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem"><div><div style="font-weight:700;color:var(--navy)">Airport Terminal B</div><div style="color:#64748B;font-size:.83rem;margin-top:.25rem">International Airport, Terminal B</div></div><span style="font-size:.7rem;font-weight:700;padding:.25rem .625rem;border-radius:9999px;background:rgba(217,119,6,.12);color:var(--brand)">24/7</span></div>
+        <div style="display:flex;flex-direction:column;gap:.5rem"><div style="display:flex;align-items:center;gap:.5rem;color:#64748B;font-size:.83rem"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Open 24 Hours, 7 Days a Week</div><div style="display:flex;align-items:center;gap:.5rem;color:#64748B;font-size:.83rem"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.09a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>+1 (555) 300-4000</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ FOOTER ═══════════════════ -->
+<footer style="background:var(--navy);padding:4rem 0 2rem">
+  <div style="max-width:1280px;margin:0 auto;padding:0 1.5rem">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2.5rem;margin-bottom:3rem">
+      <div style="grid-column:span 2" id="footer-brand">
+        <a href="#home" style="display:inline-flex;align-items:center;gap:.75rem;text-decoration:none;margin-bottom:1.125rem">
+          <div style="width:38px;height:38px;background:var(--brand);border-radius:.625rem;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11h18"/><path d="M3 11a2 2 0 01-2-2V8a2 2 0 012-2h18a2 2 0 012 2v1a2 2 0 01-2 2"/><path d="M3 11v8a2 2 0 002 2h14a2 2 0 002-2v-8"/><path d="M8 15h8"/></svg></div>
+          <div><div class="fd" style="font-weight:900;font-size:1.2rem;color:#fff;letter-spacing:.18em;line-height:1">FORGE</div><div style="font-size:.65rem;color:rgba(255,255,255,.4);letter-spacing:.18em;font-weight:500">PREMIUM BURGERS</div></div>
+        </a>
+        <p style="color:rgba(255,255,255,.42);font-size:.85rem;line-height:1.7;max-width:22rem;margin-bottom:1.25rem">Crafted with precision. Served with passion. FORGE is redefining what fast food can be — one burger at a time.</p>
+        <div style="display:flex;gap:.625rem">
+          <a href="#" style="width:2.25rem;height:2.25rem;background:rgba(255,255,255,.08);border-radius:.5rem;display:flex;align-items:center;justify-content:center;transition:background .2s" onmouseover="this.style.background='var(--brand)'" onmouseout="this.style.background='rgba(255,255,255,.08)'" aria-label="FORGE on Instagram"><svg width="15" height="15" viewBox="0 0 24 24" fill="rgba(255,255,255,.75)" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
+          <a href="#" style="width:2.25rem;height:2.25rem;background:rgba(255,255,255,.08);border-radius:.5rem;display:flex;align-items:center;justify-content:center;transition:background .2s" onmouseover="this.style.background='var(--brand)'" onmouseout="this.style.background='rgba(255,255,255,.08)'" aria-label="FORGE on Facebook"><svg width="15" height="15" viewBox="0 0 24 24" fill="rgba(255,255,255,.75)" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+          <a href="#" style="width:2.25rem;height:2.25rem;background:rgba(255,255,255,.08);border-radius:.5rem;display:flex;align-items:center;justify-content:center;transition:background .2s" onmouseover="this.style.background='var(--brand)'" onmouseout="this.style.background='rgba(255,255,255,.08)'" aria-label="FORGE on TikTok"><svg width="15" height="15" viewBox="0 0 24 24" fill="rgba(255,255,255,.75)" aria-hidden="true"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.67a8.15 8.15 0 004.77 1.52V6.76a4.85 4.85 0 01-1-.07z"/></svg></a>
+        </div>
+      </div>
+      <div>
+        <h4 style="color:#fff;font-weight:700;font-size:.875rem;margin-bottom:1.125rem;letter-spacing:.05em">Navigation</h4>
+        <div style="display:flex;flex-direction:column;gap:.75rem">
+          <a href="#home" style="color:rgba(255,255,255,.42);text-decoration:none;font-size:.85rem;transition:color .2s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.42)'">Home</a>
+          <a href="#menu" style="color:rgba(255,255,255,.42);text-decoration:none;font-size:.85rem;transition:color .2s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.42)'">Menu</a>
+          <a href="#about" style="color:rgba(255,255,255,.42);text-decoration:none;font-size:.85rem;transition:color .2s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.42)'">About</a>
+          <a href="#locations" style="color:rgba(255,255,255,.42);text-decoration:none;font-size:.85rem;transition:color .2s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.42)'">Locations</a>
+          <a href="dashboard.html" style="color:var(--brand);text-decoration:none;font-size:.85rem">Dashboard</a>
+        </div>
+      </div>
+      <div>
+        <h4 style="color:#fff;font-weight:700;font-size:.875rem;margin-bottom:1.125rem;letter-spacing:.05em">Contact</h4>
+        <div style="display:flex;flex-direction:column;gap:.75rem">
+          <div style="display:flex;align-items:center;gap:.5rem;color:rgba(255,255,255,.42);font-size:.85rem"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.09a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>+1 (555) 100-2000</div>
+          <div style="display:flex;align-items:center;gap:.5rem;color:rgba(255,255,255,.42);font-size:.85rem"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>hello@forgeburgers.com</div>
+          <div style="display:flex;align-items:flex-start;gap:.5rem;color:rgba(255,255,255,.42);font-size:.85rem"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>12 locations nationwide</div>
+        </div>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,.08);padding-top:2rem;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:1rem">
+      <p style="color:rgba(255,255,255,.28);font-size:.8rem">© 2025 FORGE Burgers. All rights reserved.</p>
+      <div style="display:flex;gap:1.5rem">
+        <a href="#" style="color:rgba(255,255,255,.28);text-decoration:none;font-size:.8rem;transition:color .2s" onmouseover="this.style.color='rgba(255,255,255,.6)'" onmouseout="this.style.color='rgba(255,255,255,.28)'">Privacy Policy</a>
+        <a href="#" style="color:rgba(255,255,255,.28);text-decoration:none;font-size:.8rem;transition:color .2s" onmouseover="this.style.color='rgba(255,255,255,.6)'" onmouseout="this.style.color='rgba(255,255,255,.28)'">Terms of Service</a>
+        <a href="#" style="color:rgba(255,255,255,.28);text-decoration:none;font-size:.8rem;transition:color .2s" onmouseover="this.style.color='rgba(255,255,255,.6)'" onmouseout="this.style.color='rgba(255,255,255,.28)'">Nutritional Info</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── NAVBAR SCROLL ──
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>{
+  if(window.scrollY>60){nav.classList.add('scrolled');}
+  else{nav.classList.remove('scrolled');}
+},{passive:true});
+
+// ── RESPONSIVE GRIDS ──
+function applyResponsive(){
+  const w=window.innerWidth;
+  // Hero
+  const hg=document.getElementById('hero-grid');
+  const hic=document.getElementById('hero-img-col');
+  if(w>=1024){hg.style.gridTemplateColumns='1fr 1fr';hic.style.display='block';}
+  else{hg.style.gridTemplateColumns='1fr';hic.style.display='none';}
+  // Value props
+  const vp=document.getElementById('vp-grid');
+  if(w>=768){vp.style.gridTemplateColumns='repeat(4,1fr)';}
+  else{vp.style.gridTemplateColumns='repeat(2,1fr)';}
+  // About
+  const ag=document.getElementById('about-grid');
+  const ab=document.getElementById('about-badge');
+  if(w>=1024){ag.style.gridTemplateColumns='1fr 1fr';if(ab)ab.style.display='block';}
+  else{ag.style.gridTemplateColumns='1fr';if(ab)ab.style.display='none';}
+  // Footer brand col
+  const fb=document.getElementById('footer-brand');
+  if(fb){fb.style.gridColumn=w>=768?'span 2':'span 1';}
+}
+applyResponsive();
+window.addEventListener('resize',applyResponsive);
+
+// ── MOBILE MENU ──
+const hamburger=document.getElementById('hamburger');
+const mobNav=document.getElementById('mob-nav');
+hamburger.addEventListener('click',()=>{
+  const open=mobNav.style.display==='block';
+  mobNav.style.display=open?'none':'block';
+  hamburger.setAttribute('aria-expanded',String(!open));
+});
+mobNav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>mobNav.style.display='none'));
+document.addEventListener('click',e=>{if(!nav.contains(e.target))mobNav.style.display='none';});
+
+// ── MENU TABS ──
+const tabs=document.querySelectorAll('.mtab');
+const panels=document.querySelectorAll('.menu-panel');
+tabs.forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    tabs.forEach(t=>{t.classList.remove('active');});
+    tab.classList.add('active');
+    const target=tab.dataset.tab;
+    panels.forEach(p=>{
+      if(p.dataset.panel===target){p.style.display='grid';}
+      else{p.style.display='none';}
+    });
+  });
+});
+
+// ── ADD TO CART ──
+document.querySelectorAll('.add-btn').forEach(btn=>{
+  btn.addEventListener('click',function(){
+    const orig=this.innerHTML;
+    this.innerHTML='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Added';
+    this.style.background='#059669';
+    this.disabled=true;
+    setTimeout(()=>{this.innerHTML=orig;this.style.background='var(--navy)';this.disabled=false;},1500);
+  });
+});
+
+// ── SMOOTH SCROLL ──
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const t=document.querySelector(a.getAttribute('href'));
+    if(t){e.preventDefault();window.scrollTo({top:t.offsetTop-72,behavior:'smooth'});}
+  });
+});
+</script>
+</body>
+</html>
