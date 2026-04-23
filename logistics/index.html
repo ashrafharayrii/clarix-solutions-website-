@@ -1310,6 +1310,11 @@
         .hero-stats    { gap: 20px; }
         .sol-tabs      { flex-wrap: wrap; width: 100%; border-radius: 16px; }
     }
+
+    /* ─── STICKY MOBILE BAR ─── */
+    #mob-cta-bar{display:none;position:fixed;bottom:0;left:0;right:0;z-index:45;background:rgba(15,32,68,.96);padding:.875rem 1.25rem 1rem;border-top:1px solid rgba(91,141,238,.2);box-shadow:0 -8px 32px rgba(0,0,0,.3);align-items:center;justify-content:space-between;gap:1rem;transition:transform .3s;transform:translateY(100%)}
+    #mob-cta-bar.visible{transform:translateY(0)}
+    @media(max-width:900px){#mob-cta-bar{display:flex}body{padding-bottom:70px}}
     </style>
 </head>
 <body>
@@ -2178,6 +2183,20 @@ revealEl.forEach(el => {
     el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
     revealObs.observe(el);
 });
+
+// Sticky mobile CTA
+(function(){
+  var bar=document.getElementById('mob-cta-bar');
+  if(bar){window.addEventListener('scroll',function(){if(window.scrollY>300){bar.classList.add('visible');bar.setAttribute('aria-hidden','false');}else{bar.classList.remove('visible');bar.setAttribute('aria-hidden','true');}},{passive:true});}
+})();
 </script>
+
+<div id="mob-cta-bar" aria-hidden="true">
+  <div>
+    <div style="color:#fff;font-weight:700;font-size:.875rem;line-height:1.25">Al-Behar Dashboard</div>
+    <div style="color:rgba(255,255,255,.45);font-size:.75rem;margin-top:.1rem">Live logistics intelligence</div>
+  </div>
+  <a href="al_behar_dashboard_final.html" style="background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;font-size:.875rem;font-weight:700;padding:.7rem 1.5rem;border-radius:50px;text-decoration:none;white-space:nowrap;flex-shrink:0">View Demo</a>
+</div>
 </body>
 </html>

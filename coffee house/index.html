@@ -1225,5 +1225,19 @@
 </footer>
 
 <script src="js/main.js"></script>
+
+<div id="mob-cta-bar" aria-hidden="true">
+  <div>
+    <div style="color:#fff;font-weight:700;font-size:.875rem;line-height:1.25">Coffee House Demo</div>
+    <div style="color:rgba(255,255,255,.45);font-size:.75rem;margin-top:.1rem">View the business dashboard</div>
+  </div>
+  <a href="dashboard.html" style="background:linear-gradient(135deg,#D4A76A,#8B5E3C);color:#fff;font-size:.875rem;font-weight:700;padding:.7rem 1.5rem;border-radius:50px;text-decoration:none;white-space:nowrap;flex-shrink:0">View Dashboard</a>
+</div>
+<script>
+(function(){
+  var bar=document.getElementById('mob-cta-bar');
+  if(bar){window.addEventListener('scroll',function(){if(window.scrollY>300){bar.classList.add('visible');bar.setAttribute('aria-hidden','false');}else{bar.classList.remove('visible');bar.setAttribute('aria-hidden','true');}},{passive:true});}
+})();
+</script>
 </body>
 </html>

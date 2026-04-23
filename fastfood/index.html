@@ -69,6 +69,37 @@
     .au3{animation:fadeUp .65s .35s ease forwards;opacity:0}
 
     @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+    /* ── STICKY MOBILE BAR ── */
+    #mob-cta{display:none;position:fixed;bottom:0;left:0;right:0;z-index:45;background:var(--navy-d);padding:.875rem 1.25rem 1rem;border-top:1px solid rgba(255,255,255,.12);box-shadow:0 -8px 32px rgba(0,0,0,.3);align-items:center;justify-content:space-between;gap:1rem;transition:transform .3s ease;transform:translateY(100%)}
+    #mob-cta.visible{transform:translateY(0)}
+
+    /* ── MOBILE OVERRIDES ── */
+    @media(max-width:767px){
+      #mob-cta{display:flex}
+      body{padding-bottom:68px}
+    }
+    @media(max-width:639px){
+      #hero-inner{padding:2.5rem 1rem 3rem!important}
+      #hero-stats{gap:1rem!important}
+      .stat-div{display:none!important}
+      #hero-btns{flex-direction:column!important}
+      #hero-btns a{justify-content:center!important;width:100%!important}
+      #tabs-row{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;flex-wrap:nowrap!important;justify-content:flex-start!important;padding-bottom:4px}
+      #tabs-row::-webkit-scrollbar{display:none}
+      .mtab{white-space:nowrap;flex-shrink:0}
+      .menu-panel{grid-template-columns:1fr!important}
+      #about-img{aspect-ratio:16/9!important}
+      #menu,#about,#locations{padding:3rem 0!important}
+      #loc-grid{grid-template-columns:1fr!important}
+      #footer-grid{grid-template-columns:1fr!important}
+      .add-btn{padding:.6rem 1.125rem!important;font-size:.875rem!important;min-height:40px}
+      .loc-card{padding:1.125rem!important}
+    }
+    @media(max-width:400px){
+      h1.fd{font-size:3rem!important}
+      #hero-stats{gap:.75rem!important;font-size:.85rem}
+    }
   </style>
 </head>
 <body>
@@ -136,7 +167,7 @@
 
 <!-- ═══════════════════ HERO ═══════════════════ -->
 <section id="home" class="hero" style="padding-top:72px;display:flex;align-items:center">
-  <div style="max-width:1280px;margin:0 auto;padding:5rem 1.5rem;width:100%;position:relative;z-index:1">
+  <div id="hero-inner" style="max-width:1280px;margin:0 auto;padding:5rem 1.5rem;width:100%;position:relative;z-index:1">
     <div style="display:grid;grid-template-columns:1fr;gap:3.5rem;align-items:center" id="hero-grid">
       <!-- Left -->
       <div>
@@ -155,7 +186,7 @@
           Premium ingredients. Expert technique. Zero shortcuts. Every burger crafted to order with precision and passion.
         </p>
 
-        <div style="display:flex;flex-wrap:wrap;gap:1rem;margin-bottom:3.25rem" class="au3">
+        <div id="hero-btns" style="display:flex;flex-wrap:wrap;gap:1rem;margin-bottom:3.25rem" class="au3">
           <a href="#menu" style="display:inline-flex;align-items:center;gap:.5rem;background:var(--brand);color:#fff;font-size:.875rem;font-weight:600;padding:.875rem 2rem;border-radius:.75rem;text-decoration:none;box-shadow:0 8px 24px rgba(217,119,6,.32);transition:background .2s" onmouseover="this.style.background='var(--brand-d)'" onmouseout="this.style.background='var(--brand)'">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 001.99 1.61H19.4a2 2 0 001.97-1.67L23 6H6"/></svg>
             Order Now
@@ -167,17 +198,17 @@
         </div>
 
         <!-- Stats -->
-        <div class="au3" style="display:flex;align-items:center;gap:2.5rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,.1)">
+        <div id="hero-stats" class="au3" style="display:flex;align-items:center;gap:2.5rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,.1)">
           <div>
             <div class="fd" style="font-weight:900;color:#fff;font-size:1.9rem;line-height:1">2.4M+</div>
             <div style="color:rgba(255,255,255,.45);font-size:.75rem;margin-top:.35rem;font-weight:500">Burgers Served</div>
           </div>
-          <div style="width:1px;height:2.5rem;background:rgba(255,255,255,.15);flex-shrink:0"></div>
+          <div class="stat-div" style="width:1px;height:2.5rem;background:rgba(255,255,255,.15);flex-shrink:0"></div>
           <div>
             <div class="fd" style="font-weight:900;color:#fff;font-size:1.9rem;line-height:1">4.9</div>
             <div style="color:rgba(255,255,255,.45);font-size:.75rem;margin-top:.35rem;font-weight:500">Avg. Rating</div>
           </div>
-          <div style="width:1px;height:2.5rem;background:rgba(255,255,255,.15);flex-shrink:0"></div>
+          <div class="stat-div" style="width:1px;height:2.5rem;background:rgba(255,255,255,.15);flex-shrink:0"></div>
           <div>
             <div class="fd" style="font-weight:900;color:#fff;font-size:1.9rem;line-height:1">12</div>
             <div style="color:rgba(255,255,255,.45);font-size:.75rem;margin-top:.35rem;font-weight:500">Locations</div>
@@ -257,7 +288,7 @@
     </div>
 
     <!-- Tabs -->
-    <div style="display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-bottom:2.5rem" role="tablist">
+    <div id="tabs-row" style="display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-bottom:2.5rem" role="tablist">
       <button class="mtab active" data-tab="burgers" role="tab" aria-selected="true">Burgers</button>
       <button class="mtab" data-tab="sides" role="tab" aria-selected="false">Sides</button>
       <button class="mtab" data-tab="shakes" role="tab" aria-selected="false">Shakes</button>
@@ -387,7 +418,7 @@
     <div style="display:grid;grid-template-columns:1fr;gap:4rem;align-items:center" id="about-grid">
 
       <div style="position:relative">
-        <div style="border-radius:1.25rem;overflow:hidden;aspect-ratio:4/5;box-shadow:0 24px 64px rgba(0,0,0,.12)">
+        <div id="about-img" style="border-radius:1.25rem;overflow:hidden;aspect-ratio:4/5;box-shadow:0 24px 64px rgba(0,0,0,.12)">
           <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&h=1000&fit=crop&q=85" alt="FORGE kitchen — where craftsmanship meets fast food" style="width:100%;height:100%;object-fit:cover;display:block" loading="lazy" width="800" height="1000"/>
         </div>
         <div id="about-badge" style="display:none;position:absolute;bottom:2rem;right:-1.5rem;background:#fff;border-radius:1.125rem;padding:1.125rem 1.25rem;box-shadow:0 16px 40px rgba(0,0,0,.16);max-width:16rem">
@@ -424,7 +455,7 @@
       <div class="sec-tag"><div class="line"></div><span>Find Us</span><div class="line"></div></div>
       <h2 class="fd" style="font-weight:900;color:var(--navy);font-size:clamp(2.25rem,5vw,3.5rem);line-height:.95">12 LOCATIONS &amp; GROWING</h2>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.25rem">
+    <div id="loc-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(280px,100%),1fr));gap:1.25rem">
       <div class="loc-card">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem"><div><div style="font-weight:700;color:var(--navy)">Downtown Flagship</div><div style="color:#64748B;font-size:.83rem;margin-top:.25rem">123 Main St, Financial District</div></div><span style="font-size:.7rem;font-weight:700;padding:.25rem .625rem;border-radius:9999px;background:#DCFCE7;color:#16A34A">Open</span></div>
         <div style="display:flex;flex-direction:column;gap:.5rem"><div style="display:flex;align-items:center;gap:.5rem;color:#64748B;font-size:.83rem"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Mon – Sun: 10:00 AM – 12:00 AM</div><div style="display:flex;align-items:center;gap:.5rem;color:#64748B;font-size:.83rem"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.09a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>+1 (555) 100-2000</div></div>
@@ -444,7 +475,7 @@
 <!-- ═══════════════════ FOOTER ═══════════════════ -->
 <footer style="background:var(--navy);padding:4rem 0 2rem">
   <div style="max-width:1280px;margin:0 auto;padding:0 1.5rem">
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2.5rem;margin-bottom:3rem">
+    <div id="footer-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2.5rem;margin-bottom:3rem">
       <div style="grid-column:span 2" id="footer-brand">
         <a href="#home" style="display:inline-flex;align-items:center;gap:.75rem;text-decoration:none;margin-bottom:1.125rem">
           <div style="width:38px;height:38px;background:var(--brand);border-radius:.625rem;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11h18"/><path d="M3 11a2 2 0 01-2-2V8a2 2 0 012-2h18a2 2 0 012 2v1a2 2 0 01-2 2"/><path d="M3 11v8a2 2 0 002 2h14a2 2 0 002-2v-8"/><path d="M8 15h8"/></svg></div>
@@ -486,6 +517,15 @@
     </div>
   </div>
 </footer>
+
+<!-- ═══════════════════ MOBILE STICKY BAR ═══════════════════ -->
+<div id="mob-cta" aria-hidden="true">
+  <div>
+    <div style="color:#fff;font-weight:700;font-size:.875rem;line-height:1.25">Order in 8–12 min</div>
+    <div style="color:rgba(255,255,255,.45);font-size:.75rem;margin-top:.15rem">12 locations citywide</div>
+  </div>
+  <a href="#menu" onclick="document.getElementById('mob-cta').classList.remove('visible')" style="background:var(--brand);color:#fff;font-size:.875rem;font-weight:700;padding:.75rem 1.5rem;border-radius:.75rem;text-decoration:none;white-space:nowrap;flex-shrink:0;box-shadow:0 4px 16px rgba(217,119,6,.35)">Order Now</a>
+</div>
 
 <script>
 // ── NAVBAR SCROLL ──
@@ -563,6 +603,16 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
     if(t){e.preventDefault();window.scrollTo({top:t.offsetTop-72,behavior:'smooth'});}
   });
 });
+
+// ── STICKY MOBILE BAR ──
+(function(){
+  var bar=document.getElementById('mob-cta');
+  if(!bar)return;
+  window.addEventListener('scroll',function(){
+    if(window.scrollY>320){bar.classList.add('visible');bar.setAttribute('aria-hidden','false');}
+    else{bar.classList.remove('visible');bar.setAttribute('aria-hidden','true');}
+  },{passive:true});
+})();
 </script>
 </body>
 </html>

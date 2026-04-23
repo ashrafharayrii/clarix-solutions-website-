@@ -935,4 +935,14 @@ footer {
   .footer-grid { grid-template-columns: 1fr; }
   .about-features { grid-template-columns: 1fr; }
   .hero-stats { flex-direction: column; }
+  .hero-actions { flex-direction: column; }
+  .hero-actions a { width: 100%; justify-content: center; }
+  .menu-tabs { overflow-x: auto; flex-wrap: nowrap; scrollbar-width: none; }
+  .menu-tabs::-webkit-scrollbar { display: none; }
+  .menu-tab { white-space: nowrap; flex-shrink: 0; }
 }
+
+/* ─── STICKY MOBILE BAR ─── */
+#mob-cta-bar{display:none;position:fixed;bottom:0;left:0;right:0;z-index:999;background:rgba(26,15,10,.97);padding:.875rem 1.25rem 1rem;border-top:1px solid rgba(212,167,106,.2);box-shadow:0 -8px 32px rgba(0,0,0,.4);align-items:center;justify-content:space-between;gap:1rem;transition:transform .3s;transform:translateY(100%)}
+#mob-cta-bar.visible{transform:translateY(0)}
+@media(max-width:768px){#mob-cta-bar{display:flex}body{padding-bottom:70px}}
