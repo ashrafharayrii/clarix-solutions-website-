@@ -2,31 +2,20 @@ import { motion } from 'framer-motion'
 
 const EASE = [0.22, 1, 0.36, 1]
 
-const VALUES = [
-  {
-    icon: '📊',
-    title: 'Data-Driven',
-    desc: 'Every solution is built on real business metrics — not guesswork.',
-    rgb: '43, 104, 233',
-  },
-  {
-    icon: '🎯',
-    title: 'Custom-Built',
-    desc: 'No templates. Each system is crafted around your exact operations.',
-    rgb: '16, 185, 129',
-  },
-  {
-    icon: '🤝',
-    title: 'Long-Term Partner',
-    desc: "We don't disappear after delivery — we stay and grow with you.",
-    rgb: '139, 92, 246',
-  },
+const highlights = [
+  { icon: '📍', text: 'Based in Amman, Jordan' },
+  { icon: '🔧', text: 'Custom-built systems for each business' },
+  { icon: '📊', text: 'Focus on real, measurable business value' },
+  { icon: '🤝', text: 'Ongoing support & long-term partnership' },
+  { icon: '⚡', text: '50+ projects delivered across 10+ industries' },
+  { icon: '⏱️', text: 'Response within 24 hours' },
 ]
 
-const PARAS = [
-  'We are Clarix Solutions, a data and web development company based in Amman, Jordan. We specialize in custom business dashboards and professional websites that help owners understand their numbers, manage operations, and make smarter decisions every single day.',
-  'Our team combines expertise in data analytics, software development, and business operations. We have worked with coffee houses, supermarkets, retail stores, jewelry shops, and many other businesses across Jordan — each with unique needs, and each getting a system built specifically for them.',
-  'We believe every business, no matter its size, deserves access to the same powerful tools large companies use — at an affordable price, with a solution that fits exactly how you work.',
+const STATS = [
+  { val: '50+',  label: 'Projects Delivered' },
+  { val: '10+',  label: 'Industries Served'  },
+  { val: '100%', label: 'Custom Built'        },
+  { val: '24h',  label: 'Response Time'       },
 ]
 
 export default function About() {
@@ -38,105 +27,75 @@ export default function About() {
 
   return (
     <section id="about">
-      <div className="about-bg-accent" />
       <div className="container">
 
-        {/* ── Section header ── */}
-        <div className="about-top">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
-            <div className="sec-label">About Us</div>
-            <h2>The Team Behind <span className="text-blue">Your Success</span></h2>
-          </motion.div>
-        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="sec-label">About Us</div>
+          <h2>The Team Behind <span className="text-blue">Your Success</span></h2>
+        </motion.div>
 
-        {/* ── Two-column body ── */}
-        <div className="about-layout">
+        {/* Two-column layout */}
+        <div className="about-new-layout">
 
-          {/* LEFT — values card */}
+          {/* LEFT — image */}
           <motion.div
+            className="about-new-img-wrap"
             initial={{ opacity: 0, x: -28 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.65, ease: EASE }}
           >
-            <div className="about-values-card">
-              <div className="avc-eyebrow">What makes us different</div>
-
-              <div className="avc-list">
-                {VALUES.map((v, i) => (
-                  <motion.div
-                    key={v.title}
-                    className="avc-item"
-                    initial={{ opacity: 0, x: -14 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.45, delay: 0.15 + i * 0.12, ease: EASE }}
-                  >
-                    <div
-                      className="avc-icon"
-                      style={{
-                        background: `rgba(${v.rgb}, 0.12)`,
-                        border:     `1px solid rgba(${v.rgb}, 0.28)`,
-                      }}
-                    >
-                      {v.icon}
-                    </div>
-                    <div className="avc-text">
-                      <strong>{v.title}</strong>
-                      <p>{v.desc}</p>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-
-              <div className="avc-footer">
-                <span>📍</span>
-                <span>Based in Amman, Jordan</span>
-              </div>
+            <img
+              src="https://images.unsplash.com/photo-1556761175-4b46a572b786?auto=format&fit=crop&w=800&q=80"
+              alt="Clarix Solutions team at work"
+              className="about-new-img"
+              loading="lazy"
+            />
+            <div className="about-new-img-overlay" />
+            <div className="about-new-quote">
+              "We don't sell software.<br />We solve business problems."
             </div>
           </motion.div>
 
-          {/* RIGHT — narrative text */}
+          {/* RIGHT — text */}
           <motion.div
-            className="about-content"
+            className="about-new-content"
             initial={{ opacity: 0, x: 28 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.65, delay: 0.1, ease: EASE }}
           >
-            <motion.div
-              className="about-quote-bar"
-              whileHover={{ scale: 1.01 }}
-              transition={{ duration: 0.2 }}
-            >
-              "We don't sell software. We solve business problems."
-            </motion.div>
-
-            <div className="about-paras">
-              {PARAS.map((text, i) => (
-                <motion.p
-                  key={i}
-                  className="about-para"
-                  initial={{ opacity: 0, y: 10 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: 0.1 + i * 0.13, ease: EASE }}
-                >
-                  {text}
-                </motion.p>
-              ))}
+            <div className="about-new-paras">
+              <p>We are <strong>Clarix Solutions</strong>, a data and web development company based in Amman, Jordan. We specialize in custom business dashboards and professional websites that help owners understand their numbers, manage operations, and make smarter decisions every single day.</p>
+              <p>Our team combines expertise in data analytics, software development, and business operations. We have worked with coffee houses, supermarkets, retail stores, jewelry shops, and many other businesses across Jordan — each getting a system built specifically for them.</p>
+              <p>We believe every business, no matter its size, deserves access to the same powerful tools large companies use — at an affordable price, with a solution that fits exactly how you work.</p>
             </div>
+
+            <ul className="about-new-highlights">
+              {highlights.map((h, i) => (
+                <motion.li
+                  key={h.text}
+                  initial={{ opacity: 0, x: -12 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: 0.15 + i * 0.07, ease: EASE }}
+                >
+                  <span className="about-check-icon">{h.icon}</span>
+                  <span>{h.text}</span>
+                </motion.li>
+              ))}
+            </ul>
 
             <motion.div
               initial={{ opacity: 0, y: 14 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.45, ease: EASE }}
+              transition={{ duration: 0.5, delay: 0.5, ease: EASE }}
             >
               <button className="btn-primary" onClick={() => scrollTo('contact')}>
                 Partner With Us
@@ -146,7 +105,7 @@ export default function About() {
 
         </div>
 
-        {/* ── Stats bar ── */}
+        {/* Stats bar */}
         <motion.div
           className="about-stats"
           initial={{ opacity: 0, y: 20 }}
@@ -154,12 +113,7 @@ export default function About() {
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          {[
-            { val: '50+',  label: 'Projects Delivered' },
-            { val: '10+',  label: 'Industries Served'  },
-            { val: '100%', label: 'Custom Built'        },
-            { val: '24h',  label: 'Response Time'       },
-          ].map((s, i) => (
+          {STATS.map((s, i) => (
             <motion.div
               key={s.label}
               className="as-item"

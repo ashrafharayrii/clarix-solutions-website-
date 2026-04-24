@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion'
+import { SceneBackground } from './SceneBackground'
 
 /* ── Typewriter ───────────────────────────────────────────── */
 const WORDS = ['Coffee Houses', 'Supermarkets', 'Restaurants', 'Retail Stores', 'Jewelry Shops', 'Pharmacies', 'Clothing Stores', 'Bakeries']
@@ -297,20 +298,12 @@ export default function Hero() {
   }
 
   return (
-    <section id="hero" style={{ position: 'relative' }}>
-      <div className="hero-orb orb-1" />
-      <div className="hero-orb orb-2" />
-      <div className="hero-orb orb-3" />
-      <div className="hero-bg-grid" />
-      <div className="hero-bg-logo" />
+    <section id="hero" style={{ position: 'relative', overflow: 'hidden' }}>
+      <SceneBackground variant="combined" color="#2B68E9" />
+      {/* Subtle gradient overlay so text stays readable over the 3D scene */}
+      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(3,10,25,0.72) 0%, rgba(7,24,48,0.55) 100%)', pointerEvents: 'none', zIndex: 1 }} />
 
-      {/* Floating geometric shapes */}
-      <div className="hero-geo hero-geo-1" />
-      <div className="hero-geo hero-geo-2" />
-      <div className="hero-geo hero-geo-3" />
-      <div className="hero-geo hero-geo-4" />
-
-      <div className="container hero-layout">
+      <div className="container hero-layout" style={{ position: 'relative', zIndex: 2 }}>
 
         {/* ── Text column ── */}
         <motion.div
@@ -398,7 +391,7 @@ export default function Hero() {
 
       </div>
 
-      <div className="hero-scroll-hint">
+      <div className="hero-scroll-hint" style={{ position: 'relative', zIndex: 2 }}>
         <span>Scroll to explore</span>
         <div className="scroll-mouse"><div className="scroll-dot" /></div>
       </div>
