@@ -307,28 +307,6 @@ html.dark #navbar.scrolled {
   .logo-solutions { font-size: 0.55rem; }
 }
 
-/* Footer logo — dark footer so keep white gradient */
-.footer-brand .logo-title {
-  background: linear-gradient(135deg, #FFFFFF, #7AAEFF) !important;
-  -webkit-background-clip: text !important;
-  background-clip: text !important;
-  color: transparent !important;
-}
-.footer-brand .logo-img {
-  margin-bottom: 12px;
-}
-
-.footer-brand .logo-title {
-  font-size: 1.1rem;
-}
-
-.footer-brand .logo-tagline {
-  font-size: 0.48rem;
-}
-
-.footer-brand .logo-solutions {
-  font-size: 0.58rem;
-}
 
 .nav-links { display: flex; align-items: center; gap: 28px; }
 .nav-links a {

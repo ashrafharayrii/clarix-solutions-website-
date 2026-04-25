@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import ClarixLogo from './ClarixLogo'
+import ClarixCatalystLogo from './ClarixCatalystLogo'
 
 export default function Footer() {
   const scrollTo = (id) => {
@@ -19,9 +19,8 @@ export default function Footer() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          {/* Animated logo — plays once when footer scrolls into view, no idle loop */}
           <div style={{ marginBottom: 14 }}>
-            <ClarixLogo size="sm" showSubtitle={true} loop={false} />
+            <ClarixCatalystLogo />
           </div>
           <p style={{ marginBottom: 6 }}>Smart dashboards and websites for businesses that want to grow with data.</p>
           <p>📍 Amman, Jordan</p>
