@@ -65,6 +65,7 @@
   --electric-m: #1D4ED8;
   --electric-l: #1E3A8A;
   --cyan: #06B6D4;
+  --electric-cyan: #00A8C6;
   --teal: #10B981;
   --teal-l: #10B981;
   --white: #FFFFFF;
@@ -91,6 +92,7 @@ html.dark {
   --electric-m: #60A5FA;
   --electric-l: #93C5FD;
   --cyan: #22D3EE;
+  --electric-cyan: #00F0FF;
   --teal: #34D399;
   --teal-l: #6EE7B7;
   --white: #F8FAFC;
@@ -2928,3 +2930,31 @@ html.dark .sec-label.light { color: var(--electric-l); }
 /* body smooth transition for the whole color system */
 body { transition: background-color 0.5s cubic-bezier(0.4,0,0.2,1), color 0.5s cubic-bezier(0.4,0,0.2,1); }
 section { transition: background-color 0.5s cubic-bezier(0.4,0,0.2,1); }
+
+/* ════════════ DIGITAL MESH TEXTURE ════════════ */
+
+html.dark body {
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(255,255,255,0.03) 1px, transparent 0);
+  background-size: 40px 40px;
+}
+
+/* Jewellery backlight — fixed cyan halo top-left */
+html.dark body::before {
+  content: '';
+  position: fixed;
+  top: -10%;
+  left: -10%;
+  width: 50%;
+  height: 50%;
+  background: radial-gradient(circle, rgba(0,240,255,0.04) 0%, transparent 75%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ════════════ NEON TEXT UTILITY ════════════ */
+
+.neon-text {
+  color: #00F0FF;
+  text-shadow: 0 0 15px rgba(0,240,255,0.45), 0 0 40px rgba(0,240,255,0.18);
+}

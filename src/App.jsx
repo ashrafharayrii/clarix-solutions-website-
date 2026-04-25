@@ -18,8 +18,8 @@ function CursorSpotlight({ isDarkMode }) {
     const el = ref.current
     if (!el) return
     const onMove = (e) => {
-      const color = isDarkMode ? 'rgba(59,130,246,0.07)' : 'rgba(37,99,235,0.05)'
-      el.style.background = `radial-gradient(700px circle at ${e.clientX}px ${e.clientY}px, ${color}, transparent 65%)`
+      const color = isDarkMode ? 'rgba(0,240,255,0.15)' : 'rgba(59,130,246,0.10)'
+      el.style.background = `radial-gradient(600px circle at ${e.clientX}px ${e.clientY}px, ${color}, transparent 65%)`
     }
     window.addEventListener('mousemove', onMove, { passive: true })
     return () => window.removeEventListener('mousemove', onMove)
@@ -29,7 +29,7 @@ function CursorSpotlight({ isDarkMode }) {
       ref={ref}
       style={{
         position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none',
-        background: 'transparent', transition: 'background 0.08s linear',
+        background: 'transparent', transition: 'background 0.15s ease-out',
       }}
     />
   )
