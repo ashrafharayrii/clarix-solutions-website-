@@ -61,10 +61,11 @@
   --bg-2: #F1F5F9;
   --bg-card: #FFFFFF;
   --bg-glass: rgba(0,0,0,0.02);
-  --electric: #2B68E9;
-  --electric-m: #1D55D1;
+  --electric: #2563EB;
+  --electric-m: #1D4ED8;
   --electric-l: #1E3A8A;
-  --teal: #059669;
+  --cyan: #06B6D4;
+  --teal: #10B981;
   --teal-l: #10B981;
   --white: #FFFFFF;
   --text: #0F172A;
@@ -72,8 +73,8 @@
   --text-dim: #94A3B8;
   --text-main: #0F172A;
   --border: rgba(0,0,0,0.08);
-  --border-e: rgba(43,104,233,0.35);
-  --glow-e: rgba(43,104,233,0.10);
+  --border-e: rgba(37,99,235,0.30);
+  --glow-e: rgba(37,99,235,0.10);
   --radius: 14px;
   --radius-s: 9px;
   --radius-l: 20px;
@@ -81,24 +82,25 @@
 
 /* ── Dark Mode Overrides ── */
 html.dark {
-  --bg: #050505;
-  --bg-1: #080808;
-  --bg-2: #0a0a0a;
-  --bg-card: #111111;
-  --bg-glass: rgba(255,255,255,0.03);
-  --electric: #2B68E9;
-  --electric-m: #4A82FF;
-  --electric-l: #7AAEFF;
-  --teal: #10B981;
-  --teal-l: #34D399;
-  --white: #F5F5F7;
-  --text: #F5F5F7;
-  --text-muted: #A0A0A8;
-  --text-dim: #606068;
-  --text-main: #F5F5F7;
-  --border: rgba(255,255,255,0.06);
-  --border-e: rgba(43,104,233,0.4);
-  --glow-e: rgba(43,104,233,0.25);
+  --bg: #020617;
+  --bg-1: #030d1e;
+  --bg-2: #071028;
+  --bg-card: #0F172A;
+  --bg-glass: rgba(59,130,246,0.04);
+  --electric: #3B82F6;
+  --electric-m: #60A5FA;
+  --electric-l: #93C5FD;
+  --cyan: #22D3EE;
+  --teal: #34D399;
+  --teal-l: #6EE7B7;
+  --white: #F8FAFC;
+  --text: #F8FAFC;
+  --text-muted: #94A3B8;
+  --text-dim: #475569;
+  --text-main: #F8FAFC;
+  --border: rgba(59,130,246,0.12);
+  --border-e: rgba(59,130,246,0.40);
+  --glow-e: rgba(59,130,246,0.22);
 }
 
 html { scroll-behavior: smooth; }
@@ -133,9 +135,10 @@ ul { list-style: none; }
 .sec-label.light { color: var(--electric-l); }
 
 section h2 {
-  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
-  font-weight: 800;
-  line-height: 1.2;
+  font-size: clamp(1.8rem, 3.5vw, 2.7rem);
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
   color: var(--text);
   margin-bottom: 14px;
 }
@@ -162,13 +165,13 @@ section { padding: 96px 0; }
   border: none;
   text-align: center;
   cursor: pointer;
-  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
-  box-shadow: 0 4px 20px rgba(43,104,233,0.45);
+  transition: background 0.25s, transform 0.25s, box-shadow 0.25s;
+  box-shadow: 0 4px 24px rgba(37,99,235,0.45);
 }
 .btn-primary:hover {
   background: var(--electric-m);
   transform: translateY(-2px);
-  box-shadow: 0 8px 32px rgba(43,104,233,0.6);
+  box-shadow: 0 10px 36px rgba(37,99,235,0.62);
 }
 .btn-primary.full { width: 100%; text-align: center; display: block; border-radius: var(--radius-s); }
 
@@ -431,10 +434,11 @@ html.dark .mobile-menu { background: rgba(5,5,5,0.98); }
 @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.5)} }
 
 .hero-text h1 {
-  font-size: clamp(2.2rem, 4.5vw, 3.6rem);
+  font-size: clamp(2.4rem, 5vw, 4rem);
   font-weight: 900;
-  line-height: 1.1;
-  color: var(--white);
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+  color: var(--text);
   margin-bottom: 20px;
 }
 .hero-sub {
@@ -612,8 +616,8 @@ html.dark .mobile-menu { background: rgba(5,5,5,0.98); }
 }
 .svc-works-for span { font-weight: 600; color: var(--text-muted); margin-right: 6px; }
 
-.btn-bundle { background: linear-gradient(135deg, #F59E0B, #D97706); box-shadow: 0 4px 20px rgba(245,158,11,0.3); }
-.btn-bundle:hover { background: linear-gradient(135deg, #FBBF24, #F59E0B); }
+.btn-bundle { background: linear-gradient(135deg, #3B82F6, #06B6D4); box-shadow: 0 4px 24px rgba(59,130,246,0.45); }
+.btn-bundle:hover { background: linear-gradient(135deg, #60A5FA, #22D3EE); box-shadow: 0 8px 36px rgba(59,130,246,0.60); }
 
 /* ════════════ DEMOS SECTION ════════════ */
 .demo-card-item { min-width: 82vw; scroll-snap-align: center; }
@@ -1138,12 +1142,12 @@ html.dark .ua-card {
 
 /* ── Animated gradient headline text ── */
 .text-gradient-anim {
-  background: linear-gradient(90deg, #7AAEFF, #4A82FF, #2B68E9, #10B981, #7AAEFF);
-  background-size: 250% auto;
+  background: linear-gradient(90deg, #93C5FD, #3B82F6, #22D3EE, #34D399, #3B82F6, #93C5FD);
+  background-size: 280% auto;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  animation: gradientShift 5s linear infinite;
+  animation: gradientShift 6s linear infinite;
 }
 @keyframes gradientShift {
   0%   { background-position: 0% center; }
@@ -2213,11 +2217,40 @@ html:not(.dark) nav.scrolled {
 .svc-card {
   transform-style: preserve-3d;
   will-change: transform;
-  transition: box-shadow 0.3s ease;
+  transition: box-shadow 0.35s ease, transform 0.35s ease;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06), 0 1px 4px rgba(0,0,0,0.04);
 }
 .svc-card:hover {
-  box-shadow: 0 24px 64px rgba(43,104,233,0.22), 0 8px 32px rgba(0,0,0,0.5) !important;
+  box-shadow: 0 32px 80px rgba(37,99,235,0.18), 0 8px 32px rgba(0,0,0,0.12) !important;
 }
+html.dark .svc-card {
+  box-shadow: 0 4px 32px rgba(2,6,23,0.6), 0 1px 4px rgba(2,6,23,0.5);
+}
+html.dark .svc-card:hover {
+  box-shadow: 0 0 0 1px rgba(59,130,246,0.22), 0 32px 80px rgba(59,130,246,0.18), 0 12px 48px rgba(2,6,23,0.8) !important;
+}
+
+/* ── Bundle card — permanent "Black Hole" dark treatment ── */
+.bundle-card,
+html:not(.dark) .bundle-card {
+  background: #0F172A !important;
+  border: 1px solid rgba(59,130,246,0.22) !important;
+  box-shadow: 0 4px 32px rgba(2,6,23,0.5) !important;
+}
+.bundle-card:hover,
+html:not(.dark) .bundle-card:hover {
+  box-shadow: 0 0 0 1px rgba(59,130,246,0.40), 0 32px 80px rgba(59,130,246,0.25), 0 12px 48px rgba(2,6,23,0.9) !important;
+}
+.bundle-card .svc-body h3 { color: #F8FAFC !important; }
+.bundle-card .svc-body .svc-desc { color: #94A3B8 !important; }
+.bundle-card .svc-body .svc-list li { color: #94A3B8 !important; }
+.bundle-card .svc-body .svc-list strong { color: #F8FAFC !important; }
+.bundle-card .svc-body .svc-works-for {
+  background: rgba(59,130,246,0.06) !important;
+  border-color: rgba(59,130,246,0.18) !important;
+  color: #94A3B8 !important;
+}
+.bundle-card .svc-body .svc-works-for span { color: #34D399 !important; }
 
 /* shimmer sweep on card hover */
 .svc-card::after {
@@ -2253,8 +2286,8 @@ html:not(.dark) nav.scrolled {
   top: 50%;
   left: 0;
   height: 2px;
-  background: linear-gradient(90deg, #2B68E9, #8B5CF6, #10B981);
-  box-shadow: 0 0 12px rgba(43,104,233,0.6);
+  background: linear-gradient(90deg, #3B82F6, #06B6D4, #34D399);
+  box-shadow: 0 0 16px rgba(59,130,246,0.5);
   transform: translateY(-50%);
   z-index: 0;
 }
@@ -2366,7 +2399,7 @@ footer::before {
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, #2B68E9, #8B5CF6, #10B981, transparent);
+  background: linear-gradient(90deg, transparent, #3B82F6, #22D3EE, #34D399, transparent);
 }
 
 /* --- Industry card per-color glow --- */
@@ -2379,33 +2412,35 @@ footer::before {
 
 /* Hero stays dark — 3D scene background lives here */
 #hero {
-  background: linear-gradient(135deg, #0B1A3E 0%, #0F2D5A 100%) !important;
-  /* Override CSS vars inside hero so its text/border tokens stay white-based */
-  --text:       #FFFFFF;
-  --text-muted: rgba(255,255,255,0.62);
-  --text-dim:   rgba(255,255,255,0.30);
-  --border:     rgba(255,255,255,0.10);
-  --bg-glass:   rgba(255,255,255,0.04);
+  background: linear-gradient(160deg, #020617 0%, #071437 55%, #0d1f42 100%) !important;
+  --text:       #F8FAFC;
+  --text-muted: rgba(248,250,252,0.65);
+  --text-dim:   rgba(248,250,252,0.32);
+  --border:     rgba(59,130,246,0.14);
+  --bg-glass:   rgba(59,130,246,0.05);
+  --electric:   #3B82F6;
+  --electric-l: #93C5FD;
 }
 
-#services   { background: #FFFFFF !important; }
-#process    { background: #F8FAFC !important; }
-#industries { background: #FFFFFF !important; }
+/* Light mode section backgrounds */
+#services   { background: #F8FAFC !important; }
+#process    { background: #FFFFFF !important; }
+#industries { background: #F8FAFC !important; }
 #about      { background: #F1F5F9 !important; }
 #urgency    { background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%) !important; }
 #contact    { background: #F8FAFC !important; }
 #results    { background: #FFFFFF !important; }
-footer      { background: #1E293B !important; }
+footer      { background: #0F172A !important; }
 
-/* Dark mode overrides for all sections */
-html.dark #services   { background: #0a0a0a !important; }
-html.dark #process    { background: #050505 !important; }
-html.dark #industries { background: #0a0a0a !important; }
-html.dark #about      { background: #0a0a0a !important; }
-html.dark #urgency    { background: linear-gradient(135deg, #07131f 0%, #091a2e 100%) !important; }
-html.dark #contact    { background: #050505 !important; }
-html.dark #results    { background: #0a0a0a !important; }
-html.dark footer      { background: #050505 !important; }
+/* Dark mode section backgrounds — Deep Space Obsidian system */
+html.dark #services   { background: #020617 !important; }
+html.dark #process    { background: #020617 !important; }
+html.dark #industries { background: #020617 !important; }
+html.dark #about      { background: #020617 !important; }
+html.dark #urgency    { background: linear-gradient(135deg, #020617 0%, #071437 100%) !important; }
+html.dark #contact    { background: #020617 !important; }
+html.dark #results    { background: #020617 !important; }
+html.dark footer      { background: #020617 !important; }
 
 /* ════════════ DASHBOARD CARD — pulsing glow border ════════════ */
 
@@ -2416,16 +2451,16 @@ html.dark footer      { background: #050505 !important; }
 @keyframes card-border-glow {
   0%, 100% {
     box-shadow:
-      0 0 0 1px rgba(43,104,233,0.22),
-      0 0 22px rgba(43,104,233,0.10),
-      0 28px 60px rgba(0,0,0,0.55),
+      0 0 0 1px rgba(59,130,246,0.22),
+      0 0 28px rgba(59,130,246,0.12),
+      0 32px 80px rgba(2,6,23,0.75),
       inset 0 1px 0 rgba(255,255,255,0.05);
   }
   50% {
     box-shadow:
-      0 0 0 1px rgba(43,104,233,0.55),
-      0 0 46px rgba(43,104,233,0.26),
-      0 28px 60px rgba(0,0,0,0.55),
+      0 0 0 1px rgba(59,130,246,0.55),
+      0 0 56px rgba(59,130,246,0.28),
+      0 32px 80px rgba(2,6,23,0.75),
       inset 0 1px 0 rgba(255,255,255,0.10);
   }
 }
@@ -2844,3 +2879,52 @@ html.dark footer      { background: #050505 !important; }
   .about-new-img-wrap { aspect-ratio: 16 / 7; }
   .about-new-highlights { grid-template-columns: 1fr; }
 }
+
+/* ════════════ PREMIUM SYSTEM — section glass dividers ════════════ */
+
+section {
+  position: relative;
+}
+
+/* Luminous top-edge accent line on dark sections */
+html.dark #services::before,
+html.dark #process::before,
+html.dark #about::before,
+html.dark #urgency::before,
+html.dark #contact::before,
+html.dark #results::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 60%; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(59,130,246,0.25), rgba(34,211,238,0.15), transparent);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Glassmorphism card background update for dark mode */
+html.dark .svc-card,
+html.dark .about-card,
+html.dark .ua-card {
+  background: var(--bg-card);
+  border-color: rgba(59,130,246,0.10);
+}
+
+/* Premium metric number highlight */
+html.dark .hv-kpi-val,
+html.dark .hv-kpi-delta.up,
+html.dark .hv-chart-total {
+  text-shadow: 0 0 20px rgba(59,130,246,0.4);
+}
+
+/* Urgency section text on dark */
+html.dark #urgency .urgency-text h2 { color: #F8FAFC; }
+
+/* Services section label on dark gets cyan */
+html.dark .sec-label { color: var(--cyan); }
+html.dark .sec-label.light { color: var(--electric-l); }
+
+/* body smooth transition for the whole color system */
+body { transition: background-color 0.5s cubic-bezier(0.4,0,0.2,1), color 0.5s cubic-bezier(0.4,0,0.2,1); }
+section { transition: background-color 0.5s cubic-bezier(0.4,0,0.2,1); }

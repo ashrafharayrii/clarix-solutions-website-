@@ -186,12 +186,16 @@ function DashboardCard() {
           <svg className="hv-linechart" viewBox="0 0 220 65" preserveAspectRatio="none">
             <defs>
               <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%"   stopColor="#2B68E9" stopOpacity="0.32" />
-                <stop offset="100%" stopColor="#2B68E9" stopOpacity="0" />
+                <stop offset="0%"   stopColor="#3B82F6" stopOpacity="0.35" />
+                <stop offset="100%" stopColor="#3B82F6" stopOpacity="0" />
               </linearGradient>
+              <filter id="dotGlow" x="-80%" y="-80%" width="260%" height="260%">
+                <feGaussianBlur stdDeviation="2.8" result="blur" />
+                <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+              </filter>
             </defs>
 
-            {/* Area fill — fades in once line is drawn */}
+            {/* Area fill */}
             <motion.path
               d="M0,54 C14,50 24,47 40,41 S58,44 76,31 S98,35 116,20 S136,25 155,11 S176,17 220,15 L220,65 L0,65Z"
               fill="url(#areaGrad)"
@@ -200,11 +204,11 @@ function DashboardCard() {
               transition={{ duration: 0.7, delay: 2.1 }}
             />
 
-            {/* Line — draws itself left to right */}
+            {/* Line */}
             <motion.path
               d="M0,54 C14,50 24,47 40,41 S58,44 76,31 S98,35 116,20 S136,25 155,11 S176,17 220,15"
               fill="none"
-              stroke="#2B68E9"
+              stroke="#3B82F6"
               strokeWidth="2.2"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -213,36 +217,28 @@ function DashboardCard() {
               transition={{ duration: 1.8, ease: 'easeInOut', delay: 0.35 }}
             />
 
-            {/* Peak point — appears then pulses indefinitely */}
+            {/* Peak point — Glow Blue pulse */}
             <motion.circle
-              cx={155} cy={11} r={3.5} fill="#2B68E9"
+              cx={155} cy={11} r={3.5} fill="#3B82F6"
               filter="url(#dotGlow)"
               initial={{ opacity: 0, scale: 0 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.25, delay: 1.9 }}
             >
-              <animate attributeName="r"       values="3.5;5.8;3.5" dur="2s"   repeatCount="indefinite" begin="2.2s" />
-              <animate attributeName="opacity" values="1;0.35;1"    dur="2s"   repeatCount="indefinite" begin="2.2s" />
+              <animate attributeName="r"       values="3.5;6;3.5"   dur="2s"   repeatCount="indefinite" begin="2.2s" />
+              <animate attributeName="opacity" values="1;0.35;1"     dur="2s"   repeatCount="indefinite" begin="2.2s" />
             </motion.circle>
 
-            {/* Trailing end point */}
+            {/* Trailing end — Neon Mint */}
             <motion.circle
-              cx={220} cy={15} r={2.5} fill="#10B981"
+              cx={220} cy={15} r={2.5} fill="#34D399"
               initial={{ opacity: 0, scale: 0 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.25, delay: 2.05 }}
             >
-              <animate attributeName="r"       values="2.5;4.5;2.5" dur="1.8s" repeatCount="indefinite" begin="2.3s" />
-              <animate attributeName="opacity" values="1;0.4;1"     dur="1.8s" repeatCount="indefinite" begin="2.3s" />
+              <animate attributeName="r"       values="2.5;4.8;2.5" dur="1.8s" repeatCount="indefinite" begin="2.3s" />
+              <animate attributeName="opacity" values="1;0.4;1"      dur="1.8s" repeatCount="indefinite" begin="2.3s" />
             </motion.circle>
-
-            {/* Glow filter for the peak point */}
-            <defs>
-              <filter id="dotGlow" x="-80%" y="-80%" width="260%" height="260%">
-                <feGaussianBlur stdDeviation="2.5" result="blur" />
-                <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-              </filter>
-            </defs>
           </svg>
 
           <div className="hv-chart-days">
@@ -261,8 +257,8 @@ function DashboardCard() {
             <defs>
               {WEEK_BARS.map((b, i) => (
                 <linearGradient key={i} id={`barGrad${i}`} x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%"   stopColor={b.hi ? '#7AAEFF' : '#3B78F5'} stopOpacity="0.95" />
-                  <stop offset="100%" stopColor={b.hi ? '#2B68E9' : '#0E2870'} stopOpacity="0.35" />
+                  <stop offset="0%"   stopColor={b.hi ? '#22D3EE' : '#60A5FA'} stopOpacity="0.95" />
+                  <stop offset="100%" stopColor={b.hi ? '#3B82F6' : '#1D4ED8'} stopOpacity="0.35" />
                 </linearGradient>
               ))}
             </defs>
@@ -299,9 +295,8 @@ export default function Hero() {
 
   return (
     <section id="hero" style={{ position: 'relative', overflow: 'hidden' }}>
-      <SceneBackground variant="combined" color="#2B68E9" />
-      {/* Subtle gradient overlay so text stays readable over the 3D scene */}
-      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(3,10,25,0.72) 0%, rgba(7,24,48,0.55) 100%)', pointerEvents: 'none', zIndex: 1 }} />
+      <SceneBackground variant="combined" color="#3B82F6" />
+      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(160deg, rgba(2,6,23,0.78) 0%, rgba(7,20,55,0.62) 60%, rgba(13,31,66,0.50) 100%)', pointerEvents: 'none', zIndex: 1 }} />
 
       <div className="container hero-layout" style={{ position: 'relative', zIndex: 2 }}>
 
