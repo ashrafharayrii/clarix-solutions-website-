@@ -119,7 +119,7 @@ ul { list-style: none; }
 
 .text-blue { color: var(--electric-m); }
 .text-blue-l { color: var(--electric-l); }
-.white-h { color: var(--white); }
+.white-h { color: var(--text); }
 
 .sec-label {
   display: inline-block;
@@ -1350,7 +1350,7 @@ html.dark .ua-card {
 .ps-content h4 {
   font-size: 1rem;
   font-weight: 800;
-  color: var(--white);
+  color: var(--text);
   margin-bottom: 7px;
 }
 .ps-content p {
@@ -2183,6 +2183,13 @@ nav.scrolled {
   box-shadow: 0 4px 32px rgba(0,0,0,0.4) !important;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
+html:not(.dark) nav.scrolled {
+  background: rgba(255, 255, 255, 0.88) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  border-bottom: 1px solid rgba(0,0,0,0.08) !important;
+  box-shadow: 0 4px 32px rgba(0,0,0,0.08) !important;
+}
 
 /* --- Geometric floating shapes (hero) --- */
 .hero-geo {
@@ -2362,6 +2369,11 @@ nav.scrolled {
   border: 1px solid rgba(0,0,0,0.07) !important;
   box-shadow: 0 8px 40px rgba(0,0,0,0.08) !important;
 }
+html.dark .contact-form {
+  background: #111111 !important;
+  border: 1px solid rgba(255,255,255,0.06) !important;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.45) !important;
+}
 
 /* --- Footer gradient border top --- */
 footer {
@@ -2406,6 +2418,16 @@ footer::before {
 #contact    { background: #F8FAFC !important; }
 #results    { background: #FFFFFF !important; }
 footer      { background: #1E293B !important; }
+
+/* Dark mode overrides for all sections */
+html.dark #services   { background: #0a0a0a !important; }
+html.dark #process    { background: #050505 !important; }
+html.dark #industries { background: #0a0a0a !important; }
+html.dark #about      { background: #0a0a0a !important; }
+html.dark #urgency    { background: linear-gradient(135deg, #07131f 0%, #091a2e 100%) !important; }
+html.dark #contact    { background: #050505 !important; }
+html.dark #results    { background: #0a0a0a !important; }
+html.dark footer      { background: #050505 !important; }
 
 /* ════════════ DASHBOARD CARD — pulsing glow border ════════════ */
 
