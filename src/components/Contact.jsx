@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
+import { MessageSquare } from 'lucide-react'
 
 const infoRows = [
   { icon: '📧', content: <a href="mailto:clarix.solutions.jo@gmail.com">clarix.solutions.jo@gmail.com</a> },
@@ -49,6 +50,29 @@ export default function Contact() {
           <div className="sec-label light">Get In Touch</div>
           <h2 className="white-h">Ready to Transform<br /><span className="text-blue-l">Your Business?</span></h2>
           <p>Tell us what you're struggling to track. Our team replies within 24 hours with a clear, personalised plan.</p>
+
+          {/* WhatsApp Direct CTA */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            style={{ margin: '24px 0' }}
+          >
+            <a
+              href="https://wa.me/962792803075"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-whatsapp"
+            >
+              <MessageSquare size={18} />
+              WhatsApp Direct
+            </a>
+            <p style={{ marginTop: 10, fontSize: '0.78rem', color: 'var(--text-dim)', fontWeight: 500 }}>
+              Fastest response · Typically under 1 hour
+            </p>
+          </motion.div>
+
           <div className="contact-info">
             {infoRows.map((row, i) => (
               <motion.div
