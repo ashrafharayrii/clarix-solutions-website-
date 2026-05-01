@@ -108,8 +108,8 @@ const SERVICES = [
   {
     title: 'Website + Dashboard Bundle',
     desc: 'The complete package — attract customers online with a professional website AND manage your entire operations with a live dashboard.',
-    image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=700&q=80',
-    alt: 'Team working together with technology',
+    image: 'https://images.unsplash.com/photo-1517292987719-0369a794ec0f?auto=format&fit=crop&w=700&q=80',
+    alt: 'Laptop and phone showing website and dashboard together',
     features: [
       { icon: CheckCircle, text: 'Everything in Dashboard + Website — full feature set included' },
       { icon: Link2,       text: 'Seamless Integration — website and dashboard work as one system' },
