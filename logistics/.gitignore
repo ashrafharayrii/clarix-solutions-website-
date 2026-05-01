@@ -1,0 +1,5 @@
+.claude/
+*.xlsx
+__pycache__/
+*.pyc
+.vscode/
