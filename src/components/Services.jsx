@@ -74,7 +74,7 @@ const SERVICES = [
   {
     title: 'Dashboard Development',
     desc: 'A real-time management dashboard built for your business — track inventory, sales, suppliers, and employees all from one screen.',
-    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=700&q=80',
+    image: 'https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&w=700&q=80',
     alt: 'Dashboard Analytics',
     features: [
       { icon: Package,    text: 'Inventory Tracking — live stock levels & auto reorder alerts' },
@@ -91,7 +91,7 @@ const SERVICES = [
   {
     title: 'Website Development',
     desc: 'A fast, modern website that puts your business online professionally — custom built to match your brand and attract new customers.',
-    image: 'https://images.unsplash.com/photo-1547658719-da2b51169166?auto=format&fit=crop&w=700&q=80',
+    image: 'https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?auto=format&fit=crop&w=700&q=80',
     alt: 'Website Development',
     features: [
       { icon: Palette,     text: 'Custom Design — unique to your brand, no generic templates' },
@@ -108,8 +108,8 @@ const SERVICES = [
   {
     title: 'Website + Dashboard Bundle',
     desc: 'The complete package — attract customers online with a professional website AND manage your entire operations with a live dashboard.',
-    image: 'https://images.unsplash.com/photo-1517292987719-0369a794ec0f?auto=format&fit=crop&w=700&q=80',
-    alt: 'Laptop and phone showing website and dashboard together',
+    image: 'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?auto=format&fit=crop&w=700&q=80',
+    alt: 'Laptop showing website and dashboard bundle',
     features: [
       { icon: CheckCircle, text: 'Everything in Dashboard + Website — full feature set included' },
       { icon: Link2,       text: 'Seamless Integration — website and dashboard work as one system' },
