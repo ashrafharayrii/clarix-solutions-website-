@@ -1142,6 +1142,14 @@ html.dark .ua-card {
    CLARIX — CREATIVE UPGRADE: MOTIONS + PHOTOS
    ════════════════════════════════════════════ */
 
+/* ── Static blue-to-teal gradient text ── */
+.text-gradient-blue {
+  background: linear-gradient(135deg, #2B68E9 0%, #5B8FF9 50%, #10B981 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 /* ── Animated gradient headline text ── */
 .text-gradient-anim {
   background: linear-gradient(90deg, #93C5FD, #3B82F6, #22D3EE, #34D399, #3B82F6, #93C5FD);
