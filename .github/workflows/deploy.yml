@@ -28,6 +28,7 @@ jobs:
         run: |
           touch dist/.nojekyll
           cp -r "coffee house" dist/
+          cp -r "coffeehous video" dist/
           cp -r resorant dist/
           cp -r jewllery dist/
           cp -r logistics dist/
