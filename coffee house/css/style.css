@@ -942,6 +942,114 @@ footer {
   .menu-tab { white-space: nowrap; flex-shrink: 0; }
 }
 
+/* ===== CINEMATIC VIDEO SECTION ===== */
+
+.video-section {
+  position: relative;
+  height: 80vh;
+  min-height: 520px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.video-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: 0;
+}
+
+.video-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(26,15,10,0.55) 0%,
+    rgba(26,15,10,0.28) 45%,
+    rgba(26,15,10,0.62) 100%
+  );
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.video-content {
+  text-align: center;
+  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.video-tag {
+  justify-content: center;
+  color: var(--accent-light) !important;
+}
+
+.video-headline {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(3rem, 7vw, 5.5rem);
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  text-shadow: 0 4px 32px rgba(0,0,0,0.45);
+}
+
+.video-headline em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.video-sub {
+  font-size: clamp(1rem, 2vw, 1.18rem);
+  color: rgba(255,255,255,0.78);
+  max-width: 460px;
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+}
+
+.video-scroll-hint {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,255,255,0.45);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  animation: floatA 2.8s ease-in-out infinite;
+}
+
+.video-scroll-line {
+  width: 1px;
+  height: 42px;
+  background: linear-gradient(180deg, rgba(212,167,106,0.85), transparent);
+}
+
+/* Stagger fade-in delays for video content */
+.video-content .section-tag.fade-in.visible  { transition-delay: 0s; }
+.video-content .video-headline.fade-in.visible { transition-delay: 0.12s; }
+.video-content .video-sub.fade-in.visible      { transition-delay: 0.24s; }
+
+@media (max-width: 600px) {
+  .video-section { height: 70vh; min-height: 420px; }
+  .video-scroll-hint { display: none; }
+}
+
 /* ─── STICKY MOBILE BAR ─── */
 #mob-cta-bar{display:none;position:fixed;bottom:0;left:0;right:0;z-index:999;background:rgba(26,15,10,.97);padding:.875rem 1.25rem 1rem;border-top:1px solid rgba(212,167,106,.2);box-shadow:0 -8px 32px rgba(0,0,0,.4);align-items:center;justify-content:space-between;gap:1rem;transition:transform .3s;transform:translateY(100%)}
 #mob-cta-bar.visible{transform:translateY(0)}
