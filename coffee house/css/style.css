@@ -899,7 +899,7 @@ footer {
 /* ===== RESPONSIVE ===== */
 @media (max-width: 1024px) {
   .about, .location { grid-template-columns: 1fr; gap: 50px; }
-  .about-img-float { right: 0; bottom: -20px; }
+  .about-video { height: 340px; }
   .about-badge { left: 0; }
   .gallery-grid { grid-template-columns: repeat(2, 1fr); }
   .gallery-item:first-child { grid-column: span 2; grid-row: span 1; }
@@ -942,112 +942,19 @@ footer {
   .menu-tab { white-space: nowrap; flex-shrink: 0; }
 }
 
-/* ===== CINEMATIC VIDEO SECTION ===== */
+/* ===== ABOUT VIDEO ===== */
 
-.video-section {
+.about-video-wrap {
   position: relative;
-  height: 80vh;
-  min-height: 520px;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
-.video-bg {
-  position: absolute;
-  inset: 0;
+.about-video {
   width: 100%;
-  height: 100%;
+  height: 480px;
   object-fit: cover;
-  object-position: center;
-  z-index: 0;
-}
-
-.video-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(26,15,10,0.55) 0%,
-    rgba(26,15,10,0.28) 45%,
-    rgba(26,15,10,0.62) 100%
-  );
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.video-content {
-  text-align: center;
-  padding: 0 24px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 18px;
-}
-
-.video-tag {
-  justify-content: center;
-  color: var(--accent-light) !important;
-}
-
-.video-headline {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(3rem, 7vw, 5.5rem);
-  font-weight: 800;
-  color: #fff;
-  line-height: 1.08;
-  letter-spacing: -0.025em;
-  text-shadow: 0 4px 32px rgba(0,0,0,0.45);
-}
-
-.video-headline em {
-  font-style: italic;
-  color: var(--accent);
-}
-
-.video-sub {
-  font-size: clamp(1rem, 2vw, 1.18rem);
-  color: rgba(255,255,255,0.78);
-  max-width: 460px;
-  line-height: 1.7;
-  letter-spacing: 0.01em;
-}
-
-.video-scroll-hint {
-  position: absolute;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 3;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  color: rgba(255,255,255,0.45);
-  font-size: 0.68rem;
-  font-weight: 600;
-  letter-spacing: 2.5px;
-  text-transform: uppercase;
-  animation: floatA 2.8s ease-in-out infinite;
-}
-
-.video-scroll-line {
-  width: 1px;
-  height: 42px;
-  background: linear-gradient(180deg, rgba(212,167,106,0.85), transparent);
-}
-
-/* Stagger fade-in delays for video content */
-.video-content .section-tag.fade-in.visible  { transition-delay: 0s; }
-.video-content .video-headline.fade-in.visible { transition-delay: 0.12s; }
-.video-content .video-sub.fade-in.visible      { transition-delay: 0.24s; }
-
-@media (max-width: 600px) {
-  .video-section { height: 70vh; min-height: 420px; }
-  .video-scroll-hint { display: none; }
+  border-radius: 24px;
+  box-shadow: var(--shadow-lg);
+  display: block;
 }
 
 /* ─── STICKY MOBILE BAR ─── */
