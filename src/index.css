@@ -376,14 +376,8 @@ html.dark .mobile-menu { background: rgba(5,5,5,0.98); }
 
 /* ════════════ HERO SECTION ════════════ */
 #hero {
-  background: var(--bg);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding-top: 110px;
+  background: transparent;
   position: relative;
-  overflow: hidden;
 }
 
 .hero-bg-grid {
