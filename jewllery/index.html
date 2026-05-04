@@ -7,6 +7,17 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+<!-- Three.js ES module importmap -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 :root{
@@ -17,17 +28,21 @@ html{scroll-behavior:smooth;}
 body{font-family:'Montserrat',sans-serif;background:var(--dark);color:var(--text);overflow-x:hidden;}
 a{text-decoration:none;color:inherit;}
 
+/* ─── FIXED CANVAS ─── */
+#three-canvas-container{position:fixed;top:0;left:0;width:100%;height:100vh;z-index:0;pointer-events:none;transition:opacity 0.6s ease;}
+.vignette{position:fixed;inset:0;background:radial-gradient(circle,transparent 20%,rgba(0,0,0,0.88) 100%);pointer-events:none;z-index:4;}
+
 /* ─── LIVE BACKGROUND ─── */
 .bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
-.orb{position:absolute;border-radius:50%;filter:blur(120px);opacity:.18;}
+.orb{position:absolute;border-radius:50%;filter:blur(120px);opacity:.12;}
 .orb1{width:700px;height:700px;background:radial-gradient(circle,#5B2C8D,transparent);top:-20%;right:-10%;animation:dA 16s ease-in-out infinite;}
 .orb2{width:500px;height:500px;background:radial-gradient(circle,#C9A84C,transparent);bottom:0%;left:-5%;animation:dB 20s ease-in-out infinite;}
 .orb3{width:300px;height:300px;background:radial-gradient(circle,#8B4FD4,transparent);top:50%;left:40%;animation:dC 14s ease-in-out infinite;}
-.stars{position:absolute;inset:0;background-image:radial-gradient(circle,rgba(201,168,76,.3) 1px,transparent 1px);background-size:50px 50px;opacity:.4;animation:twinkle 4s ease-in-out infinite alternate;}
+.stars{position:absolute;inset:0;background-image:radial-gradient(circle,rgba(201,168,76,.3) 1px,transparent 1px);background-size:50px 50px;opacity:.35;animation:twinkle 4s ease-in-out infinite alternate;}
 @keyframes dA{0%,100%{transform:translate(0,0);}50%{transform:translate(-60px,80px);}}
 @keyframes dB{0%,100%{transform:translate(0,0);}50%{transform:translate(80px,-60px);}}
 @keyframes dC{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(-40px,40px) scale(1.2);}}
-@keyframes twinkle{from{opacity:.3;}to{opacity:.6;}}
+@keyframes twinkle{from{opacity:.25;}to{opacity:.5;}}
 
 /* ─── NAVBAR ─── */
 .navbar{position:fixed;top:0;left:0;right:0;z-index:100;padding:20px 48px;display:flex;align-items:center;justify-content:space-between;background:rgba(7,4,15,.75);backdrop-filter:blur(24px);border-bottom:1px solid rgba(201,168,76,.12);}
@@ -39,38 +54,112 @@ a{text-decoration:none;color:inherit;}
 .back-btn{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);padding:9px 18px;border-radius:50px;font-size:12px;display:flex;align-items:center;gap:6px;cursor:pointer;transition:background .2s;letter-spacing:.04em;}
 .back-btn:hover{background:rgba(255,255,255,.14);}
 
-/* ─── HERO ─── */
-.hero{position:relative;z-index:1;min-height:100vh;display:flex;align-items:center;padding:120px 48px 80px;gap:80px;justify-content:center;}
-.hero-left{flex:1;max-width:580px;}
-.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);color:var(--gold);padding:8px 20px;border-radius:50px;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:32px;animation:fadeUp .8s ease both;}
-.hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(3.5rem,6vw,5.5rem);font-weight:700;line-height:1.05;margin-bottom:24px;animation:fadeUp .8s .1s ease both;}
-.hero h1 em{font-style:italic;background:linear-gradient(135deg,var(--gold),#E8C96B);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-.hero p{font-size:16px;color:var(--muted);line-height:1.9;margin-bottom:40px;animation:fadeUp .8s .2s ease both;font-weight:300;}
-.hero-btns{display:flex;gap:16px;flex-wrap:wrap;animation:fadeUp .8s .3s ease both;}
-.btn-gold{background:linear-gradient(135deg,var(--gold),#E8A020);color:#07040F;padding:16px 36px;border-radius:50px;font-weight:700;font-size:14px;letter-spacing:.06em;text-transform:uppercase;display:inline-flex;align-items:center;gap:10px;cursor:pointer;transition:transform .2s,box-shadow .2s;border:none;}
-.btn-gold:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(201,168,76,.4);}
-.btn-ghost{background:transparent;color:var(--text);padding:16px 36px;border-radius:50px;font-size:14px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;border:1px solid rgba(255,255,255,.18);cursor:pointer;display:inline-flex;align-items:center;gap:10px;transition:border-color .2s,background .2s;}
-.btn-ghost:hover{border-color:var(--gold);background:rgba(201,168,76,.07);}
-.hero-right{flex:0 0 400px;display:flex;flex-direction:column;gap:16px;animation:fadeUp .8s .4s ease both;}
+/* ─── 3D HERO ─── */
+.hero-3d{height:300vh;position:relative;}
+.sticky-hero{
+  position:sticky;top:0;height:100vh;width:100%;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  overflow:hidden;z-index:10;
+}
+.hero-brand{
+  position:absolute;top:96px;left:48px;
+  display:flex;align-items:center;gap:16px;z-index:60;
+}
+.hero-brand-circle{
+  width:40px;height:40px;border-radius:50%;
+  border:1px solid rgba(201,168,76,0.35);
+  display:flex;align-items:center;justify-content:center;
+}
+.hero-brand-letter{
+  font-family:'Cormorant Garamond',serif;font-size:16px;
+  font-weight:700;color:var(--gold);
+}
+.hero-brand-name{
+  text-transform:uppercase;letter-spacing:.5em;font-size:10px;
+  font-weight:600;color:rgba(255,255,255,0.4);
+}
+.visual-frame{
+  position:relative;width:100%;max-width:1280px;height:680px;
+  display:flex;align-items:center;justify-content:center;
+}
+.ring-panels{
+  position:relative;display:flex;align-items:center;
+  justify-content:center;width:100%;height:100%;gap:24px;
+}
+/* Left spec panel */
+.spec-panel{
+  width:370px;height:510px;
+  background:rgba(8,6,18,0.18);
+  backdrop-filter:blur(44px);
+  border:1px solid rgba(201,168,76,0.14);
+  box-shadow:0 50px 100px -20px rgba(0,0,0,0.95);
+  border-radius:6px;overflow:hidden;
+  opacity:0;transform:translateX(-140px);
+  flex-shrink:0;
+}
+.spec-panel-inner{padding:40px;height:100%;display:flex;flex-direction:column;}
+.spec-label{font-size:9px;text-transform:uppercase;letter-spacing:.5em;color:rgba(255,255,255,0.3);margin-bottom:10px;}
+.spec-title{
+  font-family:'Cormorant Garamond',serif;font-size:28px;font-style:italic;
+  background:linear-gradient(135deg,#bf953f,#fcf6ba,#b38728,#fbf5b7,#aa771c);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:0;
+}
+.spec-divider{height:1px;background:rgba(255,255,255,0.05);margin:24px 0;}
+.spec-row{background:rgba(255,255,255,0.04);padding:18px 20px;border-radius:4px;border:1px solid rgba(255,255,255,0.05);margin-bottom:14px;}
+.spec-row-label{font-size:8px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:.12em;display:block;margin-bottom:5px;}
+.spec-row-val{font-size:16px;font-weight:300;}
+/* Right boutique panel */
+.boutique-panel{
+  width:600px;height:460px;
+  background:rgba(8,6,18,0.18);
+  backdrop-filter:blur(44px);
+  border:1px solid rgba(201,168,76,0.14);
+  box-shadow:0 50px 100px -20px rgba(0,0,0,0.95);
+  border-radius:6px;overflow:hidden;
+  opacity:0;transform:translateX(140px);
+  flex-shrink:0;position:relative;
+}
+.boutique-fade{position:absolute;inset:0;background:linear-gradient(to right,rgba(0,0,0,0.82) 0%,rgba(0,0,0,0.25) 55%,transparent);z-index:10;}
+.boutique-inner{position:relative;z-index:20;padding:52px;height:100%;display:flex;flex-direction:column;justify-content:center;}
+.boutique-eyebrow{
+  font-size:10px;letter-spacing:.7em;text-transform:uppercase;font-weight:700;
+  margin-bottom:20px;display:block;
+  background:linear-gradient(135deg,#bf953f,#fcf6ba,#b38728);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.boutique-heading{
+  font-family:'Cormorant Garamond',serif;font-size:52px;font-style:italic;
+  line-height:1.1;margin-bottom:22px;
+}
+.boutique-desc{color:rgba(255,255,255,0.38);font-size:14px;margin-bottom:36px;max-width:300px;font-weight:300;line-height:1.85;}
+.boutique-actions{display:flex;align-items:center;gap:28px;}
+.boutique-btn{
+  padding:16px 32px;background:rgba(201,168,76,0.9);color:#07040F;
+  font-size:10px;text-transform:uppercase;letter-spacing:.35em;font-weight:800;
+  text-decoration:none;display:inline-block;transition:background .25s;
+}
+.boutique-btn:hover{background:var(--gold2);}
+.boutique-link{font-size:10px;text-transform:uppercase;letter-spacing:.35em;font-weight:600;border-bottom:1px solid rgba(255,255,255,0.15);padding-bottom:4px;cursor:pointer;color:rgba(255,255,255,0.65);}
+/* Hero title */
+.hero-title-wrap{position:absolute;bottom:72px;text-align:center;z-index:60;width:100%;pointer-events:none;}
+#main-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(3.5rem,8.5vw,8rem);
+  font-style:italic;letter-spacing:-0.02em;
+  margin-bottom:14px;opacity:0;line-height:1;
+}
+.gold-word{background:linear-gradient(135deg,#bf953f,#fcf6ba,#b38728,#fbf5b7,#aa771c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+#hero-sub{
+  font-size:13px;color:rgba(255,255,255,0.22);
+  font-weight:300;letter-spacing:.4em;text-transform:uppercase;opacity:0;
+}
+/* Scroll line */
+.scroll-line-wrap{position:absolute;bottom:24px;display:flex;flex-direction:column;align-items:center;gap:12px;z-index:60;}
+.scroll-line{width:1px;height:52px;background:linear-gradient(to bottom,transparent,rgba(201,168,76,0.4),transparent);}
 
-/* ─── GEM SHOWCASE ─── */
-.gem-showcase{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-.gem-card{border-radius:20px;overflow:hidden;aspect-ratio:1;position:relative;cursor:pointer;transition:transform .5s cubic-bezier(.16,1,.3,1),box-shadow .5s;}
-.gem-card:hover{transform:perspective(600px) rotateY(-15deg) rotateX(8deg) scale(1.05);box-shadow:20px 20px 60px rgba(0,0,0,.7),0 0 40px rgba(201,168,76,.2);}
-.gem-card:first-child{grid-column:1/-1;aspect-ratio:2/1;}
-.gem-inner{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;font-size:56px;}
-.gem-inner.ring{background:linear-gradient(135deg,#1a0f2e,#2d1760);}
-.gem-inner.diamond{background:linear-gradient(135deg,#0a1a1a,#0f2d2d);}
-.gem-inner.necklace{background:linear-gradient(135deg,#1a1500,#2d2300);}
-.gem-inner.bracelet{background:linear-gradient(135deg,#1a0505,#2d1010);}
-.gem-lbl{font-size:13px;font-weight:500;color:rgba(201,168,76,.8);letter-spacing:.08em;text-transform:uppercase;}
-.gem-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(7,4,15,.85),transparent 50%);opacity:0;transition:opacity .3s;}
-.gem-card:hover .gem-overlay{opacity:1;}
-.gem-price{position:absolute;bottom:16px;left:50%;transform:translateX(-50%) translateY(8px);opacity:0;font-size:15px;font-weight:700;color:var(--gold);white-space:nowrap;transition:opacity .3s,transform .3s;}
-.gem-card:hover .gem-price{opacity:1;transform:translateX(-50%) translateY(0);}
-
-/* ─── SECTIONS ─── */
-section{position:relative;z-index:1;}
+/* ─── POST-HERO SECTIONS ─── */
+section{position:relative;z-index:1;background:var(--dark);}
 .container{max-width:1200px;margin:0 auto;padding:0 48px;}
 .sec-title{text-align:center;margin-bottom:64px;}
 .sec-badge{display:inline-block;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.22);color:var(--gold);padding:6px 20px;border-radius:50px;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px;}
@@ -78,7 +167,7 @@ section{position:relative;z-index:1;}
 .sec-title p{font-size:15px;color:var(--muted);max-width:500px;margin:0 auto;line-height:1.9;font-weight:300;}
 
 /* ─── COLLECTION ─── */
-.collection{padding:80px 0;}
+.collection{padding:100px 0;}
 .collection-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px;}
 .col-card{background:rgba(255,255,255,.025);border:1px solid rgba(201,168,76,.1);border-radius:24px;overflow:hidden;transition:transform .4s cubic-bezier(.16,1,.3,1),border-color .3s,box-shadow .4s;cursor:pointer;}
 .col-card:hover{transform:perspective(800px) rotateY(-8deg) translateY(-10px);border-color:rgba(201,168,76,.3);box-shadow:16px 16px 60px rgba(0,0,0,.5),0 0 30px rgba(201,168,76,.08);}
@@ -91,7 +180,7 @@ section{position:relative;z-index:1;}
 .col-tag{background:rgba(91,44,141,.2);color:#C4A0FF;padding:4px 14px;border-radius:50px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;}
 
 /* ─── FEATURES ─── */
-.features{padding:80px 0;background:rgba(201,168,76,.02);}
+.features{padding:80px 0;}
 .feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;}
 .feat-card{padding:32px;border-radius:24px;background:rgba(255,255,255,.025);border:1px solid rgba(201,168,76,.08);transition:transform .3s,border-color .3s;}
 .feat-card:hover{transform:translateY(-6px);border-color:rgba(201,168,76,.25);}
@@ -100,20 +189,21 @@ section{position:relative;z-index:1;}
 .feat-card p{font-size:13px;color:var(--muted);line-height:1.8;font-weight:300;}
 
 /* ─── DASHBOARD CTA ─── */
-.dash-cta{padding:100px 0;text-align:center;}
+.dash-cta{padding:100px 0;}
 .dash-card{background:linear-gradient(135deg,rgba(201,168,76,.06),rgba(91,44,141,.06));border:1px solid rgba(201,168,76,.18);border-radius:32px;padding:64px 40px;max-width:800px;margin:0 auto;position:relative;overflow:hidden;}
 .dash-card::after{content:'💎';position:absolute;font-size:200px;right:-20px;bottom:-40px;opacity:.04;}
-.dash-card h2{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:700;margin-bottom:16px;}
-.dash-card p{font-size:16px;color:var(--muted);max-width:520px;margin:0 auto 40px;line-height:1.9;font-weight:300;}
+.dash-card h2{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:700;margin-bottom:16px;text-align:center;}
+.dash-card p{font-size:16px;color:var(--muted);max-width:520px;margin:0 auto 40px;line-height:1.9;font-weight:300;text-align:center;}
 .btn-dashboard{display:inline-flex;align-items:center;gap:12px;background:linear-gradient(135deg,var(--gold),var(--purple));color:#fff;padding:18px 52px;border-radius:50px;font-size:16px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:transform .2s,box-shadow .2s;text-decoration:none;}
 .btn-dashboard:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(201,168,76,.3);}
+.dash-card .sec-title-inner{text-align:center;}
 .kpi-row{display:flex;gap:28px;justify-content:center;margin-top:48px;flex-wrap:wrap;}
 .kpi{background:rgba(255,255,255,.03);border:1px solid rgba(201,168,76,.12);border-radius:16px;padding:20px 28px;text-align:center;}
 .kpi-val{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:700;color:var(--gold);}
 .kpi-lbl{font-size:12px;color:var(--muted);margin-top:4px;letter-spacing:.06em;text-transform:uppercase;}
 
 /* ─── FOOTER ─── */
-.footer{padding:40px;text-align:center;border-top:1px solid rgba(255,255,255,.05);position:relative;z-index:1;}
+.footer{padding:40px;text-align:center;border-top:1px solid rgba(255,255,255,.05);background:var(--dark);}
 .footer p{color:var(--muted);font-size:13px;letter-spacing:.04em;}
 .footer span{color:var(--gold);}
 
@@ -123,11 +213,13 @@ section{position:relative;z-index:1;}
 .reveal.visible{opacity:1;transform:translateY(0);}
 
 @media(max-width:900px){
-  .hero{flex-direction:column;gap:40px;padding:100px 24px 60px;}
-  .hero-right{flex:none;width:100%;max-width:400px;margin:0 auto;}
+  .visual-frame{height:auto;min-height:400px;}
+  .spec-panel,.boutique-panel{display:none;}
+  .hero-3d{height:200vh;}
   .container{padding:0 24px;}
   .navbar{padding:16px 20px;}
   .nav-links{display:none;}
+  .hero-brand{left:20px;top:88px;}
 }
 /* ─── MOBILE ADDITIONS ─── */
 .ham-btn{display:none;background:none;border:1px solid rgba(255,255,255,.2);border-radius:8px;width:38px;height:38px;cursor:pointer;align-items:center;justify-content:center;color:rgba(255,255,255,.8);flex-shrink:0}
@@ -140,19 +232,11 @@ section{position:relative;z-index:1;}
   #mob-cta-bar{display:flex}
   body{padding-bottom:70px}
   .navbar{padding:14px 20px!important}
-  .hero{padding:88px 20px 50px!important}
-  .hero-inner{grid-template-columns:1fr!important;gap:32px!important}
-  .hero-btns,.hero-actions{flex-direction:column!important}
-  .hero-btns a,.hero-btns button,.hero-actions a{width:100%!important;justify-content:center!important}
-  .hero-stats,.hero-stats-row{gap:14px!important;flex-wrap:wrap!important}
   .container{padding:0 20px!important}
-  .feat-grid,.features-grid,.prod-grid,.collection-grid,.menu-grid{grid-template-columns:1fr!important}
+  .feat-grid,.collection-grid{grid-template-columns:1fr!important}
   .dash-card{padding:40px 20px!important}
   .kpi-row{gap:12px!important}
   .kpi{padding:14px 18px!important}
-}
-@media(max-width:480px){
-  .product-display,.product-showcase,.gem-showcase{grid-template-columns:1fr 1fr!important}
 }
 </style>
 </head>
@@ -165,6 +249,10 @@ section{position:relative;z-index:1;}
   <div class="stars"></div>
 </div>
 
+<!-- Three.js canvas (fixed behind everything) -->
+<div id="three-canvas-container"></div>
+<div class="vignette"></div>
+
 <nav class="navbar">
   <div class="nav-logo">LUMIÈRE</div>
   <ul class="nav-links">
@@ -176,49 +264,92 @@ section{position:relative;z-index:1;}
   <button class="ham-btn" id="ham-btn" aria-label="Open navigation"><i class="fas fa-bars"></i></button>
   <a href="../index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Clarix</a>
 </nav>
-<div id="mob-menu" style="background:rgba(7,4,15,.97);border-top:1px solid rgba(201,168,76,.15)">
+<div id="mob-menu">
   <a href="#home">Home</a>
   <a href="#collection">Collection</a>
   <a href="#about">About</a>
   <a href="#dashboard-cta" style="color:var(--gold);font-weight:600"><i class="fas fa-gem" style="margin-right:6px"></i>Dashboard</a>
 </div>
 
-<section class="hero" id="home">
-  <div class="hero-left">
-    <div class="hero-badge"><i class="fas fa-gem"></i> Fine Jewelry · Since 1998</div>
-    <h1>Every Gem<br/>Tells an<br/><em>Eternal Story</em></h1>
-    <p>Handcrafted jewelry of extraordinary beauty. Each piece is a work of art — designed with passion, set with precision, and worn with pride for generations.</p>
-    <div class="hero-btns">
-      <a href="#collection" class="btn-gold"><i class="fas fa-gem"></i> View Collection</a>
-      <a href="#dashboard-cta" class="btn-ghost"><i class="fas fa-chart-bar"></i> Dashboard</a>
-    </div>
-  </div>
-  <div class="hero-right">
-    <div class="gem-showcase">
-      <div class="gem-card">
-        <div class="gem-inner ring">💍<span class="gem-lbl">Engagement Rings</span></div>
-        <div class="gem-overlay"></div>
-        <div class="gem-price">From 850 JOD</div>
-      </div>
-      <div class="gem-card">
-        <div class="gem-inner diamond">💎<span class="gem-lbl">Diamonds</span></div>
-        <div class="gem-overlay"></div>
-        <div class="gem-price">From 1,200 JOD</div>
-      </div>
-      <div class="gem-card">
-        <div class="gem-inner necklace">📿<span class="gem-lbl">Necklaces</span></div>
-        <div class="gem-overlay"></div>
-        <div class="gem-price">From 320 JOD</div>
-      </div>
-      <div class="gem-card">
-        <div class="gem-inner bracelet">✨<span class="gem-lbl">Bracelets</span></div>
-        <div class="gem-overlay"></div>
-        <div class="gem-price">From 180 JOD</div>
-      </div>
-    </div>
-  </div>
-</section>
+<!-- ═══ 3D SCROLL HERO ═══ -->
+<div class="hero-3d" id="home">
+  <div class="sticky-hero">
 
+    <!-- Brand label -->
+    <div class="hero-brand">
+      <div class="hero-brand-circle">
+        <span class="hero-brand-letter">L</span>
+      </div>
+      <span class="hero-brand-name">Lumière Jewels &middot; Amman</span>
+    </div>
+
+    <!-- Visual frame -->
+    <div class="visual-frame">
+      <div class="ring-panels">
+
+        <!-- LEFT: Spec panel -->
+        <div id="spec-panel" class="spec-panel">
+          <div class="spec-panel-inner">
+            <div>
+              <div class="spec-label">Craftsmanship Spec</div>
+              <div class="spec-title">The Solitaire</div>
+              <div class="spec-divider"></div>
+            </div>
+            <div>
+              <div class="spec-row">
+                <span class="spec-row-label">Metal Composition</span>
+                <div class="spec-row-val">18K Solid Yellow Gold</div>
+              </div>
+              <div class="spec-row">
+                <span class="spec-row-label">Refractive Index</span>
+                <div class="spec-row-val">2.417 (Brilliant Cut)</div>
+              </div>
+              <div class="spec-row">
+                <span class="spec-row-label">Certification</span>
+                <div class="spec-row-val">GIA Conflict-Free</div>
+              </div>
+              <div class="spec-row">
+                <span class="spec-row-label">Stone Weight</span>
+                <div class="spec-row-val">1.20 ct · D / VS1</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Boutique panel -->
+        <div id="boutique-panel" class="boutique-panel">
+          <div class="boutique-fade"></div>
+          <div class="boutique-inner">
+            <span class="boutique-eyebrow">Legacy Collection</span>
+            <h3 class="boutique-heading">Eternal<br/>Geometry</h3>
+            <p class="boutique-desc">Every facet of the Lumière ring is hand-set by master craftsmen and certified to the highest international standards.</p>
+            <div class="boutique-actions">
+              <a href="#collection" class="boutique-btn">View Collection</a>
+              <span class="boutique-link">GIA Certified</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Hero title -->
+    <div class="hero-title-wrap">
+      <h1 id="main-title">
+        Pure <span id="dynamic-word" class="gold-word">Structure</span>
+      </h1>
+      <p id="hero-sub">A Symphony of Gold and Light</p>
+    </div>
+
+    <!-- Scroll hint -->
+    <div class="scroll-line-wrap">
+      <div class="scroll-line"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ COLLECTION ═══ -->
 <section class="collection" id="collection">
   <div class="container">
     <div class="sec-title reveal">
@@ -246,7 +377,7 @@ section{position:relative;z-index:1;}
       <div class="col-card reveal">
         <div class="col-img" style="background:linear-gradient(135deg,#1a0000,#3d0010);">❤️</div>
         <div class="col-body">
-          <h4>Ruby & Gold Bracelet</h4>
+          <h4>Ruby &amp; Gold Bracelet</h4>
           <p>Burmese rubies alternating with diamond baguettes in a flexible 18K rose gold bracelet.</p>
           <div class="col-footer"><span class="col-price">3,200 JOD</span><span class="col-tag">Exclusive</span></div>
         </div>
@@ -263,6 +394,7 @@ section{position:relative;z-index:1;}
   </div>
 </section>
 
+<!-- ═══ FEATURES ═══ -->
 <section class="features" id="about">
   <div class="container">
     <div class="sec-title reveal">
@@ -279,15 +411,18 @@ section{position:relative;z-index:1;}
   </div>
 </section>
 
+<!-- ═══ DASHBOARD CTA ═══ -->
 <section class="dash-cta" id="dashboard-cta">
   <div class="container">
     <div class="dash-card reveal">
-      <span class="sec-badge">Business Intelligence</span>
+      <div style="text-align:center;margin-bottom:24px;"><span class="sec-badge">Business Intelligence</span></div>
       <h2>Know Your Inventory.<br/><em style="color:var(--gold)">Grow Your Revenue.</em></h2>
       <p>Track high-value stock, monitor slow-moving pieces, analyze customer purchase patterns, and protect your most valuable assets — all in one dashboard.</p>
-      <a href="../jewllery/jewellery_inventory.html" class="btn-dashboard">
-        <i class="fas fa-chart-line"></i> Open Jewelry Dashboard
-      </a>
+      <div style="text-align:center;">
+        <a href="../jewllery/jewellery_inventory.html" class="btn-dashboard">
+          <i class="fas fa-chart-line"></i> Open Jewelry Dashboard
+        </a>
+      </div>
       <div class="kpi-row">
         <div class="kpi"><div class="kpi-val">+41%</div><div class="kpi-lbl">Revenue Growth</div></div>
         <div class="kpi"><div class="kpi-val">-60%</div><div class="kpi-lbl">Stock Loss</div></div>
@@ -310,20 +445,291 @@ section{position:relative;z-index:1;}
   <a href="#dashboard-cta" style="background:linear-gradient(135deg,var(--gold),var(--purple));color:#fff;font-size:.875rem;font-weight:700;padding:.7rem 1.5rem;border-radius:50px;text-decoration:none;white-space:nowrap;flex-shrink:0">View Demo</a>
 </div>
 
+<!-- Reveal + mobile nav script -->
 <script>
-const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.1});
-document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
-// Mobile nav & sticky bar
+const revealObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, {threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
 (function(){
-  var btn=document.getElementById('ham-btn'),menu=document.getElementById('mob-menu');
+  var btn=document.getElementById('ham-btn'), menu=document.getElementById('mob-menu');
   if(btn&&menu){
     btn.addEventListener('click',function(){var o=menu.style.display==='flex';menu.style.display=o?'none':'flex';});
     menu.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){menu.style.display='none';});});
     document.addEventListener('click',function(e){if(!document.querySelector('.navbar').contains(e.target)&&!menu.contains(e.target))menu.style.display='none';});
   }
   var bar=document.getElementById('mob-cta-bar');
-  if(bar){window.addEventListener('scroll',function(){if(window.scrollY>280){bar.classList.add('visible');bar.setAttribute('aria-hidden','false');}else{bar.classList.remove('visible');bar.setAttribute('aria-hidden','true');}},{passive:true});}
+  if(bar){window.addEventListener('scroll',function(){if(window.scrollY>window.innerHeight*3){bar.classList.add('visible');bar.setAttribute('aria-hidden','false');}else{bar.classList.remove('visible');bar.setAttribute('aria-hidden','true');}},{passive:true});}
 })();
 </script>
+
+<!-- Three.js 3D Ring -->
+<script type="module">
+import * as THREE from 'three';
+import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+
+const container = document.getElementById('three-canvas-container');
+
+// ── Renderer ──
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.4;
+container.appendChild(renderer.domElement);
+
+// ── Scene + Camera ──
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(42, window.innerWidth / window.innerHeight, 0.1, 100);
+camera.position.set(0, 0.2, 4.8);
+
+// ── HDR Environment (studio lighting for realistic reflections) ──
+const pmrem = new THREE.PMREMGenerator(renderer);
+pmrem.compileEquirectangularShader();
+
+new RGBELoader().load(
+  'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/studio_small_09_1k.hdr',
+  texture => {
+    const envMap = pmrem.fromEquirectangular(texture).texture;
+    scene.environment = envMap;
+    texture.dispose();
+    pmrem.dispose();
+  },
+  undefined,
+  () => {
+    // Fallback: generate synthetic env from scene lights
+    scene.environment = null;
+  }
+);
+
+// ── Materials ──
+const goldMat = new THREE.MeshStandardMaterial({
+  color: new THREE.Color(0xd4a843),
+  metalness: 1.0,
+  roughness: 0.06,
+  envMapIntensity: 2.8,
+});
+
+const diamondMat = new THREE.MeshPhysicalMaterial({
+  color: new THREE.Color(0xffffff),
+  metalness: 0,
+  roughness: 0,
+  transmission: 0.92,
+  thickness: 0.45,
+  ior: 2.417,
+  reflectivity: 0.9,
+  clearcoat: 1.0,
+  clearcoatRoughness: 0.0,
+  envMapIntensity: 3.5,
+  flatShading: true,
+});
+
+const goldDarkMat = goldMat.clone();
+goldDarkMat.roughness = 0.18;
+
+// ── Ring Group ──
+const ringGroup = new THREE.Group();
+
+// Gold band — high-poly torus
+const bandGeo = new THREE.TorusGeometry(1.0, 0.10, 64, 256);
+const band = new THREE.Mesh(bandGeo, goldMat);
+band.rotation.x = Math.PI / 2;
+ringGroup.add(band);
+
+// Setting base (open cylinder holding the diamond)
+const cupGeo = new THREE.CylinderGeometry(0.21, 0.27, 0.18, 8, 1, true);
+const cup = new THREE.Mesh(cupGeo, goldMat);
+cup.position.y = 1.01;
+ringGroup.add(cup);
+
+// Seat ring (gold ring at base of setting)
+const seatGeo = new THREE.TorusGeometry(0.28, 0.024, 16, 48);
+const seat = new THREE.Mesh(seatGeo, goldMat);
+seat.position.y = 1.0;
+ringGroup.add(seat);
+
+// Six prongs
+for (let i = 0; i < 6; i++) {
+  const angle = (i / 6) * Math.PI * 2;
+  const prongGeo = new THREE.CylinderGeometry(0.020, 0.020, 0.30, 8);
+  const prong = new THREE.Mesh(prongGeo, goldMat);
+  prong.position.set(
+    Math.sin(angle) * 0.27,
+    1.16,
+    Math.cos(angle) * 0.27
+  );
+  ringGroup.add(prong);
+}
+
+// ── Diamond (brilliant cut approximation) ──
+const diamondGroup = new THREE.Group();
+
+// Table (flat octagonal top face)
+const tableGeo = new THREE.CylinderGeometry(0.195, 0.195, 0.022, 8);
+const table = new THREE.Mesh(tableGeo, diamondMat);
+table.position.y = 0.41;
+diamondGroup.add(table);
+
+// Star / Upper crown facets
+const crownTopGeo = new THREE.CylinderGeometry(0.195, 0.285, 0.10, 8);
+const crownTop = new THREE.Mesh(crownTopGeo, diamondMat);
+crownTop.position.y = 0.31;
+diamondGroup.add(crownTop);
+
+// Lower crown / girdle
+const crownLowGeo = new THREE.CylinderGeometry(0.285, 0.305, 0.08, 8);
+const crownLow = new THREE.Mesh(crownLowGeo, diamondMat);
+crownLow.position.y = 0.22;
+diamondGroup.add(crownLow);
+
+// Girdle (widest, very thin)
+const girdleGeo = new THREE.CylinderGeometry(0.305, 0.305, 0.012, 8);
+const girdle = new THREE.Mesh(girdleGeo, diamondMat);
+girdle.position.y = 0.18;
+diamondGroup.add(girdle);
+
+// Pavilion (main cone, wide to culet)
+const pavilionGeo = new THREE.CylinderGeometry(0.305, 0.012, 0.36, 8);
+const pavilion = new THREE.Mesh(pavilionGeo, diamondMat);
+pavilion.position.y = 0.0;
+diamondGroup.add(pavilion);
+
+// Culet (tiny flat bottom)
+const culetGeo = new THREE.CylinderGeometry(0.012, 0.012, 0.008, 8);
+const culet = new THREE.Mesh(culetGeo, diamondMat);
+culet.position.y = -0.18;
+diamondGroup.add(culet);
+
+diamondGroup.position.y = 1.04;
+ringGroup.add(diamondGroup);
+
+// ── Initial state ──
+ringGroup.rotation.x = -0.28;
+ringGroup.position.set(0, 0, -6);
+scene.add(ringGroup);
+
+// ── Gold dust particles ──
+const pCount = 1800;
+const pPos = new Float32Array(pCount * 3);
+for (let i = 0; i < pCount * 3; i++) pPos[i] = (Math.random() - 0.5) * 18;
+const pGeo = new THREE.BufferGeometry();
+pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+const pMat = new THREE.PointsMaterial({
+  size: 0.009, color: 0xd4af37,
+  transparent: true, opacity: 0.28,
+  blending: THREE.AdditiveBlending,
+  depthWrite: false,
+});
+const particles = new THREE.Points(pGeo, pMat);
+scene.add(particles);
+
+// ── Lights ──
+const keyLight = new THREE.PointLight(0xfff5e0, 4.0);
+keyLight.position.set(4, 5, 4);
+scene.add(keyLight);
+
+const goldLight = new THREE.PointLight(0xd4af37, 5.0);
+goldLight.position.set(-3, 1, 2.5);
+scene.add(goldLight);
+
+const rimLight = new THREE.PointLight(0xaac8ff, 2.5);
+rimLight.position.set(0, -3, 3.5);
+scene.add(rimLight);
+
+const fillLight = new THREE.PointLight(0xffffff, 1.5);
+fillLight.position.set(2, -2, -2);
+scene.add(fillLight);
+
+scene.add(new THREE.AmbientLight(0xffffff, 0.55));
+
+// ── Animation loop ──
+let autoRotY = 0;
+function animate() {
+  requestAnimationFrame(animate);
+  autoRotY += 0.006;
+  ringGroup.rotation.y = autoRotY;
+  particles.rotation.y += 0.0004;
+  renderer.render(scene, camera);
+}
+animate();
+
+// ── Mouse parallax ──
+window.addEventListener('mousemove', e => {
+  if (window.scrollY > window.innerHeight * 3) return;
+  const x = (e.clientX / window.innerWidth - 0.5);
+  const y = (e.clientY / window.innerHeight - 0.5);
+  autoRotY += x * 0.025;
+  ringGroup.rotation.x = -0.28 + y * 0.12;
+}, { passive: true });
+
+// ── Resize ──
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+}, { passive: true });
+
+// ── UI refs ──
+const specPanel   = document.getElementById('spec-panel');
+const boutiquePanel = document.getElementById('boutique-panel');
+const mainTitle   = document.getElementById('main-title');
+const heroSub     = document.getElementById('hero-sub');
+const dynamicWord = document.getElementById('dynamic-word');
+
+// ── Scroll driver ──
+window.addEventListener('scroll', () => {
+  const sp = window.scrollY / window.innerHeight;
+
+  // Fade canvas out after hero (300vh)
+  container.style.opacity = sp < 2.8 ? '1' : String(Math.max(0, 1 - (sp - 2.8) * 3));
+
+  // ── Phase 1: Ring flies in (0 → 1.2) ──
+  if (sp <= 1.2) {
+    const p = Math.min(sp / 1.2, 1);
+    const ease = 1 - Math.pow(1 - p, 3);
+    ringGroup.position.z = -6 + ease * 6;
+    ringGroup.position.x = 0;
+    ringGroup.scale.setScalar(1);
+    mainTitle.style.opacity = ease;
+    heroSub.style.opacity = ease;
+    specPanel.style.opacity = '0';
+    boutiquePanel.style.opacity = '0';
+    specPanel.style.transform = 'translateX(-140px)';
+    boutiquePanel.style.transform = 'translateX(140px)';
+    dynamicWord.textContent = 'Structure';
+  }
+
+  // ── Phase 2: Spec panel (1.2 → 2.2) ──
+  if (sp > 1.2 && sp <= 2.2) {
+    const p = Math.min((sp - 1.2) / 1.0, 1);
+    const ease = 1 - Math.pow(1 - p, 3);
+    ringGroup.position.x = ease * 1.5;
+    ringGroup.scale.setScalar(1 + ease * 0.18);
+    mainTitle.style.opacity = String(1 - ease * 0.5);
+    specPanel.style.opacity = String(ease);
+    specPanel.style.transform = `translateX(${(1 - ease) * -140}px) rotateY(${(1 - ease) * 30}deg)`;
+    boutiquePanel.style.opacity = '0';
+    boutiquePanel.style.transform = 'translateX(140px)';
+    dynamicWord.textContent = 'Authentic';
+  }
+
+  // ── Phase 3: Boutique panel (2.2 → 3.0) ──
+  if (sp > 2.2) {
+    const p = Math.min((sp - 2.2) / 0.8, 1);
+    const ease = 1 - Math.pow(1 - p, 3);
+    ringGroup.position.x = 1.5 - ease * 4.0;
+    ringGroup.scale.setScalar(1.18 + ease * 0.28);
+    specPanel.style.opacity = String(1 - ease);
+    specPanel.style.transform = `translateX(${ease * 180}px) scale(${1 - ease * 0.25})`;
+    boutiquePanel.style.opacity = String(ease);
+    boutiquePanel.style.transform = `translateX(${(1 - ease) * 140}px) rotateY(${(1 - ease) * -25}deg)`;
+    mainTitle.style.opacity = String(Math.max(0, 1 - ease));
+    dynamicWord.textContent = 'Eternal';
+  }
+}, { passive: true });
+</script>
+
 </body>
 </html>
