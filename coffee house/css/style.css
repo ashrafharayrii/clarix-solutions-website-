@@ -82,7 +82,7 @@ body {
 
 /* ── NEW LOGO ── */
 .logo-text-group { display:flex; flex-direction:column; gap:1px; }
-.logo-name { font-family:'Playfair Display',serif; font-size:1.45rem; font-weight:700; color:var(--white); letter-spacing:.5px; line-height:1; }
+.logo-name { font-family:'Playfair Display',serif; font-size:1.05rem; font-weight:700; color:var(--white); letter-spacing:.5px; line-height:1; }
 .logo-name span { color:var(--accent); }
 .logo-tagline { font-size:.62rem; font-weight:500; color:rgba(212,167,106,.7); letter-spacing:2.5px; text-transform:uppercase; }
 .nav-back { background:rgba(255,255,255,.07)!important; border:1px solid rgba(255,255,255,.15)!important; padding:8px 16px!important; border-radius:50px!important; font-size:.82rem!important; display:flex!important; align-items:center!important; gap:6px!important; }
@@ -606,19 +606,6 @@ section { padding: 100px 5%; }
   font-weight: 400;
 }
 
-.add-btn {
-  width: 40px; height: 40px;
-  background: linear-gradient(135deg, var(--accent), var(--secondary));
-  border: none;
-  border-radius: 50%;
-  color: var(--white);
-  font-size: 1.2rem;
-  cursor: pointer;
-  transition: var(--transition);
-  display: flex; align-items: center; justify-content: center;
-}
-
-.add-btn:hover { transform: scale(1.15) rotate(90deg); }
 
 /* ===== GALLERY ===== */
 .gallery { background: var(--primary); padding-bottom: 80px; }
