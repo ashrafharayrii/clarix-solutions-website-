@@ -158,7 +158,7 @@ a{text-decoration:none;color:inherit;}
 .scroll-line-wrap{position:absolute;bottom:24px;display:flex;flex-direction:column;align-items:center;gap:12px;z-index:60;}
 .scroll-line{width:1px;height:52px;background:linear-gradient(to bottom,transparent,rgba(201,168,76,0.4),transparent);}
 
-/* ─── POST-HERO SECTIONS ─── */
+/* ─── POST-HERO SECTIONS (z-index + background so canvas doesn't bleed) ─── */
 section{position:relative;z-index:1;background:var(--dark);}
 .container{max-width:1200px;margin:0 auto;padding:0 48px;}
 .sec-title{text-align:center;margin-bottom:64px;}
@@ -166,21 +166,360 @@ section{position:relative;z-index:1;background:var(--dark);}
 .sec-title h2{font-family:'Cormorant Garamond',serif;font-size:clamp(2.2rem,4vw,3.5rem);font-weight:700;line-height:1.15;margin-bottom:16px;}
 .sec-title p{font-size:15px;color:var(--muted);max-width:500px;margin:0 auto;line-height:1.9;font-weight:300;}
 
-/* ─── COLLECTION ─── */
-.collection{padding:100px 0;}
-.collection-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px;}
-.col-card{background:rgba(255,255,255,.025);border:1px solid rgba(201,168,76,.1);border-radius:24px;overflow:hidden;transition:transform .4s cubic-bezier(.16,1,.3,1),border-color .3s,box-shadow .4s;cursor:pointer;}
-.col-card:hover{transform:perspective(800px) rotateY(-8deg) translateY(-10px);border-color:rgba(201,168,76,.3);box-shadow:16px 16px 60px rgba(0,0,0,.5),0 0 30px rgba(201,168,76,.08);}
-.col-img{height:200px;display:flex;align-items:center;justify-content:center;font-size:72px;}
-.col-body{padding:22px;}
-.col-body h4{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;margin-bottom:6px;}
-.col-body p{font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.7;font-weight:300;}
-.col-footer{display:flex;align-items:center;justify-content:space-between;}
-.col-price{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--gold);}
-.col-tag{background:rgba(91,44,141,.2);color:#C4A0FF;padding:4px 14px;border-radius:50px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;}
+/* ─── CATEGORY FILTER BAR ─── */
+.filter-section{
+  padding:48px 0 0;
+  position:relative;z-index:1;background:var(--dark);
+  border-bottom:1px solid rgba(201,168,76,.1);
+}
+.filter-bar{
+  display:flex;gap:8px;overflow-x:auto;padding:0 48px 24px;
+  scrollbar-width:none;-ms-overflow-style:none;
+  justify-content:flex-start;
+}
+.filter-bar::-webkit-scrollbar{display:none;}
+.filter-btn{
+  flex-shrink:0;padding:10px 24px;border-radius:50px;
+  border:1px solid rgba(201,168,76,.2);background:transparent;
+  color:rgba(240,236,248,.55);font-family:'Montserrat',sans-serif;
+  font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;
+  cursor:pointer;transition:all .3s ease;white-space:nowrap;
+}
+.filter-btn:hover{border-color:rgba(201,168,76,.5);color:var(--gold);}
+.filter-btn.active{
+  background:linear-gradient(135deg,rgba(201,168,76,.18),rgba(91,44,141,.12));
+  border-color:var(--gold);color:var(--gold);
+  box-shadow:0 0 20px rgba(201,168,76,.12);
+}
 
-/* ─── FEATURES ─── */
-.features{padding:80px 0;}
+/* ─── PRODUCT GRID ─── */
+.products-section{padding:80px 0 100px;position:relative;z-index:1;background:var(--dark);}
+.product-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:28px;
+}
+.product-card{
+  background:rgba(255,255,255,.025);
+  border:1px solid rgba(201,168,76,.1);
+  border-radius:20px;overflow:hidden;
+  transition:transform .45s cubic-bezier(.16,1,.3,1),border-color .3s,box-shadow .45s;
+  cursor:pointer;position:relative;
+}
+.product-card:hover{
+  transform:perspective(900px) rotateY(-6deg) rotateX(2deg) translateY(-12px);
+  border-color:rgba(201,168,76,.45);
+  box-shadow:20px 20px 60px rgba(0,0,0,.6),0 0 40px rgba(201,168,76,.1);
+}
+.product-card.hidden{
+  display:none;
+}
+.product-card.fade-out{
+  opacity:0;transform:translateY(20px) scale(.97);
+}
+.product-img-wrap{
+  position:relative;height:340px;overflow:hidden;
+}
+.product-img-wrap img{
+  width:100%;height:100%;object-fit:cover;
+  transition:transform .6s ease;
+  display:block;
+}
+.product-card:hover .product-img-wrap img{
+  transform:scale(1.07);
+}
+.cat-badge{
+  position:absolute;top:14px;left:14px;z-index:2;
+  background:rgba(7,4,15,.75);backdrop-filter:blur(12px);
+  border:1px solid rgba(201,168,76,.3);color:var(--gold);
+  padding:5px 14px;border-radius:50px;
+  font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+}
+.product-body{padding:22px 24px 24px;}
+.product-name{
+  font-family:'Cormorant Garamond',serif;font-size:20px;
+  font-weight:600;margin-bottom:6px;line-height:1.3;color:var(--text);
+}
+.product-material{
+  font-size:12px;color:var(--muted);margin-bottom:18px;
+  font-weight:400;letter-spacing:.03em;line-height:1.6;
+}
+.inquire-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.25);
+  color:var(--gold);padding:10px 22px;border-radius:50px;
+  font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+  cursor:pointer;transition:all .3s;width:100%;justify-content:center;
+  font-family:'Montserrat',sans-serif;
+}
+.inquire-btn:hover{
+  background:rgba(201,168,76,.18);border-color:var(--gold);
+  box-shadow:0 4px 20px rgba(201,168,76,.18);
+}
+
+/* ─── BRAND STORY ─── */
+.brand-story{padding:120px 0;position:relative;z-index:1;background:var(--dark);}
+.brand-story-inner{
+  display:grid;grid-template-columns:1fr 1fr;gap:80px;
+  align-items:center;
+}
+.brand-story-img{
+  position:relative;border-radius:20px;overflow:hidden;
+  height:600px;
+}
+.brand-story-img img{
+  width:100%;height:100%;object-fit:cover;
+}
+.brand-story-img::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(91,44,141,.25),rgba(201,168,76,.1));
+  pointer-events:none;
+}
+.brand-story-img-frame{
+  position:absolute;inset:-12px;
+  border:1px solid rgba(201,168,76,.2);border-radius:24px;
+  pointer-events:none;z-index:-1;
+}
+.brand-story-text{}
+.story-label{
+  display:inline-block;font-size:10px;letter-spacing:.5em;text-transform:uppercase;
+  color:var(--gold);font-weight:600;margin-bottom:20px;
+}
+.story-heading{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2.2rem,3.5vw,3.2rem);font-weight:700;
+  line-height:1.15;margin-bottom:24px;
+}
+.story-body{
+  font-size:15px;color:var(--muted);line-height:2;font-weight:300;
+  margin-bottom:36px;
+}
+.story-badges{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:40px;}
+.story-badge{
+  background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);
+  color:rgba(240,236,248,.7);padding:8px 20px;border-radius:50px;
+  font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;
+}
+.story-stats{display:flex;gap:40px;}
+.story-stat{}
+.story-stat-num{
+  font-family:'Cormorant Garamond',serif;font-size:2.8rem;
+  font-weight:700;color:var(--gold);line-height:1;
+}
+.story-stat-lbl{font-size:12px;color:var(--muted);margin-top:4px;letter-spacing:.05em;text-transform:uppercase;}
+
+/* ─── CRAFTSMANSHIP STEPS ─── */
+.craft-section{padding:100px 0;position:relative;z-index:1;background:linear-gradient(180deg,var(--dark) 0%,#0a0616 50%,var(--dark) 100%);}
+.craft-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative;}
+.craft-steps::before{
+  content:'';position:absolute;top:48px;left:12.5%;right:12.5%;
+  height:1px;background:linear-gradient(to right,transparent,rgba(201,168,76,.25),transparent);
+}
+.craft-step{text-align:center;padding:0 24px;}
+.craft-step-icon{
+  width:96px;height:96px;border-radius:50%;
+  background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:32px;color:var(--gold);margin:0 auto 28px;
+  position:relative;z-index:1;
+  transition:transform .3s,background .3s;
+}
+.craft-step:hover .craft-step-icon{
+  transform:scale(1.1);background:rgba(201,168,76,.12);
+}
+.craft-step-num{
+  font-size:10px;letter-spacing:.3em;color:rgba(201,168,76,.4);
+  text-transform:uppercase;font-weight:600;margin-bottom:10px;
+}
+.craft-step-title{
+  font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;
+  margin-bottom:10px;
+}
+.craft-step-desc{font-size:13px;color:var(--muted);line-height:1.85;font-weight:300;}
+
+/* ─── MATERIALS ─── */
+.materials-section{padding:100px 0;position:relative;z-index:1;background:var(--dark);}
+.materials-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;}
+.material-card{
+  border-radius:20px;overflow:hidden;position:relative;
+  border:1px solid rgba(201,168,76,.12);
+  transition:transform .4s ease,border-color .3s;height:400px;
+}
+.material-card:hover{transform:translateY(-8px);border-color:rgba(201,168,76,.35);}
+.material-card img{width:100%;height:100%;object-fit:cover;transition:transform .6s;}
+.material-card:hover img{transform:scale(1.06);}
+.material-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(7,4,15,.95) 0%,rgba(7,4,15,.4) 55%,transparent 100%);
+}
+.material-content{
+  position:absolute;bottom:0;left:0;right:0;
+  padding:32px;
+}
+.material-dot{
+  width:14px;height:14px;border-radius:50%;margin-bottom:16px;
+  box-shadow:0 0 12px currentColor;
+}
+.material-dot.yellow{background:#D4A843;color:#D4A843;}
+.material-dot.white{background:#E8E8E8;color:#E8E8E8;}
+.material-dot.rose{background:#C87D55;color:#C87D55;}
+.material-name{
+  font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:700;
+  margin-bottom:8px;
+}
+.material-desc{font-size:13px;color:rgba(240,236,248,.55);line-height:1.8;font-weight:300;}
+
+/* ─── TESTIMONIALS ─── */
+.testimonials-section{padding:100px 0;position:relative;z-index:1;background:var(--dark);}
+.testimonials-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+.testimonial-card{
+  background:rgba(255,255,255,.025);border:1px solid rgba(201,168,76,.1);
+  border-radius:20px;padding:36px;
+  transition:transform .35s,border-color .3s;
+}
+.testimonial-card:hover{transform:translateY(-6px);border-color:rgba(201,168,76,.3);}
+.testimonial-stars{color:var(--gold);font-size:14px;letter-spacing:2px;margin-bottom:20px;}
+.testimonial-quote{
+  font-family:'Cormorant Garamond',serif;font-size:18px;
+  font-style:italic;line-height:1.75;color:rgba(240,236,248,.85);
+  margin-bottom:28px;
+}
+.testimonial-author{display:flex;align-items:center;gap:14px;}
+.testimonial-avatar{
+  width:48px;height:48px;border-radius:50%;overflow:hidden;
+  border:2px solid rgba(201,168,76,.3);flex-shrink:0;
+  background:rgba(201,168,76,.1);display:flex;align-items:center;justify-content:center;
+  font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:700;color:var(--gold);
+}
+.testimonial-name{font-size:14px;font-weight:600;margin-bottom:3px;}
+.testimonial-location{font-size:12px;color:var(--muted);}
+
+/* ─── CONSULTATION CTA ─── */
+.consult-section{
+  padding:100px 0;position:relative;z-index:1;
+  background:linear-gradient(135deg,#0a0516 0%,#070310 50%,#0c0620 100%);
+  border-top:1px solid rgba(201,168,76,.1);
+  border-bottom:1px solid rgba(201,168,76,.1);
+}
+.consult-inner{
+  display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;
+}
+.consult-text{}
+.consult-label{
+  display:inline-block;font-size:10px;letter-spacing:.5em;
+  text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:20px;
+}
+.consult-heading{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2rem,3.5vw,3rem);font-weight:700;
+  line-height:1.15;margin-bottom:20px;
+}
+.consult-body{
+  font-size:15px;color:var(--muted);line-height:1.95;font-weight:300;margin-bottom:36px;
+}
+.wa-btn{
+  display:inline-flex;align-items:center;gap:12px;
+  background:linear-gradient(135deg,#25D366,#128C7E);
+  color:#fff;padding:16px 32px;border-radius:50px;
+  font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  transition:transform .25s,box-shadow .25s;
+  text-decoration:none;
+}
+.wa-btn:hover{transform:translateY(-3px);box-shadow:0 12px 36px rgba(37,211,102,.25);}
+.consult-form{
+  background:rgba(255,255,255,.03);border:1px solid rgba(201,168,76,.15);
+  border-radius:24px;padding:40px;
+}
+.form-title{
+  font-family:'Cormorant Garamond',serif;font-size:22px;
+  font-weight:600;margin-bottom:28px;
+}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+.form-group{margin-bottom:16px;}
+.form-group label{
+  display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:8px;font-weight:500;
+}
+.form-group input,
+.form-group textarea{
+  width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.15);
+  border-radius:10px;padding:14px 18px;color:var(--text);
+  font-family:'Montserrat',sans-serif;font-size:14px;
+  transition:border-color .25s;outline:none;
+  -webkit-appearance:none;
+}
+.form-group input:focus,
+.form-group textarea:focus{border-color:rgba(201,168,76,.5);}
+.form-group input::placeholder,
+.form-group textarea::placeholder{color:rgba(255,255,255,.2);}
+.form-group textarea{resize:none;min-height:110px;}
+.form-submit{
+  width:100%;padding:16px;border-radius:50px;
+  background:linear-gradient(135deg,var(--gold),var(--purple));
+  color:#fff;font-family:'Montserrat',sans-serif;
+  font-size:12px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+  border:none;cursor:pointer;transition:transform .25s,box-shadow .25s;
+  margin-top:8px;
+}
+.form-submit:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(201,168,76,.3);}
+
+/* ─── FOOTER ─── */
+.site-footer{
+  padding:80px 48px 40px;position:relative;z-index:1;
+  background:var(--dark);border-top:1px solid rgba(255,255,255,.06);
+}
+.footer-inner{
+  display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:48px;
+  margin-bottom:60px;
+}
+.footer-brand{}
+.footer-logo{
+  font-family:'Cormorant Garamond',serif;font-size:28px;
+  font-weight:600;color:var(--gold);letter-spacing:.12em;margin-bottom:16px;
+}
+.footer-tagline{
+  font-size:13px;color:var(--muted);line-height:1.85;
+  font-weight:300;max-width:280px;margin-bottom:28px;
+}
+.footer-social{display:flex;gap:12px;}
+.social-icon{
+  width:40px;height:40px;border-radius:50%;
+  background:rgba(255,255,255,.05);border:1px solid rgba(201,168,76,.15);
+  display:flex;align-items:center;justify-content:center;
+  color:rgba(240,236,248,.5);font-size:15px;
+  transition:all .25s;text-decoration:none;
+}
+.social-icon:hover{
+  background:rgba(201,168,76,.12);border-color:rgba(201,168,76,.4);
+  color:var(--gold);transform:translateY(-3px);
+}
+.footer-col-title{
+  font-size:11px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--gold);font-weight:600;margin-bottom:20px;
+}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:12px;}
+.footer-links a{
+  font-size:14px;color:var(--muted);transition:color .2s;font-weight:300;
+}
+.footer-links a:hover{color:var(--text);}
+.footer-contact-item{display:flex;gap:12px;margin-bottom:14px;align-items:flex-start;}
+.footer-contact-icon{color:var(--gold);font-size:13px;margin-top:2px;flex-shrink:0;}
+.footer-contact-text{font-size:13px;color:var(--muted);line-height:1.6;font-weight:300;}
+.footer-bottom{
+  border-top:1px solid rgba(255,255,255,.05);padding-top:32px;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:12px;
+}
+.footer-copy{font-size:13px;color:var(--muted);letter-spacing:.03em;}
+.footer-copy span{color:var(--gold);}
+.footer-cert{display:flex;gap:16px;align-items:center;}
+.cert-badge{
+  font-size:11px;color:rgba(240,236,248,.35);
+  letter-spacing:.07em;text-transform:uppercase;
+}
+
+/* ─── FEATURES (kept from original) ─── */
+.features{padding:80px 0;position:relative;z-index:1;background:var(--dark);}
 .feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;}
 .feat-card{padding:32px;border-radius:24px;background:rgba(255,255,255,.025);border:1px solid rgba(201,168,76,.08);transition:transform .3s,border-color .3s;}
 .feat-card:hover{transform:translateY(-6px);border-color:rgba(201,168,76,.25);}
@@ -188,30 +527,19 @@ section{position:relative;z-index:1;background:var(--dark);}
 .feat-card h3{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;margin-bottom:10px;}
 .feat-card p{font-size:13px;color:var(--muted);line-height:1.8;font-weight:300;}
 
-/* ─── DASHBOARD CTA ─── */
-.dash-cta{padding:100px 0;}
-.dash-card{background:linear-gradient(135deg,rgba(201,168,76,.06),rgba(91,44,141,.06));border:1px solid rgba(201,168,76,.18);border-radius:32px;padding:64px 40px;max-width:800px;margin:0 auto;position:relative;overflow:hidden;}
-.dash-card::after{content:'💎';position:absolute;font-size:200px;right:-20px;bottom:-40px;opacity:.04;}
-.dash-card h2{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:700;margin-bottom:16px;text-align:center;}
-.dash-card p{font-size:16px;color:var(--muted);max-width:520px;margin:0 auto 40px;line-height:1.9;font-weight:300;text-align:center;}
-.btn-dashboard{display:inline-flex;align-items:center;gap:12px;background:linear-gradient(135deg,var(--gold),var(--purple));color:#fff;padding:18px 52px;border-radius:50px;font-size:16px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:transform .2s,box-shadow .2s;text-decoration:none;}
-.btn-dashboard:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(201,168,76,.3);}
-.dash-card .sec-title-inner{text-align:center;}
-.kpi-row{display:flex;gap:28px;justify-content:center;margin-top:48px;flex-wrap:wrap;}
-.kpi{background:rgba(255,255,255,.03);border:1px solid rgba(201,168,76,.12);border-radius:16px;padding:20px 28px;text-align:center;}
-.kpi-val{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:700;color:var(--gold);}
-.kpi-lbl{font-size:12px;color:var(--muted);margin-top:4px;letter-spacing:.06em;text-transform:uppercase;}
-
-/* ─── FOOTER ─── */
-.footer{padding:40px;text-align:center;border-top:1px solid rgba(255,255,255,.05);background:var(--dark);}
-.footer p{color:var(--muted);font-size:13px;letter-spacing:.04em;}
-.footer span{color:var(--gold);}
-
 /* ─── ANIMATIONS ─── */
 @keyframes fadeUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
-.reveal{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease;}
+.reveal{opacity:0;transform:translateY(32px);transition:opacity .75s ease,transform .75s ease;}
 .reveal.visible{opacity:1;transform:translateY(0);}
 
+/* ─── MOBILE NAV ─── */
+.ham-btn{display:none;background:none;border:1px solid rgba(255,255,255,.2);border-radius:8px;width:38px;height:38px;cursor:pointer;align-items:center;justify-content:center;color:rgba(255,255,255,.8);flex-shrink:0;}
+#mob-menu{display:none;flex-direction:column;gap:.25rem;padding:.875rem 1.25rem 1.25rem;border-top:1px solid rgba(201,168,76,.15);position:relative;z-index:99;background:rgba(7,4,15,.97);}
+#mob-menu a{color:rgba(255,255,255,.65);font-size:.875rem;padding:.6rem .75rem;border-radius:.5rem;display:block;text-decoration:none;}
+#mob-cta-bar{display:none;position:fixed;bottom:0;left:0;right:0;z-index:45;padding:.875rem 1.25rem 1rem;border-top:1px solid rgba(201,168,76,.2);background:rgba(7,4,15,.95);box-shadow:0 -8px 32px rgba(0,0,0,.4);align-items:center;justify-content:space-between;gap:1rem;transition:transform .3s;transform:translateY(100%);}
+#mob-cta-bar.visible{transform:translateY(0);}
+
+/* ─── RESPONSIVE ─── */
 @media(max-width:900px){
   .visual-frame{height:auto;min-height:400px;}
   .spec-panel,.boutique-panel{display:none;}
@@ -220,23 +548,30 @@ section{position:relative;z-index:1;background:var(--dark);}
   .navbar{padding:16px 20px;}
   .nav-links{display:none;}
   .hero-brand{left:20px;top:88px;}
+  .brand-story-inner,.consult-inner{grid-template-columns:1fr;}
+  .brand-story-img{height:360px;}
+  .craft-steps{grid-template-columns:repeat(2,1fr);gap:48px;}
+  .craft-steps::before{display:none;}
+  .materials-grid,.testimonials-grid{grid-template-columns:1fr 1fr;}
+  .footer-inner{grid-template-columns:1fr 1fr;gap:32px;}
 }
-/* ─── MOBILE ADDITIONS ─── */
-.ham-btn{display:none;background:none;border:1px solid rgba(255,255,255,.2);border-radius:8px;width:38px;height:38px;cursor:pointer;align-items:center;justify-content:center;color:rgba(255,255,255,.8);flex-shrink:0}
-#mob-menu{display:none;flex-direction:column;gap:.25rem;padding:.875rem 1.25rem 1.25rem;border-top:1px solid rgba(201,168,76,.15);position:relative;z-index:99;background:rgba(7,4,15,.97)}
-#mob-menu a{color:rgba(255,255,255,.65);font-size:.875rem;padding:.6rem .75rem;border-radius:.5rem;display:block;text-decoration:none}
-#mob-cta-bar{display:none;position:fixed;bottom:0;left:0;right:0;z-index:45;padding:.875rem 1.25rem 1rem;border-top:1px solid rgba(201,168,76,.2);background:rgba(7,4,15,.95);box-shadow:0 -8px 32px rgba(0,0,0,.4);align-items:center;justify-content:space-between;gap:1rem;transition:transform .3s;transform:translateY(100%)}
-#mob-cta-bar.visible{transform:translateY(0)}
 @media(max-width:768px){
-  .ham-btn{display:flex}
-  #mob-cta-bar{display:flex}
-  body{padding-bottom:70px}
-  .navbar{padding:14px 20px!important}
-  .container{padding:0 20px!important}
-  .feat-grid,.collection-grid{grid-template-columns:1fr!important}
-  .dash-card{padding:40px 20px!important}
-  .kpi-row{gap:12px!important}
-  .kpi{padding:14px 18px!important}
+  .ham-btn{display:flex;}
+  #mob-cta-bar{display:flex;}
+  body{padding-bottom:70px;}
+  .navbar{padding:14px 20px!important;}
+  .container{padding:0 20px!important;}
+  .filter-bar{padding:0 20px 24px;}
+  .product-grid{grid-template-columns:1fr!important;}
+  .craft-steps{grid-template-columns:1fr!important;}
+  .materials-grid,.testimonials-grid{grid-template-columns:1fr!important;}
+  .story-stats{flex-wrap:wrap;gap:24px;}
+  .footer-inner{grid-template-columns:1fr;}
+  .footer-bottom{flex-direction:column;text-align:center;}
+  .form-row{grid-template-columns:1fr;}
+  .brand-story-inner,.consult-inner{grid-template-columns:1fr!important;}
+  .site-footer{padding:60px 20px 30px;}
+  .filter-section{padding:32px 0 0;}
 }
 </style>
 </head>
@@ -257,18 +592,19 @@ section{position:relative;z-index:1;background:var(--dark);}
   <div class="nav-logo">LUMIÈRE</div>
   <ul class="nav-links">
     <li><a href="#home">Home</a></li>
-    <li><a href="#collection">Collection</a></li>
-    <li><a href="#about">About</a></li>
-    <li><a href="#dashboard-cta" class="nav-cta"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+    <li><a href="#products">Collection</a></li>
+    <li><a href="#story">About</a></li>
+    <li><a href="#consultation">Contact</a></li>
+    <li><a href="#consultation" class="nav-cta"><i class="fas fa-gem"></i> Book Visit</a></li>
   </ul>
   <button class="ham-btn" id="ham-btn" aria-label="Open navigation"><i class="fas fa-bars"></i></button>
   <a href="../index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Clarix</a>
 </nav>
 <div id="mob-menu">
   <a href="#home">Home</a>
-  <a href="#collection">Collection</a>
-  <a href="#about">About</a>
-  <a href="#dashboard-cta" style="color:var(--gold);font-weight:600"><i class="fas fa-gem" style="margin-right:6px"></i>Dashboard</a>
+  <a href="#products">Collection</a>
+  <a href="#story">About</a>
+  <a href="#consultation" style="color:var(--gold);font-weight:600"><i class="fas fa-gem" style="margin-right:6px"></i>Book a Visit</a>
 </div>
 
 <!-- ═══ 3D SCROLL HERO ═══ -->
@@ -324,7 +660,7 @@ section{position:relative;z-index:1;background:var(--dark);}
             <h3 class="boutique-heading">Eternal<br/>Geometry</h3>
             <p class="boutique-desc">Every facet of the Lumière ring is hand-set by master craftsmen and certified to the highest international standards.</p>
             <div class="boutique-actions">
-              <a href="#collection" class="boutique-btn">View Collection</a>
+              <a href="#products" class="boutique-btn">View Collection</a>
               <span class="boutique-link">GIA Certified</span>
             </div>
           </div>
@@ -349,109 +685,755 @@ section{position:relative;z-index:1;background:var(--dark);}
   </div>
 </div>
 
-<!-- ═══ COLLECTION ═══ -->
-<section class="collection" id="collection">
+<!-- ═══ CATEGORY FILTER BAR ═══ -->
+<div class="filter-section" id="products">
+  <div class="filter-bar">
+    <button class="filter-btn active" data-filter="all">All Pieces</button>
+    <button class="filter-btn" data-filter="diamonds">Diamonds</button>
+    <button class="filter-btn" data-filter="gold">Gold</button>
+    <button class="filter-btn" data-filter="necklaces">Necklaces</button>
+    <button class="filter-btn" data-filter="bracelets">Bracelets</button>
+    <button class="filter-btn" data-filter="earrings">Earrings</button>
+    <button class="filter-btn" data-filter="pendants">Pendants</button>
+    <button class="filter-btn" data-filter="rings">Rings</button>
+    <button class="filter-btn" data-filter="bridal">Bridal</button>
+  </div>
+</div>
+
+<!-- ═══ PRODUCT GRID ═══ -->
+<section class="products-section">
   <div class="container">
     <div class="sec-title reveal">
-      <span class="sec-badge">New Collection</span>
+      <span class="sec-badge">The Collection</span>
       <h2>Signature <em style="color:var(--gold)">Pieces</em></h2>
-      <p>Timeless designs that transcend trends — each piece crafted to last a lifetime and beyond.</p>
+      <p>Timeless creations that transcend trends — each piece hand-crafted to last a lifetime and beyond.</p>
     </div>
-    <div class="collection-grid">
-      <div class="col-card reveal">
-        <div class="col-img" style="background:linear-gradient(135deg,#1a0f2e,#2d1760);">💍</div>
-        <div class="col-body">
-          <h4>Eternal Diamond Ring</h4>
-          <p>1.2ct round brilliant diamond set in 18K white gold with pavé band. Certified D-VS1.</p>
-          <div class="col-footer"><span class="col-price">2,400 JOD</span><span class="col-tag">Bestseller</span></div>
+
+    <div class="product-grid" id="product-grid">
+
+      <!-- DIAMONDS -->
+      <div class="product-card reveal" data-category="diamonds">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-jw5u6rFLjao?w=800&q=85&fit=crop&auto=format" alt="Brilliant Solitaire Ring" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=800&q=85&fit=crop&auto=format'"/>
+          <span class="cat-badge">Diamonds</span>
+        </div>
+        <div class="product-body">
+          <div class="product-name">Brilliant Solitaire Ring</div>
+          <div class="product-material">18K Yellow Gold &middot; 1.2ct D/VS1 GIA</div>
+          <button class="inquire-btn" onclick="openInquiry('Brilliant Solitaire Ring')"><i class="fas fa-envelope"></i> Inquire</button>
         </div>
       </div>
-      <div class="col-card reveal">
-        <div class="col-img" style="background:linear-gradient(135deg,#0f1a00,#1e3d00);">🌿</div>
-        <div class="col-body">
-          <h4>Emerald Halo Pendant</h4>
-          <p>Colombian emerald 0.8ct surrounded by a halo of white diamonds, 18K yellow gold chain.</p>
-          <div class="col-footer"><span class="col-price">1,850 JOD</span><span class="col-tag">Rare</span></div>
+
+      <div class="product-card reveal" data-category="diamonds">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=800&q=85&fit=crop&auto=format" alt="Halo Diamond Ring" loading="lazy"/>
+          <span class="cat-badge">Diamonds</span>
+        </div>
+        <div class="product-body">
+          <div class="product-name">Celestial Halo Ring</div>
+          <div class="product-material">18K White Gold &middot; 1.0ct E/VVS2 &middot; Pavé Halo</div>
+          <button class="inquire-btn" onclick="openInquiry('Celestial Halo Ring')"><i class="fas fa-envelope"></i> Inquire</button>
         </div>
       </div>
-      <div class="col-card reveal">
-        <div class="col-img" style="background:linear-gradient(135deg,#1a0000,#3d0010);">❤️</div>
-        <div class="col-body">
-          <h4>Ruby &amp; Gold Bracelet</h4>
-          <p>Burmese rubies alternating with diamond baguettes in a flexible 18K rose gold bracelet.</p>
-          <div class="col-footer"><span class="col-price">3,200 JOD</span><span class="col-tag">Exclusive</span></div>
+
+      <div class="product-card reveal" data-category="diamonds">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1603561591411-07134e71a2a9?w=800&q=85&fit=crop&auto=format" alt="Pavé Diamond Band" loading="lazy"/>
+          <span class="cat-badge">Diamonds</span>
+        </div>
+        <div class="product-body">
+          <div class="product-name">Pavé Eternity Band</div>
+          <div class="product-material">18K White Gold &middot; 2.4ctw Round Brilliants</div>
+          <button class="inquire-btn" onclick="openInquiry('Pavé Eternity Band')"><i class="fas fa-envelope"></i> Inquire</button>
         </div>
       </div>
-      <div class="col-card reveal">
-        <div class="col-img" style="background:linear-gradient(135deg,#001520,#003040);">💙</div>
-        <div class="col-body">
-          <h4>Sapphire Suite</h4>
-          <p>Ceylon blue sapphire earrings and pendant set — a statement of royal elegance.</p>
-          <div class="col-footer"><span class="col-price">4,100 JOD</span><span class="col-tag">Suite</span></div>
+
+      <div class="product-card reveal" data-category="diamonds">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&q=85&fit=crop&auto=format" alt="Oval Diamond Ring" loading="lazy"/>
+          <span class="cat-badge">Diamonds</span>
+        </div>
+        <div class="product-body">
+          <div class="product-name">Oval Radiance Ring</div>
+          <div class="product-material">Platinum &middot; 1.5ct Oval F/VS1 GIA Certified</div>
+          <button class="inquire-btn" onclick="openInquiry('Oval Radiance Ring')"><i class="fas fa-envelope"></i> Inquire</button>
         </div>
       </div>
+
+      <!-- GOLD -->
+      <div class="product-card reveal" data-category="gold">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&q=85&fit=crop&auto=format" alt="Yellow Gold Chain" loading="lazy"/>
+          <span class="cat-badge">Gold</span>
+        </div>
+        <div class="product-body">
+          <div class="product-name">Heritage Chain Necklace</div>
+          <div class="product-material">18K Yellow Gold &middot; 50cm Cable Link &middot; 8.2g</div>
+          <button class="inquire-btn" onclick="openInquiry('Heritage Chain Necklace')"><i class="fas fa-envelope"></i> Inquire</button>
+        </div>
+      </div>
+
+      <div class="product-card reveal" data-category="gold">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1599459183200-59c7687a0c70?w=800&q=85&fit=crop&auto=format" alt="Rose Gold Bangle" loading="lazy"/>
+          <span class="cat-badge">Gold</span>
+        </div>
+        <div class="product-body">
+          <div class="product-name">Rose Blossom Bangle</div>
+          <div class="product-material">18K Rose Gold &middot; Hammered Finish &middot; 12g</div>
+          <button class="inquire-btn" onclick="openInquiry('Rose Blossom Bangle')"><i class="fas fa-envelope"></i> Inquire</button>
+        </div>
+      </div>
+
+      <div class="product-card reveal" data-category="gold">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1630942595427-f40e59d65c8e?w=800&q=85&fit=crop&auto=format" alt="White Gold Set" loading="lazy"/>
+          <span class="cat-badge">Gold</span>
+        </div>
+        <div class="product-body">
+          <div class="product-name">White Gold Suite</div>
+          <div class="product-material">18K White Gold &middot; Earring & Pendant Set</div>
+          <button class="inquire-btn" onclick="openInquiry('White Gold Suite')"><i class="fas fa-envelope"></i> Inquire</button>
+        </div>
+      </div>
+
+      <!-- NECKLACES -->
+      <div class="product-card reveal" data-category="necklaces">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=800&q=85&fit=crop&auto=format" alt="Diamond Tennis Necklace" loading="lazy"/>
+          <span class="cat-badge">Necklaces</span>
+        </div>
+        <div class="product-body">
+          <div class="product-name">Lumière Tennis Necklace</div>
+          <div class="product-material">18K White Gold &middot; 5.0ctw Round Diamonds</div>
+          <button class="inquire-btn" onclick="openInquiry('Lumière Tennis Necklace')"><i class="fas fa-envelope"></i> Inquire</button>
+        </div>
+      </div>
+
+      <div class="product-card reveal" data-category="necklaces">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=800&q=85&fit=crop&auto=format" alt="Pearl Statement Necklace" loading="lazy"/>
+          <span class="cat-badge">Necklaces</span>
+        </div>
+        <div class="product-body">
+          <div class="product-name">Akoya Pearl Strand</div>
+          <div class="product-material">18K Yellow Gold Clasp &middot; 8mm AAA Akoya Pearls</div>
+          <button class="inquire-btn" onclick="openInquiry('Akoya Pearl Strand')"><i class="fas fa-envelope"></i> Inquire</button>
+        </div>
+      </div>
+
+      <div class="product-card reveal" data-category="necklaces">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1573408301185-9519f94a6f02?w=800&q=85&fit=crop&auto=format" alt="Layered Gold Necklace" loading="lazy"/>
+          <span class="cat-badge">Necklaces</span>
+        </div>
+        <div class="product-body">
+          <div class="product-name">Layered Signature Chain</div>
+          <div class="product-material">18K Yellow Gold &middot; Dual Layer &middot; 45cm + 50cm</div>
+          <button class="inquire-btn" onclick="openInquiry('Layered Signature Chain')"><i class="fas fa-envelope"></i> Inquire</button>
+        </div>
+      </div>
+
+      <div class="product-card reveal" data-category="necklaces">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?w=800&q=85&fit=crop&auto=format" alt="Emerald Pendant Necklace" loading="lazy"/>
+          <span class="cat-badge">Necklaces</span>
+        </div>
+        <div class="product-body">
+          <div class="product-name">Emerald Halo Necklace</div>
+          <div class="product-material">18K Yellow Gold &middot; 0.85ct Colombian Emerald</div>
+          <button class="inquire-btn" onclick="openInquiry('Emerald Halo Necklace')"><i class="fas fa-envelope"></i> Inquire</button>
+        </div>
+      </div>
+
+      <!-- BRACELETS -->
+      <div class="product-card reveal" data-category="bracelets">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&q=85&fit=crop&auto=format" alt="Diamond Tennis Bracelet" loading="lazy"/>
+          <span class="cat-badge">Bracelets</span>
+        </div>
+        <div class="product-body">
+          <div class="product-name">Diamond Tennis Bracelet</div>
+          <div class="product-material">18K White Gold &middot; 4.0ctw Round Diamonds &middot; 18cm</div>
+          <button class="inquire-btn" onclick="openInquiry('Diamond Tennis Bracelet')"><i class="fas fa-envelope"></i> Inquire</button>
+        </div>
+      </div>
+
+      <div class="product-card reveal" data-category="bracelets">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=800&q=85&fit=crop&auto=format" alt="Gold Charm Bracelet" loading="lazy"/>
+          <span class="cat-badge">Bracelets</span>
+        </div>
+        <div class="product-body">
+          <div class="product-name">Heritage Charm Bracelet</div>
+          <div class="product-material">18K Yellow Gold &middot; 7 Custom Charms &middot; 18cm</div>
+          <button class="inquire-btn" onclick="openInquiry('Heritage Charm Bracelet')"><i class="fas fa-envelope"></i> Inquire</button>
+        </div>
+      </div>
+
+      <div class="product-card reveal" data-category="bracelets">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1620912189865-1e8a6d1bdcb6?w=800&q=85&fit=crop&auto=format" alt="Ruby Bangle" loading="lazy"/>
+          <span class="cat-badge">Bracelets</span>
+        </div>
+        <div class="product-body">
+          <div class="product-name">Ruby Flexi Bangle</div>
+          <div class="product-material">18K Rose Gold &middot; Burmese Rubies &middot; Diamond Baguettes</div>
+          <button class="inquire-btn" onclick="openInquiry('Ruby Flexi Bangle')"><i class="fas fa-envelope"></i> Inquire</button>
+        </div>
+      </div>
+
+      <!-- EARRINGS -->
+      <div class="product-card reveal" data-category="earrings">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1635767798638-3e25273a8236?w=800&q=85&fit=crop&auto=format" alt="Diamond Stud Earrings" loading="lazy"/>
+          <span class="cat-badge">Earrings</span>
+        </div>
+        <div class="product-body">
+          <div class="product-name">Classic Diamond Studs</div>
+          <div class="product-material">18K White Gold &middot; 0.5ctw Pair &middot; GIA Certified</div>
+          <button class="inquire-btn" onclick="openInquiry('Classic Diamond Studs')"><i class="fas fa-envelope"></i> Inquire</button>
+        </div>
+      </div>
+
+      <div class="product-card reveal" data-category="earrings">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1599459183200-59c7687a0c70?w=800&q=85&fit=crop&auto=format" alt="Sapphire Drop Earrings" loading="lazy"/>
+          <span class="cat-badge">Earrings</span>
+        </div>
+        <div class="product-body">
+          <div class="product-name">Ceylon Sapphire Drops</div>
+          <div class="product-material">18K Yellow Gold &middot; 1.2ctw Ceylon Sapphires</div>
+          <button class="inquire-btn" onclick="openInquiry('Ceylon Sapphire Drops')"><i class="fas fa-envelope"></i> Inquire</button>
+        </div>
+      </div>
+
+      <div class="product-card reveal" data-category="earrings">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1596944924616-7b38e7cfac36?w=800&q=85&fit=crop&auto=format" alt="Gold Hoop Earrings" loading="lazy"/>
+          <span class="cat-badge">Earrings</span>
+        </div>
+        <div class="product-body">
+          <div class="product-name">Pave Gold Hoops</div>
+          <div class="product-material">18K Yellow Gold &middot; 35mm &middot; Diamond Pavé Set</div>
+          <button class="inquire-btn" onclick="openInquiry('Pave Gold Hoops')"><i class="fas fa-envelope"></i> Inquire</button>
+        </div>
+      </div>
+
+      <div class="product-card reveal" data-category="earrings">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1630942595427-f40e59d65c8e?w=800&q=85&fit=crop&auto=format" alt="Pearl Drop Earrings" loading="lazy"/>
+          <span class="cat-badge">Earrings</span>
+        </div>
+        <div class="product-body">
+          <div class="product-name">Pearl & Diamond Drops</div>
+          <div class="product-material">18K Rose Gold &middot; South Sea Pearl &middot; Diamond Halo</div>
+          <button class="inquire-btn" onclick="openInquiry('Pearl & Diamond Drops')"><i class="fas fa-envelope"></i> Inquire</button>
+        </div>
+      </div>
+
+      <!-- PENDANTS -->
+      <div class="product-card reveal" data-category="pendants">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1573408301185-9519f94a6f02?w=800&q=85&fit=crop&auto=format" alt="Solitaire Diamond Pendant" loading="lazy"/>
+          <span class="cat-badge">Pendants</span>
+        </div>
+        <div class="product-body">
+          <div class="product-name">Solitaire Diamond Pendant</div>
+          <div class="product-material">18K White Gold &middot; 0.75ct Round Brilliant GIA</div>
+          <button class="inquire-btn" onclick="openInquiry('Solitaire Diamond Pendant')"><i class="fas fa-envelope"></i> Inquire</button>
+        </div>
+      </div>
+
+      <div class="product-card reveal" data-category="pendants">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?w=800&q=85&fit=crop&auto=format" alt="Cross Pendant" loading="lazy"/>
+          <span class="cat-badge">Pendants</span>
+        </div>
+        <div class="product-body">
+          <div class="product-name">Heritage Cross Pendant</div>
+          <div class="product-material">18K Yellow Gold &middot; Pavé Diamond Set &middot; 38mm</div>
+          <button class="inquire-btn" onclick="openInquiry('Heritage Cross Pendant')"><i class="fas fa-envelope"></i> Inquire</button>
+        </div>
+      </div>
+
+      <div class="product-card reveal" data-category="pendants">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?w=800&q=85&fit=crop&auto=format" alt="Geometric Pendant" loading="lazy"/>
+          <span class="cat-badge">Pendants</span>
+        </div>
+        <div class="product-body">
+          <div class="product-name">Geometric Prism Pendant</div>
+          <div class="product-material">18K White Gold &middot; Hexagonal Design &middot; Diamond Edges</div>
+          <button class="inquire-btn" onclick="openInquiry('Geometric Prism Pendant')"><i class="fas fa-envelope"></i> Inquire</button>
+        </div>
+      </div>
+
+      <!-- RINGS -->
+      <div class="product-card reveal" data-category="rings">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&q=85&fit=crop&auto=format" alt="Cocktail Ring" loading="lazy"/>
+          <span class="cat-badge">Rings</span>
+        </div>
+        <div class="product-body">
+          <div class="product-name">Duchess Cocktail Ring</div>
+          <div class="product-material">18K Yellow Gold &middot; 3.0ct Oval Citrine &middot; Diamond Halo</div>
+          <button class="inquire-btn" onclick="openInquiry('Duchess Cocktail Ring')"><i class="fas fa-envelope"></i> Inquire</button>
+        </div>
+      </div>
+
+      <div class="product-card reveal" data-category="rings">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1603561591411-07134e71a2a9?w=800&q=85&fit=crop&auto=format" alt="Eternity Ring" loading="lazy"/>
+          <span class="cat-badge">Rings</span>
+        </div>
+        <div class="product-body">
+          <div class="product-name">Full Eternity Band</div>
+          <div class="product-material">Platinum &middot; 3.0ctw Princess Cut Diamonds</div>
+          <button class="inquire-btn" onclick="openInquiry('Full Eternity Band')"><i class="fas fa-envelope"></i> Inquire</button>
+        </div>
+      </div>
+
+      <div class="product-card reveal" data-category="rings">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1543294001-f7cd5d7fb516?w=800&q=85&fit=crop&auto=format" alt="Stackable Ring Set" loading="lazy"/>
+          <span class="cat-badge">Rings</span>
+        </div>
+        <div class="product-body">
+          <div class="product-name">Stackable Ring Trio</div>
+          <div class="product-material">18K Mixed Gold &middot; Set of 3 &middot; Diamond Accents</div>
+          <button class="inquire-btn" onclick="openInquiry('Stackable Ring Trio')"><i class="fas fa-envelope"></i> Inquire</button>
+        </div>
+      </div>
+
+      <!-- BRIDAL -->
+      <div class="product-card reveal" data-category="bridal">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1518049362265-d5b2a6467637?w=800&q=85&fit=crop&auto=format" alt="Bridal Set" loading="lazy"/>
+          <span class="cat-badge">Bridal</span>
+        </div>
+        <div class="product-body">
+          <div class="product-name">Lumière Bridal Set</div>
+          <div class="product-material">18K White Gold &middot; Engagement Ring + Wedding Band</div>
+          <button class="inquire-btn" onclick="openInquiry('Lumière Bridal Set')"><i class="fas fa-envelope"></i> Inquire</button>
+        </div>
+      </div>
+
+      <div class="product-card reveal" data-category="bridal">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1550082849-b7ab9e946ee6?w=800&q=85&fit=crop&auto=format" alt="Wedding Rings" loading="lazy"/>
+          <span class="cat-badge">Bridal</span>
+        </div>
+        <div class="product-body">
+          <div class="product-name">His & Hers Wedding Rings</div>
+          <div class="product-material">18K Yellow Gold &middot; Matching Pair &middot; GIA Diamonds</div>
+          <button class="inquire-btn" onclick="openInquiry('His & Hers Wedding Rings')"><i class="fas fa-envelope"></i> Inquire</button>
+        </div>
+      </div>
+
+      <div class="product-card reveal" data-category="bridal">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1559056199-5c6c4a49d867?w=800&q=85&fit=crop&auto=format" alt="Sapphire Bridal" loading="lazy"/>
+          <span class="cat-badge">Bridal</span>
+        </div>
+        <div class="product-body">
+          <div class="product-name">Royal Blue Bridal Set</div>
+          <div class="product-material">Platinum &middot; 1.5ct Blue Sapphire &middot; Diamond Pavé Band</div>
+          <button class="inquire-btn" onclick="openInquiry('Royal Blue Bridal Set')"><i class="fas fa-envelope"></i> Inquire</button>
+        </div>
+      </div>
+
+      <div class="product-card reveal" data-category="bridal">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1604147706283-d7119b5b822c?w=800&q=85&fit=crop&auto=format" alt="Three Stone Engagement" loading="lazy"/>
+          <span class="cat-badge">Bridal</span>
+        </div>
+        <div class="product-body">
+          <div class="product-name">Three-Stone Engagement</div>
+          <div class="product-material">Platinum &middot; 2.0ct Centre + 0.5ct Side Stones</div>
+          <button class="inquire-btn" onclick="openInquiry('Three-Stone Engagement')"><i class="fas fa-envelope"></i> Inquire</button>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
 
-<!-- ═══ FEATURES ═══ -->
-<section class="features" id="about">
+<!-- ═══ BRAND STORY ═══ -->
+<section class="brand-story" id="story">
+  <div class="container">
+    <div class="brand-story-inner">
+
+      <div class="brand-story-img reveal">
+        <img src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=900&q=90&fit=crop&auto=format" alt="Lumière atelier — master craftsmen at work" loading="lazy"/>
+        <div class="brand-story-img-frame"></div>
+      </div>
+
+      <div class="brand-story-text reveal">
+        <span class="story-label">Since 1998 · Amman, Jordan</span>
+        <h2 class="story-heading">Where Every Gem<br/>Tells a <em style="color:var(--gold)">Story</em></h2>
+        <p class="story-body">
+          Founded in Amman over two decades ago, Lumière Jewels was born from a singular passion — to create pieces as enduring as the moments they celebrate. Our master craftsmen blend centuries-old goldsmithing traditions with modern precision, producing jewelry that transcends generations.
+        </p>
+        <p class="story-body" style="margin-bottom:28px;">
+          Every stone is hand-selected from certified conflict-free sources. Every setting is tested under 10× magnification. Every piece arrives with a certificate of authenticity and a lifetime craftsmanship guarantee — because true luxury demands nothing less.
+        </p>
+        <div class="story-badges">
+          <span class="story-badge"><i class="fas fa-certificate" style="color:var(--gold);margin-right:6px"></i>GIA Certified</span>
+          <span class="story-badge"><i class="fas fa-tools" style="color:var(--gold);margin-right:6px"></i>Master Craftsmen</span>
+          <span class="story-badge"><i class="fas fa-leaf" style="color:var(--gold);margin-right:6px"></i>Ethically Sourced</span>
+          <span class="story-badge"><i class="fas fa-drafting-compass" style="color:var(--gold);margin-right:6px"></i>Bespoke Design</span>
+        </div>
+        <div class="story-stats">
+          <div class="story-stat">
+            <div class="story-stat-num">26+</div>
+            <div class="story-stat-lbl">Years of Excellence</div>
+          </div>
+          <div class="story-stat">
+            <div class="story-stat-num">4,200+</div>
+            <div class="story-stat-lbl">Pieces Crafted</div>
+          </div>
+          <div class="story-stat">
+            <div class="story-stat-num">98%</div>
+            <div class="story-stat-lbl">Client Satisfaction</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CRAFTSMANSHIP STEPS ═══ -->
+<section class="craft-section">
+  <div class="container">
+    <div class="sec-title reveal">
+      <span class="sec-badge">Our Process</span>
+      <h2>From Vision to <em style="color:var(--gold)">Masterpiece</em></h2>
+      <p>Four meticulous steps that transform your dream into a heirloom worth passing down.</p>
+    </div>
+    <div class="craft-steps">
+
+      <div class="craft-step reveal">
+        <div class="craft-step-icon">
+          <i class="fas fa-comments"></i>
+        </div>
+        <div class="craft-step-num">01</div>
+        <div class="craft-step-title">Design Consultation</div>
+        <div class="craft-step-desc">Sit with our senior designer to discuss your vision, occasion, and preferences — from stone type to metal finish and setting style.</div>
+      </div>
+
+      <div class="craft-step reveal">
+        <div class="craft-step-icon">
+          <i class="fas fa-drafting-compass"></i>
+        </div>
+        <div class="craft-step-num">02</div>
+        <div class="craft-step-title">Custom Crafting</div>
+        <div class="craft-step-desc">Our master jewelers hand-craft every component — casting the metal, setting each stone by hand, and applying the finest surface finish.</div>
+      </div>
+
+      <div class="craft-step reveal">
+        <div class="craft-step-icon">
+          <i class="fas fa-search-plus"></i>
+        </div>
+        <div class="craft-step-num">03</div>
+        <div class="craft-step-title">Quality Inspection</div>
+        <div class="craft-step-desc">Every completed piece is inspected under 10× magnification and tested for metal purity, prong security, and stone clarity before certification.</div>
+      </div>
+
+      <div class="craft-step reveal">
+        <div class="craft-step-icon">
+          <i class="fas fa-box-open"></i>
+        </div>
+        <div class="craft-step-num">04</div>
+        <div class="craft-step-title">White-Glove Delivery</div>
+        <div class="craft-step-desc">Your piece arrives in our signature presentation box, accompanied by GIA documentation, a care guide, and a lifetime craftsmanship warranty.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ MATERIALS ═══ -->
+<section class="materials-section">
+  <div class="container">
+    <div class="sec-title reveal">
+      <span class="sec-badge">Our Metals</span>
+      <h2>Crafted in the <em style="color:var(--gold)">Finest Gold</em></h2>
+      <p>We work exclusively with 18 karat gold in three classic hues — each with its own character and warmth.</p>
+    </div>
+    <div class="materials-grid">
+
+      <div class="material-card reveal">
+        <img src="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=700&q=85&fit=crop&auto=format" alt="18K Yellow Gold" loading="lazy"/>
+        <div class="material-overlay"></div>
+        <div class="material-content">
+          <div class="material-dot yellow"></div>
+          <div class="material-name">18K Yellow Gold</div>
+          <div class="material-desc">The classic choice — a rich, warm tone that has adorned royalty for millennia. 75% pure gold alloyed for lasting durability.</div>
+        </div>
+      </div>
+
+      <div class="material-card reveal">
+        <img src="https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=700&q=85&fit=crop&auto=format" alt="18K White Gold" loading="lazy"/>
+        <div class="material-overlay"></div>
+        <div class="material-content">
+          <div class="material-dot white"></div>
+          <div class="material-name">18K White Gold</div>
+          <div class="material-desc">Platinum-like brilliance at a fraction of the weight. Rhodium-plated for an ultra-bright, mirror-like finish that enhances diamond sparkle.</div>
+        </div>
+      </div>
+
+      <div class="material-card reveal">
+        <img src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=700&q=85&fit=crop&auto=format" alt="18K Rose Gold" loading="lazy"/>
+        <div class="material-overlay"></div>
+        <div class="material-content">
+          <div class="material-dot rose"></div>
+          <div class="material-name">18K Rose Gold</div>
+          <div class="material-desc">A romantic blush hue created by a copper alloy blend — timeless, flattering on all skin tones, and utterly distinctive.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CRAFTSMANSHIP FEATURES ═══ -->
+<section class="features">
   <div class="container">
     <div class="sec-title reveal">
       <span class="sec-badge">Our Promise</span>
       <h2>Craftsmanship<br/><em style="color:var(--gold)">Without Compromise</em></h2>
-      <p>Every piece we create meets the highest standards of quality, authenticity, and artistry.</p>
+      <p>Every piece meets the highest standards of quality, authenticity, and artistry.</p>
     </div>
     <div class="feat-grid">
-      <div class="feat-card reveal"><div class="feat-icon"><i class="fas fa-certificate"></i></div><h3>GIA Certified</h3><p>Every diamond and gemstone comes with a GIA or equivalent international certification — your guarantee of authenticity.</p></div>
-      <div class="feat-card reveal"><div class="feat-icon"><i class="fas fa-tools"></i></div><h3>Master Craftsmen</h3><p>Our jewelers have over 25 years of experience. Each piece is hand-set and inspected under 10x magnification before delivery.</p></div>
-      <div class="feat-card reveal"><div class="feat-icon"><i class="fas fa-recycle"></i></div><h3>Ethical Sourcing</h3><p>We source only conflict-free diamonds and ethically mined gemstones — because beauty should never come at someone else's expense.</p></div>
-      <div class="feat-card reveal"><div class="feat-icon"><i class="fas fa-pencil-ruler"></i></div><h3>Custom Design</h3><p>Work one-on-one with our designers to create a completely unique piece that tells your story exactly as you envision it.</p></div>
+      <div class="feat-card reveal"><div class="feat-icon"><i class="fas fa-certificate"></i></div><h3>GIA Certified</h3><p>Every diamond and gemstone comes with GIA or equivalent international certification — your guarantee of authenticity and traceability.</p></div>
+      <div class="feat-card reveal"><div class="feat-icon"><i class="fas fa-tools"></i></div><h3>Master Craftsmen</h3><p>Our jewelers carry 25+ years of experience. Each piece is hand-set and inspected under 10× magnification before it leaves our atelier.</p></div>
+      <div class="feat-card reveal"><div class="feat-icon"><i class="fas fa-leaf"></i></div><h3>Ethical Sourcing</h3><p>We source only conflict-free diamonds and ethically mined gemstones — because beauty should never come at another's expense.</p></div>
+      <div class="feat-card reveal"><div class="feat-icon"><i class="fas fa-pencil-ruler"></i></div><h3>Bespoke Design</h3><p>Work one-on-one with our designers to create a completely unique piece that tells your story exactly as you envision it.</p></div>
     </div>
   </div>
 </section>
 
-<!-- ═══ DASHBOARD CTA ═══ -->
-<section class="dash-cta" id="dashboard-cta">
+<!-- ═══ TESTIMONIALS ═══ -->
+<section class="testimonials-section">
   <div class="container">
-    <div class="dash-card reveal">
-      <div style="text-align:center;margin-bottom:24px;"><span class="sec-badge">Business Intelligence</span></div>
-      <h2>Know Your Inventory.<br/><em style="color:var(--gold)">Grow Your Revenue.</em></h2>
-      <p>Track high-value stock, monitor slow-moving pieces, analyze customer purchase patterns, and protect your most valuable assets — all in one dashboard.</p>
-      <div style="text-align:center;">
-        <a href="../jewllery/jewellery_inventory.html" class="btn-dashboard">
-          <i class="fas fa-chart-line"></i> Open Jewelry Dashboard
-        </a>
+    <div class="sec-title reveal">
+      <span class="sec-badge">Testimonials</span>
+      <h2>Worn with <em style="color:var(--gold)">Love</em></h2>
+      <p>The words of our clients mean more to us than any award.</p>
+    </div>
+    <div class="testimonials-grid">
+
+      <div class="testimonial-card reveal">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-quote">"The engagement ring Lumière crafted for me was beyond anything I imagined. The team listened to every detail and delivered a piece my partner will cherish forever. Truly world-class."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">N</div>
+          <div>
+            <div class="testimonial-name">Nour Al-Rashid</div>
+            <div class="testimonial-location">Amman, Jordan</div>
+          </div>
+        </div>
       </div>
-      <div class="kpi-row">
-        <div class="kpi"><div class="kpi-val">+41%</div><div class="kpi-lbl">Revenue Growth</div></div>
-        <div class="kpi"><div class="kpi-val">-60%</div><div class="kpi-lbl">Stock Loss</div></div>
-        <div class="kpi"><div class="kpi-val">98%</div><div class="kpi-lbl">Audit Accuracy</div></div>
-        <div class="kpi"><div class="kpi-val">3.2x</div><div class="kpi-lbl">ROI</div></div>
+
+      <div class="testimonial-card reveal">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-quote">"I came in for a simple necklace and left with a one-of-a-kind heirloom. The craftsmanship is extraordinary — every single stone is set with absolute precision. I receive compliments wherever I go."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">L</div>
+          <div>
+            <div class="testimonial-name">Layla Mansour</div>
+            <div class="testimonial-location">Dubai, UAE</div>
+          </div>
+        </div>
       </div>
+
+      <div class="testimonial-card reveal">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-quote">"Our wedding rings from Lumière are flawless. The experience from first consultation to delivery was seamless and deeply personal. We felt like royalty. There is no other jeweler in the region like this."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">R</div>
+          <div>
+            <div class="testimonial-name">Rania & Kareem Haddad</div>
+            <div class="testimonial-location">Amman, Jordan</div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
 
-<footer class="footer">
-  <p>© 2026 <span>Lumière Jewels</span> · Powered by <span>Clarix Solutions</span></p>
+<!-- ═══ BOOK CONSULTATION ═══ -->
+<section class="consult-section" id="consultation">
+  <div class="container">
+    <div class="consult-inner">
+
+      <div class="consult-text reveal">
+        <span class="consult-label">Private Consultation</span>
+        <h2 class="consult-heading">Begin Your<br/><em style="color:var(--gold)">Lumière</em> Journey</h2>
+        <p class="consult-body">
+          Whether you envision a bespoke engagement ring, an anniversary gift, or a statement piece for a special occasion — our team is ready to bring your vision to life. Every journey begins with a private, no-obligation consultation at our Amman boutique.
+        </p>
+        <p class="consult-body">
+          Visit us at our showroom in Amman, or reach out directly via WhatsApp for a swift, personal response from our senior design team.
+        </p>
+        <a href="https://wa.me/962799999999" class="wa-btn" target="_blank" rel="noopener">
+          <i class="fab fa-whatsapp" style="font-size:20px"></i>
+          Chat on WhatsApp
+        </a>
+        <div style="margin-top:32px;display:flex;flex-direction:column;gap:14px;">
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <i class="fas fa-map-marker-alt" style="color:var(--gold);margin-top:3px;width:16px;"></i>
+            <span style="font-size:14px;color:var(--muted);font-weight:300;line-height:1.7;">Abdali Boulevard, 3rd Circle<br/>Amman 11180, Jordan</span>
+          </div>
+          <div style="display:flex;gap:12px;align-items:center;">
+            <i class="fas fa-phone" style="color:var(--gold);width:16px;"></i>
+            <span style="font-size:14px;color:var(--muted);font-weight:300;">+962 7 9999 9999</span>
+          </div>
+          <div style="display:flex;gap:12px;align-items:center;">
+            <i class="fas fa-clock" style="color:var(--gold);width:16px;"></i>
+            <span style="font-size:14px;color:var(--muted);font-weight:300;">Sat–Thu: 10:00 AM – 9:00 PM</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="consult-form reveal">
+        <div class="form-title">Request a Private Viewing</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" placeholder="Your name" id="form-name"/>
+          </div>
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="tel" placeholder="+962 7X XXX XXXX" id="form-phone"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>WhatsApp Number</label>
+          <input type="tel" placeholder="+962 7X XXX XXXX (if different)" id="form-wa"/>
+        </div>
+        <div class="form-group">
+          <label>Tell Us About Your Vision</label>
+          <textarea placeholder="Describe the occasion, preferred metal, stone type, or any inspiration you have in mind..." id="form-message"></textarea>
+        </div>
+        <button class="form-submit" onclick="submitForm()">
+          <i class="fas fa-paper-plane" style="margin-right:8px"></i>
+          Send Inquiry
+        </button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="site-footer">
+  <div class="footer-inner">
+
+    <div class="footer-brand">
+      <div class="footer-logo">LUMIÈRE</div>
+      <p class="footer-tagline">Master jewelers since 1998. Every piece hand-crafted in our Amman atelier, certified and guaranteed for life.</p>
+      <div class="footer-social">
+        <a href="#" class="social-icon" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="#" class="social-icon" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://wa.me/962799999999" class="social-icon" aria-label="WhatsApp" target="_blank"><i class="fab fa-whatsapp"></i></a>
+        <a href="#" class="social-icon" aria-label="Pinterest"><i class="fab fa-pinterest-p"></i></a>
+      </div>
+    </div>
+
+    <div>
+      <div class="footer-col-title">Collection</div>
+      <ul class="footer-links">
+        <li><a href="#products" onclick="filterProducts('diamonds')">Diamond Rings</a></li>
+        <li><a href="#products" onclick="filterProducts('necklaces')">Necklaces</a></li>
+        <li><a href="#products" onclick="filterProducts('bracelets')">Bracelets</a></li>
+        <li><a href="#products" onclick="filterProducts('earrings')">Earrings</a></li>
+        <li><a href="#products" onclick="filterProducts('pendants')">Pendants</a></li>
+        <li><a href="#products" onclick="filterProducts('bridal')">Bridal Sets</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <div class="footer-col-title">Services</div>
+      <ul class="footer-links">
+        <li><a href="#consultation">Bespoke Design</a></li>
+        <li><a href="#consultation">Private Consultation</a></li>
+        <li><a href="#consultation">Ring Resizing</a></li>
+        <li><a href="#consultation">Jewelry Repair</a></li>
+        <li><a href="#consultation">Appraisal Service</a></li>
+        <li><a href="https://wa.me/962799999999" target="_blank">WhatsApp Us</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <div class="footer-col-title">Contact</div>
+      <div class="footer-contact-item">
+        <i class="fas fa-map-marker-alt footer-contact-icon"></i>
+        <span class="footer-contact-text">Abdali Boulevard, 3rd Circle<br/>Amman 11180, Jordan</span>
+      </div>
+      <div class="footer-contact-item">
+        <i class="fas fa-phone footer-contact-icon"></i>
+        <span class="footer-contact-text">+962 7 9999 9999</span>
+      </div>
+      <div class="footer-contact-item">
+        <i class="fab fa-whatsapp footer-contact-icon"></i>
+        <span class="footer-contact-text">+962 7 9999 9999</span>
+      </div>
+      <div class="footer-contact-item">
+        <i class="fas fa-clock footer-contact-icon"></i>
+        <span class="footer-contact-text">Sat–Thu: 10 AM – 9 PM<br/>Friday: Closed</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    <p class="footer-copy">© 2026 <span>Lumière Jewels</span> · Amman, Jordan · All Rights Reserved</p>
+    <div class="footer-cert">
+      <span class="cert-badge"><i class="fas fa-certificate" style="color:var(--gold);margin-right:4px"></i>GIA Certified</span>
+      <span class="cert-badge" style="color:rgba(240,236,248,.15)">|</span>
+      <span class="cert-badge"><i class="fas fa-leaf" style="color:var(--gold);margin-right:4px"></i>Conflict Free</span>
+      <span class="cert-badge" style="color:rgba(240,236,248,.15)">|</span>
+      <span class="cert-badge"><i class="fas fa-shield-alt" style="color:var(--gold);margin-right:4px"></i>Lifetime Guarantee</span>
+    </div>
+  </div>
 </footer>
 
 <div id="mob-cta-bar" aria-hidden="true">
   <div>
-    <div style="color:#fff;font-weight:700;font-size:.875rem;line-height:1.25">See the Dashboard</div>
-    <div style="color:rgba(255,255,255,.45);font-size:.75rem;margin-top:.1rem">Interactive business demo</div>
+    <div style="color:#fff;font-weight:700;font-size:.875rem;line-height:1.25">Book a Private Viewing</div>
+    <div style="color:rgba(255,255,255,.45);font-size:.75rem;margin-top:.1rem">WhatsApp or visit our boutique</div>
   </div>
-  <a href="#dashboard-cta" style="background:linear-gradient(135deg,var(--gold),var(--purple));color:#fff;font-size:.875rem;font-weight:700;padding:.7rem 1.5rem;border-radius:50px;text-decoration:none;white-space:nowrap;flex-shrink:0">View Demo</a>
+  <a href="https://wa.me/962799999999" target="_blank" style="background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;font-size:.875rem;font-weight:700;padding:.7rem 1.5rem;border-radius:50px;text-decoration:none;white-space:nowrap;flex-shrink:0"><i class="fab fa-whatsapp" style="margin-right:6px"></i>WhatsApp</a>
 </div>
 
-<!-- Reveal + mobile nav script -->
+<!-- ─── Inquire Modal ─── -->
+<div id="inquire-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:24px;">
+  <div style="background:#0F0820;border:1px solid rgba(201,168,76,.25);border-radius:24px;padding:40px;max-width:480px;width:100%;position:relative;">
+    <button onclick="closeInquiry()" style="position:absolute;top:18px;right:18px;background:none;border:none;color:rgba(255,255,255,.4);font-size:22px;cursor:pointer;line-height:1;"><i class="fas fa-times"></i></button>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">Inquire About</div>
+    <div id="modal-item-name" style="font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;margin-bottom:28px;line-height:1.2;"></div>
+    <p style="font-size:13px;color:var(--muted);line-height:1.85;margin-bottom:28px;font-weight:300;">Our team will get back to you within 24 hours to discuss this piece, arrange a private viewing, or guide you through a custom variation.</p>
+    <a id="modal-wa-link" href="https://wa.me/962799999999" target="_blank" class="wa-btn" style="width:100%;justify-content:center;text-decoration:none;display:flex;">
+      <i class="fab fa-whatsapp" style="font-size:20px"></i>
+      Inquire via WhatsApp
+    </a>
+    <div style="text-align:center;margin-top:16px;font-size:12px;color:rgba(255,255,255,.2);">or scroll down to fill our inquiry form</div>
+  </div>
+</div>
+
+<!-- ─── Scripts ─── -->
 <script>
+/* ── Reveal observer ── */
 const revealObs = new IntersectionObserver(entries => {
   entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
-}, {threshold:0.1});
+}, {threshold:0.08});
 document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
 
+/* ── Mobile nav ── */
 (function(){
   var btn=document.getElementById('ham-btn'), menu=document.getElementById('mob-menu');
   if(btn&&menu){
@@ -462,6 +1444,64 @@ document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
   var bar=document.getElementById('mob-cta-bar');
   if(bar){window.addEventListener('scroll',function(){if(window.scrollY>window.innerHeight*3){bar.classList.add('visible');bar.setAttribute('aria-hidden','false');}else{bar.classList.remove('visible');bar.setAttribute('aria-hidden','true');}},{passive:true});}
 })();
+
+/* ── Category filter ── */
+function filterProducts(cat) {
+  const cards = document.querySelectorAll('.product-card');
+  const btns = document.querySelectorAll('.filter-btn');
+
+  btns.forEach(b => {
+    b.classList.toggle('active', b.dataset.filter === cat);
+  });
+
+  cards.forEach(card => {
+    const match = cat === 'all' || card.dataset.category === cat;
+    if (match) {
+      card.style.display = '';
+      requestAnimationFrame(() => {
+        card.style.opacity = '1';
+        card.style.transform = '';
+      });
+    } else {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(16px) scale(.97)';
+      setTimeout(() => { card.style.display = 'none'; }, 350);
+    }
+  });
+}
+
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => filterProducts(btn.dataset.filter));
+});
+
+/* ── Inquire modal ── */
+function openInquiry(name) {
+  const modal = document.getElementById('inquire-modal');
+  document.getElementById('modal-item-name').textContent = name;
+  const msg = encodeURIComponent('Hello Lumière! I would like to inquire about: ' + name);
+  document.getElementById('modal-wa-link').href = 'https://wa.me/962799999999?text=' + msg;
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+function closeInquiry() {
+  document.getElementById('inquire-modal').style.display = 'none';
+  document.body.style.overflow = '';
+}
+document.getElementById('inquire-modal').addEventListener('click', function(e){
+  if(e.target === this) closeInquiry();
+});
+
+/* ── Form submit ── */
+function submitForm() {
+  const name = document.getElementById('form-name').value.trim();
+  const phone = document.getElementById('form-phone').value.trim();
+  const msg = document.getElementById('form-message').value.trim();
+  if (!name || !phone) { alert('Please enter your name and phone number.'); return; }
+  const text = encodeURIComponent(
+    'Hello Lumière Jewels!\n\nName: ' + name + '\nPhone: ' + phone + '\n\nMessage: ' + (msg || 'I would like to book a consultation.')
+  );
+  window.open('https://wa.me/962799999999?text=' + text, '_blank');
+}
 </script>
 
 <!-- Three.js 3D Ring -->
