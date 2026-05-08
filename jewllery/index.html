@@ -1645,6 +1645,64 @@ diamondGroup.add(culet);
 diamondGroup.position.y = 1.04;
 ringGroup.add(diamondGroup);
 
+// ── Pavé Eternity Band — nested white gold ring ──
+const wGoldMat = new THREE.MeshStandardMaterial({
+  color: new THREE.Color(0xd2d4e6),
+  metalness: 1.0,
+  roughness: 0.05,
+  envMapIntensity: 2.8,
+});
+
+const eternityGroup = new THREE.Group();
+
+// White gold band — same main radius as solitaire, slightly narrower tube
+const eBandGeo = new THREE.TorusGeometry(1.0, 0.075, 48, 200);
+eternityGroup.add(new THREE.Mesh(eBandGeo, wGoldMat));
+
+// Pavé diamonds — 52 faceted octahedra around the full circumference
+const pvDiaMat = new THREE.MeshPhysicalMaterial({
+  color: new THREE.Color(0xffffff),
+  metalness: 0,
+  roughness: 0,
+  transmission: 0.88,
+  thickness: 0.06,
+  ior: 2.417,
+  clearcoat: 1.0,
+  clearcoatRoughness: 0,
+  envMapIntensity: 3.5,
+  flatShading: true,
+});
+const pvGeo = new THREE.OctahedronGeometry(0.028, 1);
+const paveCount = 52;
+
+for (let i = 0; i < paveCount; i++) {
+  const angle = (i / paveCount) * Math.PI * 2;
+  const d = new THREE.Mesh(pvGeo, pvDiaMat);
+  // Pre-rotation positions (group will rotate PI/2 to lay flat)
+  // z = -0.052 places diamonds on the top face of the tube after group rotation
+  d.position.set(Math.cos(angle), Math.sin(angle), -0.052);
+  // Rotate each diamond so its facets align radially with the band
+  d.rotation.set(Math.PI / 4, 0, angle);
+  eternityGroup.add(d);
+}
+
+// Tiny gold prong caps between every other diamond for realistic pavé detail
+const prongCapGeo = new THREE.CylinderGeometry(0.010, 0.010, 0.018, 6);
+for (let i = 0; i < paveCount; i += 2) {
+  const angle = ((i + 0.5) / paveCount) * Math.PI * 2;
+  const p = new THREE.Mesh(prongCapGeo, wGoldMat);
+  p.position.set(Math.cos(angle), Math.sin(angle), -0.068);
+  p.rotation.set(Math.PI / 2, 0, angle);
+  eternityGroup.add(p);
+}
+
+// Rotate to lie flat, matching the solitaire orientation
+eternityGroup.rotation.x = Math.PI / 2;
+// Offset down the finger axis to nestle snugly against the solitaire
+eternityGroup.position.y = -0.20;
+
+ringGroup.add(eternityGroup);
+
 // ── Initial state ──
 ringGroup.rotation.x = -0.28;
 ringGroup.position.set(0, 0, -6);
