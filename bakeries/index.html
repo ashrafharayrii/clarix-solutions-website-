@@ -373,17 +373,41 @@ h1,h2,h3,h4{font-family:'Playfair Display',serif;}
 .social-btn:hover{border-color:var(--amber);color:var(--amber);transform:translateY(-2px);}
 
 /* ── FOOTER ───────────────────────────────────────── */
+.footer-img{
+  position:relative;height:320px;overflow:hidden;
+}
+.footer-img img{
+  width:100%;height:100%;object-fit:cover;object-position:center 60%;
+  filter:brightness(.75) saturate(1.1);
+  transition:transform 8s ease;
+}
+.footer-img:hover img{transform:scale(1.04);}
+.footer-img-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to bottom,rgba(44,24,16,.35) 0%,rgba(44,24,16,.72) 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:24px;
+}
+.footer-img-title{
+  font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3.8rem);
+  font-style:italic;font-weight:700;color:#fff;
+  text-shadow:0 4px 24px rgba(44,24,16,.5);margin-bottom:10px;
+}
+.footer-img-sub{
+  font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.25em;
+  color:rgba(255,248,220,.6);text-transform:uppercase;
+}
 footer{
-  background:var(--choco);padding:48px 24px 40px;text-align:center;
+  background:var(--choco);padding:36px 24px 32px;text-align:center;
   border-top:1px solid rgba(255,252,245,.06);
 }
 footer .footer-logo{
-  font-family:'Playfair Display',serif;font-size:26px;font-style:italic;
-  color:var(--honey);margin-bottom:12px;
+  font-family:'Playfair Display',serif;font-size:22px;font-style:italic;
+  color:var(--honey);margin-bottom:10px;
 }
-footer p{font-size:12px;color:rgba(255,252,245,.3);letter-spacing:.06em;margin-top:6px;}
+footer p{font-size:11px;color:rgba(255,252,245,.28);letter-spacing:.06em;margin-top:5px;}
 footer .footer-divider{
-  width:40px;height:1px;background:rgba(200,134,10,.35);margin:20px auto;
+  width:40px;height:1px;background:rgba(200,134,10,.35);margin:16px auto;
 }
 
 /* ── DASHBOARD (dark, functional) ─────────────────── */
@@ -678,6 +702,13 @@ tr:hover td{background:rgba(255,252,245,.025);}
         <span class="cat-count">2 items</span>
       </div>
       <div class="menu-grid" id="menu-signature"></div>
+
+      <div class="cat-divider reveal">
+        <div class="cat-icon-circle"><i class="fas fa-mug-hot"></i></div>
+        <h3 class="cat-title">Beverages</h3>
+        <span class="cat-count">8 items · Hot &amp; Cold</span>
+      </div>
+      <div class="menu-grid" id="menu-beverages"></div>
     </div>
   </div>
 
@@ -744,6 +775,15 @@ tr:hover td{background:rgba(255,252,245,.025);}
           <button class="btn-warm" onclick="openDashboard()"><i class="fas fa-chart-line"></i> Enter Lab Dashboard</button>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- FOOTER IMAGE BANNER -->
+  <div class="footer-img">
+    <img src="https://images.unsplash.com/photo-1608198093002-ad4e005484ec?w=1600&q=90&fit=crop" alt="Fresh bakery bread and pastries"/>
+    <div class="footer-img-overlay">
+      <div class="footer-img-title">Baked Every Morning,<br/>Without Exception.</div>
+      <div class="footer-img-sub">Al-Rainbow Street · Amman · Doors Open 07:00 AM</div>
     </div>
   </div>
 
@@ -872,14 +912,26 @@ tr:hover td{background:rgba(255,252,245,.025);}
 // ── DATA ─────────────────────────────────────────────────────
 
 const menuPhotos = {
+  // Viennoiserie
   'crs-001': 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=600&q=85&fit=crop',
   'pch-002': 'https://images.unsplash.com/photo-1612200177975-a6408a2ee3a9?w=600&q=85&fit=crop',
   'kdf-003': 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600&q=85&fit=crop',
   'brf-004': 'https://images.unsplash.com/photo-1484723091739-30a097e8f929?w=600&q=85&fit=crop',
+  // Sourdough
   'ams-005': 'https://images.unsplash.com/photo-1549931319-a545dcf3bc7c?w=600&q=85&fit=crop',
   'ryc-006': 'https://images.unsplash.com/photo-1586444248902-2f64eddc13df?w=600&q=85&fit=crop',
+  // Signature
   'msf-007': 'https://images.unsplash.com/photo-1571066811602-716837d681de?w=600&q=85&fit=crop',
   'lbd-008': 'https://images.unsplash.com/photo-1542010589005-d1eacc3918f2?w=600&q=85&fit=crop',
+  // Beverages
+  'esp-009': 'https://images.unsplash.com/photo-1510707577719-ae7c14805e3a?w=600&q=85&fit=crop',
+  'flw-010': 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600&q=85&fit=crop',
+  'cap-011': 'https://images.unsplash.com/photo-1534040385115-33dcb3acba5b?w=600&q=85&fit=crop',
+  'lat-012': 'https://images.unsplash.com/photo-1570968915860-54d5c301fa9f?w=600&q=85&fit=crop',
+  'ame-013': 'https://images.unsplash.com/photo-1497515114629-f71d768fd07c?w=600&q=85&fit=crop',
+  'mat-014': 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=600&q=85&fit=crop',
+  'mnt-015': 'https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?w=600&q=85&fit=crop',
+  'chm-016': 'https://images.unsplash.com/photo-1608198093002-ad4e005484ec?w=600&q=85&fit=crop',
 };
 
 const menuItems = [
@@ -915,9 +967,42 @@ const menuItems = [
    specs:{flour:'Spelt + White',hydration:'82%',temp:'24°C',fermentation:'12h'},
    desc:"Strained yogurt, wild za'atar, sumac-dusted crust, Aleppo pepper finish.",
    prepTime:'12h',yield:'24 pieces'},
+  // Beverages
+  {id:'esp-009',name:'Signature Espresso',     cat:'beverages',   price:1.8,badge:'Double Shot',
+   specs:{origin:'Ethiopian Yirgacheffe',roast:'Light',method:'Espresso',temp:'90°C'},
+   desc:"Double-shot from our house-roasted Ethiopian blend — bright, fruity, intensely aromatic.",
+   prepTime:'3 min',yield:'1 cup'},
+  {id:'flw-010',name:'Flat White',             cat:'beverages',   price:2.8,badge:'Popular',
+   specs:{origin:'Ethiopian Blend',roast:'Light',method:'Ristretto',temp:'65°C'},
+   desc:'Ristretto-based with velvety microfoam. Perfect espresso-to-milk ratio every time.',
+   prepTime:'4 min',yield:'1 cup'},
+  {id:'cap-011',name:'Cappuccino',             cat:'beverages',   price:2.5,
+   specs:{origin:'House Blend',roast:'Medium',method:'Espresso',temp:'65°C'},
+   desc:'Classic thirds of espresso, steamed milk, and dense dry foam — old world style.',
+   prepTime:'4 min',yield:'1 cup'},
+  {id:'lat-012',name:'Morning Latte',          cat:'beverages',   price:3.0,
+   specs:{origin:'Colombian',roast:'Medium',method:'Espresso',temp:'65°C'},
+   desc:'Smooth double espresso with silky steamed whole milk and a delicate latte art pour.',
+   prepTime:'4 min',yield:'1 cup'},
+  {id:'ame-013',name:'Americano',              cat:'beverages',   price:2.2,
+   specs:{origin:'Ethiopian Blend',roast:'Light',method:'Long Black',temp:'92°C'},
+   desc:'Two ristretto shots extended with hot water — clean, long, bold. The purist\'s morning.',
+   prepTime:'3 min',yield:'1 cup'},
+  {id:'mat-014',name:'Matcha Latte',           cat:'beverages',   price:3.5,badge:'New',
+   specs:{origin:'Uji, Japan',grade:'Ceremonial',method:'Whisked',temp:'70°C'},
+   desc:'Ceremonial-grade Japanese matcha whisked with oat milk. Earthy, smooth, energising.',
+   prepTime:'5 min',yield:'1 cup'},
+  {id:'mnt-015',name:'Fresh Mint Tea',         cat:'beverages',   price:2.0,badge:'Herbal',
+   specs:{origin:'Amman Gardens',type:'Spearmint',method:'Steeped',temp:'95°C'},
+   desc:'Garden-fresh spearmint steeped in boiling water — pure, caffeine-free, deeply calming.',
+   prepTime:'5 min',yield:'1 pot'},
+  {id:'chm-016',name:'Chamomile & Honey',      cat:'beverages',   price:2.2,badge:'Herbal',
+   specs:{origin:'Egyptian Chamomile',type:'Dried Blossoms',method:'Steeped',temp:'90°C'},
+   desc:'Dried chamomile blossoms with a generous drizzle of local Ajloun wildflower honey.',
+   prepTime:'5 min',yield:'1 pot'},
 ];
 
-const salesQty = [52,31,18,24,38,14,9,27];
+const salesQty = [52,31,18,24,38,14,9,27, 85,62,48,54,41,18,22,16];
 let salesData = menuItems.map((item,i)=>({
   id:item.id,name:item.name,qty:salesQty[i],
   revenue:+(salesQty[i]*item.price).toFixed(2),cat:item.cat
@@ -961,12 +1046,17 @@ const marqueeStats = [
 // ── RENDER MENU ───────────────────────────────────────────────
 
 function renderMenu() {
-  ['viennoiserie','sourdough','signature'].forEach(cat => {
+  ['viennoiserie','sourdough','signature','beverages'].forEach(cat => {
     const el = document.getElementById('menu-'+cat);
     if(!el) return;
     menuItems.filter(m=>m.cat===cat).forEach(item => {
       const photo = menuPhotos[item.id];
       const badge = item.badge ? `<span class="menu-card-badge">${item.badge}</span>` : '';
+      // Build spec rows dynamically from whatever keys the item has
+      const specRows = Object.entries(item.specs).map(([k,v]) =>
+        `<div class="spec-row"><span class="spec-key">${k.toUpperCase()}</span><span class="spec-val">${v}</span></div>`
+      ).join('');
+      const tag2 = cat === 'beverages' ? item.yield : `${item.prepTime} prep`;
       el.innerHTML += `
         <div class="menu-card">
           <div class="menu-card-img">
@@ -979,16 +1069,10 @@ function renderMenu() {
               <div class="menu-card-price">${item.price} JD</div>
             </div>
             <div class="menu-card-desc">${item.desc}</div>
-            <div class="menu-card-specs">
-              <div class="spec-row"><span class="spec-key">FLOUR</span><span class="spec-val">${item.specs.flour}</span></div>
-              <div class="spec-row"><span class="spec-key">HYDRATION</span><span class="spec-val">${item.specs.hydration}</span></div>
-              <div class="spec-row"><span class="spec-key">FERMENTATION</span><span class="spec-val">${item.specs.fermentation}</span></div>
-              <div class="spec-row"><span class="spec-key">PREP TIME</span><span class="spec-val">${item.prepTime}</span></div>
-              <div class="spec-row"><span class="spec-key">YIELD</span><span class="spec-val">${item.yield}</span></div>
-            </div>
+            <div class="menu-card-specs">${specRows}</div>
             <div class="menu-card-tags">
               <span class="menu-tag">${item.cat}</span>
-              <span class="menu-tag">${item.prepTime} prep</span>
+              <span class="menu-tag">${tag2}</span>
             </div>
           </div>
         </div>`;
@@ -1189,7 +1273,7 @@ function closeDashboard() {
   window.scrollTo(0,0);
 }
 function refreshData() {
-  const v=[48,35,22,20,42,11,12,30];
+  const v=[48,35,22,20,42,11,12,30, 91,58,44,50,38,21,19,14];
   salesData=menuItems.map((item,i)=>({id:item.id,name:item.name,qty:v[i],revenue:+(v[i]*item.price).toFixed(2),cat:item.cat}));
   updateKPIValues(); renderCatBars(); renderTopItems();
 }
